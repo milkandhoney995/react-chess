@@ -9,4 +9,17 @@
   &__whiteTile {
     background-color: #ebecd0;
   }
+  &__image {
+    width: 6.25rem;
+    height: 6.25rem;
+    background-size: 5rem;
+    background-position: center;
+    background-repeat: no-repeat;
+    &:hover {
+      cursor: grab;
+    }
+    &:active {
+      cursor: grabbing;
+    }
+  }
 }

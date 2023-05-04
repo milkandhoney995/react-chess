@@ -8,31 +8,15 @@ interface Props {
 export default function Tile({image, number}: Props) {
   if(number % 2 === 0) {
     return (
-      <div
-        className={`${classes.tile} ${classes.tile__blackTile}`}>
-          { image &&
-            <Image
-              src={image}
-              alt="piece"
-              width={80}
-              height={80}
-            />
-          }
+      <div className={`${classes.tile} ${classes.tile__blackTile}`}>
+       { image && <div className={classes.tile__image} style={{ backgroundImage: `url(${image})`}}></div>}
       </div>
     )
   } else {
 
   }
   return (
-    <div
-      className={`${classes.tile} ${classes.tile__whiteTile}`}>
-        { image &&
-          <Image
-            src={image}
-            alt="piece"
-            width={80}
-            height={80}
-          />
-          }
+    <div className={`${classes.tile} ${classes.tile__whiteTile}`}>
+      { image && <div className={classes.tile__image} style={{ backgroundImage: `url(${image})`}}></div>}
     </div>)
 }
