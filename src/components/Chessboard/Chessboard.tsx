@@ -3,7 +3,7 @@
 import classes from "./Chessboard.module.scss"
 import TileClasses from "../Title/Tile.module.scss"
 import Tile from "../Title/Tile"
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 const verticalAxis = ["1", "2", "3", "4", "5", "6", "7", "8"];
 const horizontalAxis = ["a", "b", "c", "d", "e", "f", "g", "h"];
@@ -14,43 +14,56 @@ interface Piece {
   y: number
 }
 
-const pieces: Piece[] = [];
+const initialBoardState: Piece[] = [];
 
 for (let p = 0; p < 2; p++) {
   const type = (p === 0) ? "b" : "w";
   const y = (p === 0) ? 7 : 0;
 
-  pieces.push({image: `/assets/images/rook_${type}.png`, x: 0, y: y });
-  pieces.push({image: `/assets/images/rook_${type}.png`, x: 7, y: y });
-  pieces.push({image: `/assets/images/knight_${type}.png`, x: 1, y: y });
-  pieces.push({image: `/assets/images/knight_${type}.png`, x: 6, y: y });
-  pieces.push({image: `/assets/images/bishop_${type}.png`, x: 2, y: y });
-  pieces.push({image: `/assets/images/bishop_${type}.png`, x: 5, y: y });
-  pieces.push({image: `/assets/images/queen_${type}.png`, x: 3, y: y });
-  pieces.push({image: `/assets/images/king_${type}.png`, x: 4, y: y });
+  initialBoardState.push({image: `/assets/images/rook_${type}.png`, x: 0, y: y });
+  initialBoardState.push({image: `/assets/images/rook_${type}.png`, x: 7, y: y });
+  initialBoardState.push({image: `/assets/images/knight_${type}.png`, x: 1, y: y });
+  initialBoardState.push({image: `/assets/images/knight_${type}.png`, x: 6, y: y });
+  initialBoardState.push({image: `/assets/images/bishop_${type}.png`, x: 2, y: y });
+  initialBoardState.push({image: `/assets/images/bishop_${type}.png`, x: 5, y: y });
+  initialBoardState.push({image: `/assets/images/queen_${type}.png`, x: 3, y: y });
+  initialBoardState.push({image: `/assets/images/king_${type}.png`, x: 4, y: y });
 }
 
 for (let i = 0; i < 8; i++) {
-  pieces.push({image: "/assets/images/bishop_b.png", x: i, y: 6 })
+  initialBoardState.push({image: "/assets/images/pawn_b.png", x: i, y: 6 })
 };
 for (let i = 0; i < 8; i++) {
-  pieces.push({image: "/assets/images/bishop_w.png", x: i, y: 1 })
+  initialBoardState.push({image: "/assets/images/pawn_w.png", x: i, y: 1 })
 };
 
 export default function Chessboard() {
+  const [activePiece, setActivePiece] = useState<HTMLElement | null>(null)
+  const [gridX, setGridX] = useState(0);
+  const [gridY, setGridY] = useState(0);
+  const [pieces, setPieces] = useState<Piece[]>(initialBoardState);
   const chessboardRef = useRef<HTMLDivElement>(null);
-  let activePiece: HTMLElement | null = null;
 
   function grabPiece(e: React.MouseEvent) {
     const element = e.target as HTMLElement;
-    if (element.classList.contains(`${TileClasses.tile__image}`)) {
+    const chessboard = chessboardRef.current;
+
+    if (element.classList.contains(`${TileClasses.tile__image}`) && chessboard) {
+      // 100で割ることで、0 < x < 8, 0 < y< 8になる
+      // そのままだと、from bottom left to top rightになるので、subtract 800して、top leftが(0, 0)、bottom leftが(800, 0)になるようにする
+      const gridX = Math.floor((e.clientX - chessboard.offsetLeft) / 100);
+      const gridY = Math.abs(Math.ceil((e.clientY- chessboard.offsetTop - 800) / 100));
+      // 移動した駒の位置
+      setGridX(gridX);
+      setGridY(gridY);
+
       const x = e.clientX - 50;
       const y = e.clientY - 50;
       element.style.position = "absolute";
       element.style.left = `${x}px`;
       element.style.top = `${y}px`;
 
-      activePiece = element;
+      setActivePiece(element);
     }
   }
 
@@ -59,8 +72,8 @@ export default function Chessboard() {
     if (activePiece && chessboard) {
       const minX = chessboard.offsetLeft - 25;
       const minY = chessboard.offsetTop - 25;
-      const maxX = chessboard.offsetLeft + chessboard.clientWidth -75;
-      const maxY = chessboard.offsetTop + chessboard.clientHeight -75;
+      const maxX = chessboard.offsetLeft + chessboard.clientWidth - 75;
+      const maxY = chessboard.offsetTop + chessboard.clientHeight - 75;
       const x = e.clientX - 50;
       const y = e.clientY - 50;
       activePiece.style.position = "absolute";
@@ -85,8 +98,28 @@ export default function Chessboard() {
   }
 
   function dropPiece(e: React.MouseEvent) {
-    if (activePiece) activePiece = null;
+    const chessboard = chessboardRef.current;
+
+    if (activePiece && chessboard) {
+      // 動かした後のコマの位置
+      const x = Math.floor((e.clientX - chessboard.offsetLeft) / 100);
+      const y = Math.abs(Math.ceil((e.clientY- chessboard.offsetTop - 800) / 100));
+      console.log(x, y);
+
+      setPieces(value => {
+        const pieces = value.map((p) => {
+          if (p.x === gridX && p.y === gridY) {
+            p.x = x;
+            p.y = y;
+          }
+          return p;
+        });
+        return pieces;
+      });
+      setActivePiece(null);
+    }
   }
+
   let board = [];
 
   for (let j = verticalAxis.length - 1; j >= 0 ; j--) {
