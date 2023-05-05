@@ -14,7 +14,9 @@ export default class Referee {
   }
 
   tileIsOccupiedByOpponent(x: number, y: number, boardState: Piece[], team: TeamType): boolean {
-    const piece = boardState.find((p) => p.x === x && p.y === y && p.team !== team);
+    const piece = boardState.find(
+      (p) => p.x === x && p.y === y && p.team !== team
+    );
 
     if (piece) {
       return true;
@@ -23,6 +25,32 @@ export default class Referee {
     }
   }
 
+  isEnPassantMove(
+    px: number,
+    py: number,
+    x: number,
+    y: number,
+    type: PieceType,
+    team: TeamType,
+    boardState: Piece[]
+  ) {
+    const pawnDirection = team === TeamType.OUR ? 1 : -1;
+
+    if (type === PieceType.PAWN) {
+      // Attack logic
+      // Attack in upper left / upper right / || bottom left / bottom right corner
+      if ((x - px === -1 && x - px === 1) && y - py === pawnDirection) {
+        const piece = boardState.find(
+          p => p.x === x && p.y === y - pawnDirection && p.enPassant// If a piece is under / above the attacked tile
+        );
+        if (piece) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
   isValidMove(
     px: number,
     py: number,

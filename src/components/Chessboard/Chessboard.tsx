@@ -14,7 +14,8 @@ export interface Piece {
   x: number,
   y: number,
   type: PieceType,
-  team: TeamType
+  team: TeamType,
+  enPassant?: boolean
 }
 
 export enum TeamType {
@@ -123,35 +124,69 @@ export default function Chessboard() {
       const x = Math.floor((e.clientX - chessboard.offsetLeft) / 100);
       const y = Math.abs(Math.ceil((e.clientY- chessboard.offsetTop - 800) / 100));
 
+      // gridX, gridY: コマの位置(not changing value)
       const currentPiece = pieces.find(p => p.x === gridX && p.y === gridY);
       const attackedPiece = pieces.find(p => p.x === x && p.y === y);
 
       if (currentPiece) {
         const validMove = referee.isValidMove(gridX, gridY, x, y, currentPiece.type, currentPiece.team, pieces)
 
-        if (validMove) {
-          // reduce()
-            // results: array of results
-            // piece: a single object from the initial array(= value), the current piece we're handling
-            const updatedPieces = pieces.reduce((results, piece) => {
-              if (piece.x === currentPiece.x && piece.y === currentPiece.y) {
-                piece.x = x;
-                piece.y = y;
-                results.push(piece);
-              } else if (!(piece.x === x && piece.y === y)) {
-                results.push(piece);
+        const isEnPassantMove = referee.isEnPassantMove(
+          gridX, gridY, x, y,
+          currentPiece.type, currentPiece.team, pieces
+        );
+
+        const pawnDirection = currentPiece.team === TeamType.OUR ? 1 : -1;
+
+        if (isEnPassantMove) {
+          const updatedPieces = pieces.reduce((results, piece) => {
+            if (piece.x === gridX && piece.y === gridY) {
+              piece.enPassant = false;
+              piece.x = x;
+              piece.y = y;
+              results.push(piece);
+            } else if (!(piece.x === x && piece.y === y - pawnDirection)) {
+              if (piece.type === PieceType.PAWN) {
+                piece.enPassant = false;
               }
-
-              return results;
-            }, [] as Piece[])
-
-          // コマの位置を更新する. And if a piece is attacked, remove it
+              results.push(piece);
+            }
+            return results;
+          }, [] as Piece[])
           setPieces(updatedPieces);
+        } else if (validMove) {
+        // reduce()
+          // results: array of results
+          // piece: a single object from the initial array(= value), the current piece we're handling
+          const updatedPieces = pieces.reduce((results, piece) => {
+            if (piece.x === gridX && piece.y === gridY) {
+              if (Math.abs(gridY - y) === 2 && piece.type === PieceType.PAWN) {
+                // special move
+                piece.enPassant = true;
+              } else{
+                piece.enPassant = false;
+              }
+              // x, y: 動かした後のコマの位置
+              piece.x = x;
+              piece.y = y;
+              results.push(piece);
+            } else if (!(piece.x === x && piece.y === y)) {
+              if (piece.type === PieceType.PAWN) {
+                piece.enPassant = false;
+              }
+              results.push(piece);
+            }
+
+            return results;
+          }, [] as Piece[])
+
+        // コマの位置を更新する. And if a piece is attacked, remove it
+        setPieces(updatedPieces);
         } else {
-          // 無効な移動だった場合、コマを元あった位置に戻す
-          activePiece.style.position = "relative";
-          activePiece.style.removeProperty('top');
-          activePiece.style.removeProperty('left');
+        // 無効な移動だった場合、コマを元あった位置に戻す
+        activePiece.style.position = "relative";
+        activePiece.style.removeProperty('top');
+        activePiece.style.removeProperty('left');
         }
       }
 
