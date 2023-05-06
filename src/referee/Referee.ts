@@ -1,11 +1,22 @@
-import { Piece, PieceType, TeamType, Position } from "../Constants";
+import { Piece, PieceType, TeamType, Position, samePosition } from "../Constants";
 
 // px, px: previous position
 // x, y: current position
 // type: コマの種類
 export default class Referee {
-  tileIsOccupied(x: number, y: number, boardState: Piece[]): boolean {
-    const piece = boardState.find(p => p.position.x === x && p.position.y === y)
+  tileIsEmptyOrOccupiedByOpponent(
+    position: Position,
+    boardState: Piece[],
+    team: TeamType
+  ): boolean {
+    return !this.tileIsOccupied(position, boardState) ||
+      this.tileIsOccupiedByOpponent(position, boardState, team)
+  }
+
+  tileIsOccupied(position: Position, boardState: Piece[]): boolean {
+    const piece = boardState.find(
+      p => samePosition(p.position, position)
+    )
     if (piece) {
       return true;
     } else {
@@ -13,9 +24,9 @@ export default class Referee {
     }
   }
 
-  tileIsOccupiedByOpponent(x: number, y: number, boardState: Piece[], team: TeamType): boolean {
+  tileIsOccupiedByOpponent(position: Position, boardState: Piece[], team: TeamType): boolean {
     const piece = boardState.find(
-      (p) => p.position.x === x && p.position.y === y && p.team !== team
+      (p) => samePosition(p.position, position) && p.team !== team
     );
 
     if (piece) {
@@ -67,14 +78,14 @@ export default class Referee {
       // Movement logic：はじめだけ、2マス進める
       if (initialPosition.x === desiredPosition.x && initialPosition.y === specialRow && desiredPosition.y - initialPosition.y === 2*pawnDirection) {
         if (
-          !this.tileIsOccupied(desiredPosition.x, desiredPosition.y, boardState) &&
-          !this.tileIsOccupied(desiredPosition.x, desiredPosition.y - pawnDirection, boardState)
+          !this.tileIsOccupied(desiredPosition, boardState) &&
+          !this.tileIsOccupied({x: desiredPosition.x, y: desiredPosition.y - pawnDirection}, boardState)
         ) {
           return true;
         }
       // move 1 square: Pawn needs to stay in the same column
       } else if (initialPosition.x === desiredPosition.x && desiredPosition.y - initialPosition.y === pawnDirection) {
-        if (!this.tileIsOccupied(desiredPosition.x, desiredPosition.y, boardState)) {
+        if (!this.tileIsOccupied(desiredPosition, boardState)) {
           return true;
         }
       }
@@ -82,17 +93,37 @@ export default class Referee {
       // Attack logic
       else if (desiredPosition.x - initialPosition.x === -1 && desiredPosition.y - initialPosition.y === pawnDirection) {
         // Attack in uper/bottom left corner
-        if (this.tileIsOccupiedByOpponent(desiredPosition.x, desiredPosition.y, boardState, team)) {
+        if (this.tileIsOccupiedByOpponent(desiredPosition, boardState, team)) {
           return true
         }
       }
       else if (desiredPosition.x - initialPosition.x === 1 && desiredPosition.y - initialPosition.y === pawnDirection) {
         // Attack in uper/bottom right corner
-        if (this.tileIsOccupiedByOpponent(desiredPosition.x, desiredPosition.y, boardState, team)) {
+        if (this.tileIsOccupiedByOpponent(desiredPosition, boardState, team)) {
           return true
         }
       }
 
+    } else if (type === PieceType.KNIGHT) {
+      // moving logic
+      // 8 different moving patterns
+      for (let i = -1; i < 2; i+=2) {
+        for (let j = -1; j < 2; j+=2) {
+          // Top & bottom side movement
+          if (desiredPosition.y - initialPosition.y === 2*i) {
+            if (desiredPosition.x - initialPosition.x === j) {
+              return this.tileIsEmptyOrOccupiedByOpponent(desiredPosition, boardState, team);
+            }
+          }
+
+          // Right / Left movement
+          if (desiredPosition.x - initialPosition.x === 2*i) {
+            if (desiredPosition.y - initialPosition.y === j) {
+              return this.tileIsEmptyOrOccupiedByOpponent(desiredPosition, boardState, team);
+            }
+          }
+        }
+      }
     }
 
     return false;
