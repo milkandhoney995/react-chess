@@ -252,44 +252,24 @@ export default class Referee {
   ): boolean {
 
     for (let i = 1; i < 8; i++) {
-      // Vertical
-      if (desiredPosition.x === initialPosition.x) {
-        let multiplier = (desiredPosition.y < initialPosition.y) ? -1 : 1;
 
-        let passedPosition: Position = {x: initialPosition.x, y:initialPosition.y + (i * multiplier)};
-        if (samePosition(passedPosition, desiredPosition)) {
-          if (this.tileIsEmptyOrOccupiedByOpponent(passedPosition, boardState, team)) { return true; }
-        } else {
-          if (this.tileIsOccupied(passedPosition, boardState)) { break; }
-        }
-      }
-      // Horizontal
-      if (desiredPosition.y === initialPosition.y) {
-        let multiplier = (desiredPosition.x < initialPosition.x) ? -1 : 1;
-        let passedPosition: Position = {x: initialPosition.x + (i * multiplier), y:initialPosition.y};
-        if (samePosition(passedPosition, desiredPosition)) {
-          if (this.tileIsEmptyOrOccupiedByOpponent(passedPosition, boardState, team)) { return true; }
-        } else {
-          if (this.tileIsOccupied(passedPosition, boardState)) { break; }
-        }
-      }
+      // Diagonal
+      let multiplierX; // Vertical multiplier
+      if (desiredPosition.x < initialPosition.x) { multiplierX = -1; }
+      else if (desiredPosition.x > initialPosition.x) { multiplierX = 1; }
+      else { multiplierX = 0; }
 
-      // Top right
-      if (desiredPosition.y > initialPosition.y  && desiredPosition.x > initialPosition.x) {
-        
-      }
-      // Bottom right
-      if (desiredPosition.y < initialPosition.y  && desiredPosition.x > initialPosition.x) {
-        console.log("moving bottom right!")
-      }
-      // Top left
-      if (desiredPosition.y > initialPosition.y  && desiredPosition.x < initialPosition.x) {
-        
-      }
-
-      // bottom left
-      if (desiredPosition.y < initialPosition.y  && desiredPosition.x < initialPosition.x) {
-        console.log("moving bottom left!")
+      let multiplierY; // Horizontal multiplier
+      if (desiredPosition.y < initialPosition.y) { multiplierY = -1; }
+      else if (desiredPosition.y > initialPosition.y) { multiplierY = 1; }
+      else { multiplierY = 0; }
+  
+      let passedPosition: Position = {x: initialPosition.x + (i * multiplierX), y: initialPosition.y + (i * multiplierY)};
+      // Check if the tile is the destination tile
+      if (samePosition(passedPosition, desiredPosition)) {
+        if (this.tileIsEmptyOrOccupiedByOpponent(passedPosition, boardState, team)) { return true; }
+      } else {
+        if (this.tileIsOccupied(passedPosition, boardState)) { break; }
       }
     }
     return false;
