@@ -145,7 +145,7 @@ export default class Referee {
       if (desiredPosition.x > initialPosition.x && desiredPosition.y > initialPosition.y) {
         let passedPosition: Position = {x: initialPosition.x + i, y: initialPosition.y + i};
         // Check if the tile is the destination tile
-        if (passedPosition.x === desiredPosition.x && passedPosition.y === desiredPosition.y) {
+        if (samePosition(passedPosition, desiredPosition)) {
           // dealing with the destination tile
           if (this.tileIsEmptyOrOccupiedByOpponent(passedPosition, boardState, team)) { return true; }
         } else {
@@ -158,7 +158,7 @@ export default class Referee {
       if (desiredPosition.x > initialPosition.x && desiredPosition.y < initialPosition.y) {
         let passedPosition: Position = {x: initialPosition.x + i, y: initialPosition.y - i};
         // Check if the tile is the destination tile
-        if (passedPosition.x === desiredPosition.x && passedPosition.y === desiredPosition.y) {
+        if (samePosition(passedPosition, desiredPosition)) {
           // dealing with the destination tile
           if (this.tileIsEmptyOrOccupiedByOpponent(passedPosition, boardState, team)) { return true; }
         } else {
@@ -174,7 +174,7 @@ export default class Referee {
       if (desiredPosition.x < initialPosition.x && desiredPosition.y < initialPosition.y) {
         let passedPosition: Position = {x: initialPosition.x - i, y: initialPosition.y - i};
         // Check if the tile is the destination tile
-        if (passedPosition.x === desiredPosition.x && passedPosition.y === desiredPosition.y) {
+        if (samePosition(passedPosition, desiredPosition)) {
           // dealing with the destination tile
           if (this.tileIsEmptyOrOccupiedByOpponent(passedPosition, boardState, team)) { return true; }
         } else {
@@ -189,7 +189,7 @@ export default class Referee {
       if (desiredPosition.x < initialPosition.x && desiredPosition.y > initialPosition.y) {
         let passedPosition: Position = {x: initialPosition.x - i, y: initialPosition.y + i};
         // Check if the tile is the destination tile
-        if (passedPosition.x === desiredPosition.x && passedPosition.y === desiredPosition.y) {
+        if (samePosition(passedPosition, desiredPosition)) {
           // dealing with the destination tile
           if (this.tileIsEmptyOrOccupiedByOpponent(passedPosition, boardState, team)) { return true; }
         } else {
@@ -217,7 +217,7 @@ export default class Referee {
         let multiplier = (desiredPosition.y < initialPosition.y) ? -1 : 1;
 
         let passedPosition: Position = {x: initialPosition.x, y: initialPosition.y + (i*multiplier)};
-        if (passedPosition.x === desiredPosition.x && passedPosition.y === desiredPosition.y) {
+        if (samePosition(passedPosition, desiredPosition)) {
           if (this.tileIsEmptyOrOccupiedByOpponent(passedPosition, boardState, team)) { return true; }
         } else {
           if (this.tileIsOccupied(passedPosition, boardState)) { break; }
@@ -231,7 +231,7 @@ export default class Referee {
         let multiplier = (desiredPosition.x < initialPosition.x) ? -1 : 1;
 
         let passedPosition: Position = {x: initialPosition.x + (i*multiplier), y: initialPosition.y};
-        if (passedPosition.x === desiredPosition.x && passedPosition.y === desiredPosition.y) {
+        if (samePosition(passedPosition, desiredPosition)) {
           if (this.tileIsEmptyOrOccupiedByOpponent(passedPosition, boardState, team)) { return true; }
           console.log("Arrive");
         } else {
@@ -240,6 +240,58 @@ export default class Referee {
       }
     }
 
+    return false;
+  }
+
+  // Queen movement is the combination of the rook and bishop ones.
+  queenMove(
+    initialPosition: Position,
+    desiredPosition: Position,
+    team: TeamType,
+    boardState: Piece[]
+  ): boolean {
+
+    for (let i = 1; i < 8; i++) {
+      // Vertical
+      if (desiredPosition.x === initialPosition.x) {
+        let multiplier = (desiredPosition.y < initialPosition.y) ? -1 : 1;
+
+        let passedPosition: Position = {x: initialPosition.x, y:initialPosition.y + (i * multiplier)};
+        if (samePosition(passedPosition, desiredPosition)) {
+          if (this.tileIsEmptyOrOccupiedByOpponent(passedPosition, boardState, team)) { return true; }
+        } else {
+          if (this.tileIsOccupied(passedPosition, boardState)) { break; }
+        }
+      }
+      // Horizontal
+      if (desiredPosition.y === initialPosition.y) {
+        let multiplier = (desiredPosition.x < initialPosition.x) ? -1 : 1;
+        let passedPosition: Position = {x: initialPosition.x + (i * multiplier), y:initialPosition.y};
+        if (samePosition(passedPosition, desiredPosition)) {
+          if (this.tileIsEmptyOrOccupiedByOpponent(passedPosition, boardState, team)) { return true; }
+        } else {
+          if (this.tileIsOccupied(passedPosition, boardState)) { break; }
+        }
+      }
+
+      // Top right
+      if (desiredPosition.y > initialPosition.y  && desiredPosition.x > initialPosition.x) {
+        
+      }
+      // Bottom right
+      if (desiredPosition.y < initialPosition.y  && desiredPosition.x > initialPosition.x) {
+        console.log("moving bottom right!")
+      }
+      // Top left
+      if (desiredPosition.y > initialPosition.y  && desiredPosition.x < initialPosition.x) {
+        
+      }
+
+      // bottom left
+      if (desiredPosition.y < initialPosition.y  && desiredPosition.x < initialPosition.x) {
+        console.log("moving bottom left!")
+      }
+    }
     return false;
   }
 
@@ -263,6 +315,13 @@ export default class Referee {
         break;
       case PieceType.ROOK:
         validMode = this.rookMove(initialPosition, desiredPosition, team, boardState);
+        break;
+      case PieceType.QUEEN:
+        validMode = this.queenMove(initialPosition, desiredPosition, team, boardState);
+        break;
+      case PieceType.KING:
+        validMode = this.queenMove(initialPosition, desiredPosition, team, boardState);
+        break;
     }
 
     return validMode;
