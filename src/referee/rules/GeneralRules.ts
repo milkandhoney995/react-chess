@@ -1,5 +1,9 @@
 import { Piece, Position, TeamType, samePosition } from "../../Constants";
 
+
+// px, px: previous position
+// x, y: current position
+// type: コマの種類
 export const tileIsOccupied = (
   position: Position, boardState: Piece[]
 ): boolean => {
@@ -25,4 +29,13 @@ export const tileIsOccupiedByOpponent = (
   } else {
     return false;
   }
+}
+
+export const tileIsEmptyOrOccupiedByOpponent = (
+  position: Position,
+  boardState: Piece[],
+  team: TeamType
+): boolean => {
+  return !tileIsOccupied(position, boardState) ||
+    tileIsOccupiedByOpponent(position, boardState, team)
 }
