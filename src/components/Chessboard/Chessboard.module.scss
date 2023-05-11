@@ -6,3 +6,34 @@
   height: 50rem;
   background-color: rgb(184, 184, 246);
 }
+
+.pawnPromotionModal {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  &__body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    top: calc(50% - 150px);
+    left: calc(50% - 400px);
+    width: 50rem;
+    height: 25rem;
+    background: rgb(127, 127, 127, 0.8);
+  }
+  &__body > img {
+    padding: 1rem;
+  }
+  &__body > img:hover {
+    background-color: rgb(255, 255, 255, 0.3);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+}
+
+.pawnPromotionModal.hidden {
+  display: none;
+}
