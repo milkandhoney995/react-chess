@@ -1,5 +1,5 @@
 import { Piece, TeamType, Position, samePosition } from "../../Constants";
-import { tileIsEmptyOrOccupiedByOpponent, tileIsOccupied } from "../rules/GeneralRules";
+import { tileIsEmptyOrOccupiedByOpponent, tileIsOccupied, tileIsOccupiedByOpponent } from "../rules/GeneralRules";
 
 export const bishopMove = (
   initialPosition: Position,
@@ -70,4 +70,64 @@ export const bishopMove = (
     }
   }
   return false;
+}
+
+export const getPossibleBishopMoves = (
+  bishop: Piece, boardstate: Piece[]
+): Position[] => {
+  const possibleMoves: Position[] = [];
+
+  // Up right
+  for (let i = 1; i < 8; i++) {
+   const destination: Position = { x: bishop.position.x + i, y: bishop.position.y + i };
+   if (!tileIsOccupied(destination, boardstate)) {
+    possibleMoves.push(destination)
+   } else if (tileIsOccupiedByOpponent(destination, boardstate, bishop.team)) {
+    possibleMoves.push(destination);
+    break;
+   } else {
+    break;
+   }
+ }
+
+  // Bottom right
+  for (let i = 1; i < 8; i++) {
+   const destination: Position = { x: bishop.position.x + i, y: bishop.position.y - i };
+   if (!tileIsOccupied(destination, boardstate)) {
+    possibleMoves.push(destination)
+   } else if (tileIsOccupiedByOpponent(destination, boardstate, bishop.team)) {
+    possibleMoves.push(destination);
+    break;
+   } else {
+    break;
+   }
+ }
+
+  // Bottom Left
+  for (let i = 1; i < 8; i++) {
+   const destination: Position = { x: bishop.position.x - i, y: bishop.position.y - i };
+   if (!tileIsOccupied(destination, boardstate)) {
+    possibleMoves.push(destination)
+   } else if (tileIsOccupiedByOpponent(destination, boardstate, bishop.team)) {
+    possibleMoves.push(destination);
+    break;
+   } else {
+    break;
+   }
+ }
+
+  // Up left
+  for (let i = 1; i < 8; i++) {
+   const destination: Position = { x: bishop.position.x - i, y: bishop.position.y + i };
+   if (!tileIsOccupied(destination, boardstate)) {
+    possibleMoves.push(destination)
+   } else if (tileIsOccupiedByOpponent(destination, boardstate, bishop.team)) {
+    possibleMoves.push(destination);
+    break;
+   } else {
+    break;
+   }
+ }
+
+  return possibleMoves;
 }

@@ -1,14 +1,15 @@
 import { Piece, TeamType, Position, samePosition } from "../../Constants";
-import { tileIsEmptyOrOccupiedByOpponent, tileIsOccupied, tileIsOccupiedByOpponent } from "./GeneralRules";
+import { tileIsEmptyOrOccupiedByOpponent, tileIsOccupied, tileIsOccupiedByOpponent } from "../rules/GeneralRules";
 
-export const kingMove = (
+ // Queen movement is the combination of the rook and bishop ones.
+export const queenMove = (
   initialPosition: Position,
   desiredPosition: Position,
   team: TeamType,
   boardState: Piece[]
 ): boolean => {
-  // Kingは1コマしか動けない
-  for (let i = 1; i < 2; i++) {
+
+  for (let i = 1; i < 8; i++) {
     // Diagonal
     let multiplierX = (desiredPosition.x < initialPosition.x) ? -1 : (desiredPosition.x > initialPosition.x) ? 1 : 0;
     let multiplierY = (desiredPosition.y < initialPosition.y) ? -1 : (desiredPosition.y > initialPosition.y) ? 1 : 0;
@@ -24,19 +25,19 @@ export const kingMove = (
   return false;
 }
 
-export const getPossibleKingMoves = (
-  king: Piece, boardstate: Piece[]
+export const getPossibleQueenMoves = (
+  queen: Piece, boardstate: Piece[]
 ): Position[] => {
   const possibleMoves: Position[] = [];
 
-  // Copied from QueenRule
+  // Copied from RookRule
   // top movement
-  for (let i = 1; i < 2; i++) {
-    const destination: Position = { x: king.position.x, y: king.position.y + i };
+  for (let i = 1; i < 8; i++) {
+    const destination: Position = { x: queen.position.x, y: queen.position.y + i };
 
     if (!tileIsOccupied(destination, boardstate)) {
       possibleMoves.push(destination)
-     } else if (tileIsOccupiedByOpponent(destination, boardstate, king.team)) {
+     } else if (tileIsOccupiedByOpponent(destination, boardstate, queen.team)) {
       possibleMoves.push(destination);
       break;
      } else {
@@ -45,12 +46,12 @@ export const getPossibleKingMoves = (
   }
 
   // Bottom movement
-  for (let i = 1; i < 2; i++) {
-    const destination: Position = { x: king.position.x, y: king.position.y - i };
+  for (let i = 1; i < 8; i++) {
+    const destination: Position = { x: queen.position.x, y: queen.position.y - i };
 
     if (!tileIsOccupied(destination, boardstate)) {
       possibleMoves.push(destination)
-     } else if (tileIsOccupiedByOpponent(destination, boardstate, king.team)) {
+     } else if (tileIsOccupiedByOpponent(destination, boardstate, queen.team)) {
       possibleMoves.push(destination);
       break;
      } else {
@@ -59,12 +60,12 @@ export const getPossibleKingMoves = (
   }
 
   // Left movement
-  for (let i = 1; i < 2; i++) {
-    const destination: Position = { x: king.position.x - i, y: king.position.y };
+  for (let i = 1; i < 8; i++) {
+    const destination: Position = { x: queen.position.x - i, y: queen.position.y };
 
     if (!tileIsOccupied(destination, boardstate)) {
       possibleMoves.push(destination)
-     } else if (tileIsOccupiedByOpponent(destination, boardstate, king.team)) {
+     } else if (tileIsOccupiedByOpponent(destination, boardstate, queen.team)) {
       possibleMoves.push(destination);
       break;
      } else {
@@ -73,12 +74,12 @@ export const getPossibleKingMoves = (
   }
 
   // Right movement
-  for (let i = 1; i < 2; i++) {
-    const destination: Position = { x: king.position.x + i, y: king.position.y };
+  for (let i = 1; i < 8; i++) {
+    const destination: Position = { x: queen.position.x + i, y: queen.position.y };
 
     if (!tileIsOccupied(destination, boardstate)) {
       possibleMoves.push(destination)
-     } else if (tileIsOccupiedByOpponent(destination, boardstate, king.team)) {
+     } else if (tileIsOccupiedByOpponent(destination, boardstate, queen.team)) {
       possibleMoves.push(destination);
       break;
      } else {
@@ -86,12 +87,13 @@ export const getPossibleKingMoves = (
      }
   }
 
+  // Copied from BishopRule
   // Up right
-  for (let i = 1; i < 2; i++) {
-    const destination: Position = { x: king.position.x + i, y: king.position.y + i };
+  for (let i = 1; i < 8; i++) {
+    const destination: Position = { x: queen.position.x + i, y: queen.position.y + i };
     if (!tileIsOccupied(destination, boardstate)) {
      possibleMoves.push(destination)
-    } else if (tileIsOccupiedByOpponent(destination, boardstate, king.team)) {
+    } else if (tileIsOccupiedByOpponent(destination, boardstate, queen.team)) {
      possibleMoves.push(destination);
      break;
     } else {
@@ -100,11 +102,11 @@ export const getPossibleKingMoves = (
   }
  
    // Bottom right
-   for (let i = 1; i < 2; i++) {
-    const destination: Position = { x: king.position.x + i, y: king.position.y - i };
+   for (let i = 1; i < 8; i++) {
+    const destination: Position = { x: queen.position.x + i, y: queen.position.y - i };
     if (!tileIsOccupied(destination, boardstate)) {
      possibleMoves.push(destination)
-    } else if (tileIsOccupiedByOpponent(destination, boardstate, king.team)) {
+    } else if (tileIsOccupiedByOpponent(destination, boardstate, queen.team)) {
      possibleMoves.push(destination);
      break;
     } else {
@@ -113,11 +115,11 @@ export const getPossibleKingMoves = (
   }
  
    // Bottom Left
-   for (let i = 1; i < 2; i++) {
-    const destination: Position = { x: king.position.x - i, y: king.position.y - i };
+   for (let i = 1; i < 8; i++) {
+    const destination: Position = { x: queen.position.x - i, y: queen.position.y - i };
     if (!tileIsOccupied(destination, boardstate)) {
      possibleMoves.push(destination)
-    } else if (tileIsOccupiedByOpponent(destination, boardstate, king.team)) {
+    } else if (tileIsOccupiedByOpponent(destination, boardstate, queen.team)) {
      possibleMoves.push(destination);
      break;
     } else {
@@ -126,11 +128,11 @@ export const getPossibleKingMoves = (
   }
  
    // Up left
-   for (let i = 1; i < 2; i++) {
-    const destination: Position = { x: king.position.x - i, y: king.position.y + i };
+   for (let i = 1; i < 8; i++) {
+    const destination: Position = { x: queen.position.x - i, y: queen.position.y + i };
     if (!tileIsOccupied(destination, boardstate)) {
      possibleMoves.push(destination)
-    } else if (tileIsOccupiedByOpponent(destination, boardstate, king.team)) {
+    } else if (tileIsOccupiedByOpponent(destination, boardstate, queen.team)) {
      possibleMoves.push(destination);
      break;
     } else {
