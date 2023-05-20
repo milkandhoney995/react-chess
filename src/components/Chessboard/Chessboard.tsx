@@ -11,20 +11,17 @@ import {
   samePosition } from "../../Constants"
 
 interface Props {
-  updatePossibleMoves: () => void;
   playMove: (piece: Piece, position: Position) => boolean;
   pieces: Piece[]
 }
 
-export default function Chessboard({updatePossibleMoves, playMove, pieces}: Props) {
+export default function Chessboard({playMove, pieces}: Props) {
   const [activePiece, setActivePiece] = useState<HTMLElement | null>(null)
   const [grabPosition, setGrabPosition] = useState<Position>({x: -1, y: -1});
-  // const [pieces, setPieces] = useState<Piece[]>(initialBoardState);
   const chessboardRef = useRef<HTMLDivElement>(null);
 
 
   function grabPiece(e: React.MouseEvent) {
-    updatePossibleMoves();
     const element = e.target as HTMLElement;
     const chessboard = chessboardRef.current;
 
@@ -112,7 +109,7 @@ export default function Chessboard({updatePossibleMoves, playMove, pieces}: Prop
 
   for (let j = VERTICAL_AXIS.length - 1; j >= 0 ; j--) {
     for (let i = 0; i < HORIZONTAL_AXIS.length; i++) {
-      const number = j + i;
+      const number = j + i + 2;
       const piece = pieces.find(p => samePosition(p.position, {x: i, y: j}));
       let image = piece ? piece.image : undefined;
 

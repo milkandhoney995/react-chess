@@ -22,11 +22,19 @@
       cursor: grabbing;
     }
   }
-  &__highlight::before {
+  &__highlight:not(.tile__pieceImage)::before {
     content: " ";
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 6.25rem;
+    height: 6.25rem;
     border-radius: 50%;
     background-color: rgb(0, 0, 0, 0.4);
+  }
+  &__highlight.tile__pieceImage::before {
+    position: absolute;
+    content: " ";
+    width: 6.25rem;
+    height: 6.25rem;
+    border-radius: 50%;
+    border: 5px solid rgb(0, 0, 0, 0.4);
   }
 }
