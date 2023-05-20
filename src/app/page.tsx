@@ -1,10 +1,10 @@
 import styles from './page.module.scss'
-import Chessboard from '../components/Chessboard/Chessboard';
+import Referee from '@/components/Referee/referee';
 
 export default function Home() {
   return (
     <main className={styles.main}>
-      <Chessboard />
+      <Referee />
     </main>
   )
 }
