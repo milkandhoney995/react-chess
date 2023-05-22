@@ -1,6 +1,6 @@
 import { Piece, Position } from "@/models";
-import { TeamType, samePosition } from "../../Constants";
 import { tileIsEmptyOrOccupiedByOpponent, tileIsOccupied, tileIsOccupiedByOpponent } from "../rules/GeneralRules";
+import { TeamType } from "@/Types";
 
  // Queen movement is the combination of the rook and bishop ones.
 export const queenMove = (
@@ -17,7 +17,7 @@ export const queenMove = (
 
     let passedPosition = new Position(initialPosition.x + (i * multiplierX), initialPosition.y + (i * multiplierY));
     // Check if the tile is the destination tile
-    if (samePosition(passedPosition, desiredPosition)) {
+    if (passedPosition.samePosition(desiredPosition)) {
       if (tileIsEmptyOrOccupiedByOpponent(passedPosition, boardState, team)) { return true; }
     } else {
       if (tileIsOccupied(passedPosition, boardState)) { break; }

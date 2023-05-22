@@ -7,8 +7,7 @@ import { useRef, useState } from "react";
 import {
   VERTICAL_AXIS,
   HORIZONTAL_AXIS,
-  GRID_SIZE,
-  samePosition } from "../../Constants"
+  GRID_SIZE } from "../../Constants"
 import { Piece, Position } from "@/models";
 
 interface Props {
@@ -86,7 +85,7 @@ export default function Chessboard({playMove, pieces}: Props) {
       const y = Math.abs(Math.ceil((e.clientY- chessboard.offsetTop - 800) / GRID_SIZE));
 
       // grabX, grabY: コマの位置(not changing value)
-      const currentPiece = pieces.find(p => samePosition(p.position, grabPosition));
+      const currentPiece = pieces.find(p => p.samePosition(grabPosition));
 
       if (currentPiece) {
         let success = playMove(currentPiece, new Position(x, y));
@@ -108,15 +107,15 @@ export default function Chessboard({playMove, pieces}: Props) {
   for (let j = VERTICAL_AXIS.length - 1; j >= 0 ; j--) {
     for (let i = 0; i < HORIZONTAL_AXIS.length; i++) {
       const number = j + i + 2;
-      const piece = pieces.find(p => samePosition(p.position, new Position(i, j)));
+      const piece = pieces.find(p => p.samePosition(new Position(i, j)));
       let image = piece ? piece.image : undefined;
 
-      let currentPiece = activePiece !== null ? pieces.find(p => samePosition(p.position, grabPosition)) : undefined;
+      let currentPiece = activePiece !== null ? pieces.find(p => p.samePosition(grabPosition)) : undefined;
       // some()
       // Determines whether the specified callback function returns true for any element of an array.
       // @param predicate
       let highlight = currentPiece?.possibleMoves ?
-      currentPiece.possibleMoves.some(p => samePosition(p, new Position(i, j))) : false;
+      currentPiece.possibleMoves.some(p => p.samePosition(new Position(i, j))) : false;
 
       board.push(<Tile key={`${j}, ${i}`} image={image} number={number} highlight={highlight} />)
     }
