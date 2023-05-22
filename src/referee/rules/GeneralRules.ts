@@ -1,5 +1,5 @@
-import { Piece, Position, TeamType, samePosition } from "../../Constants";
-
+import { Piece, Position } from "@/models";
+import { TeamType, samePosition } from "../../Constants";
 
 // px, px: previous position
 // x, y: current position

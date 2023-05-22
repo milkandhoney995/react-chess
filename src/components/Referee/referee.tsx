@@ -1,10 +1,11 @@
 'use client';
 import { useEffect, useRef, useState } from "react";
-import { Position, Piece, initialBoardState, PieceType, TeamType, samePosition } from "@/Constants";
+import { initialBoardState, PieceType, TeamType, samePosition } from "@/Constants";
 import Chessboard from "../Chessboard/Chessboard"
 import { bishopMove, getPossibleBishopMoves, getPossibleKingMoves, getPossibleKnightMoves, getPossiblePawnMoves, getPossibleQueenMoves, getPossibleRookMoves, kingMove, knightMove, pawnMove, queenMove, rookMove } from "@/referee/rules";
 import boardClasses from "../Chessboard/Chessboard.module.scss"
 import Image from "next/image";
+import { Piece, Position } from "@/models";
 
 
 
@@ -50,7 +51,7 @@ export default function Referee() {
           piece.position.x = destination.x;
           piece.position.y = destination.y;
           results.push(piece);
-        } else if (!samePosition(piece.position, { x: destination.x, y: destination.y - pawnDirection})) {
+        } else if (!samePosition(piece.position, new Position(destination.x, destination.y - pawnDirection) )) {
           if (piece.type === PieceType.PAWN) {
             piece.enPassant = false;
           }
@@ -83,7 +84,7 @@ export default function Referee() {
           setPromotionPawn(piece);
         }
         results.push(piece);
-      } else if (!samePosition(piece.position, {x: destination.x, y: destination.y})) {
+      } else if (!samePosition(piece.position, new Position(destination.x, destination.y))) {
         if (piece.type === PieceType.PAWN) {
           piece.enPassant = false;
         }

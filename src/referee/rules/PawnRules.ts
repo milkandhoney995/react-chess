@@ -1,4 +1,5 @@
-import { Piece, TeamType, Position, samePosition, PieceType } from "../../Constants";
+import { Piece, Position } from "@/models";
+import { TeamType, samePosition } from "../../Constants";
 import { tileIsOccupied, tileIsOccupiedByOpponent } from "../rules/GeneralRules";
 
 export const pawnMove = (
@@ -14,7 +15,7 @@ export const pawnMove = (
   if (initialPosition.x === desiredPosition.x && initialPosition.y === specialRow && desiredPosition.y - initialPosition.y === 2*pawnDirection) {
     if (
       !tileIsOccupied(desiredPosition, boardState) &&
-      !tileIsOccupied({x: desiredPosition.x, y: desiredPosition.y - pawnDirection}, boardState)
+      !tileIsOccupied(new Position(desiredPosition.x, desiredPosition.y - pawnDirection), boardState)
     ) {
       return true;
     }
@@ -47,12 +48,12 @@ export const getPossiblePawnMoves = (pawn: Piece, boardState: Piece[]): Position
   const specialRow = (pawn.team === TeamType.OUR) ? 1 : 6;
   const pawnDirection = pawn.team === TeamType.OUR ? 1 : -1;
 
-  const normalMove: Position = { x: pawn.position.x, y: pawn.position.y + pawnDirection };
-  const specialMove: Position = { x: normalMove.x, y: normalMove.y + pawnDirection };
-  const upperLeftAttack: Position = { x: pawn.position.x - 1, y: pawn.position.y};
-  const upperRightAttack: Position = { x: pawn.position.x + 1, y: pawn.position.y};
-  const leftPosition: Position = { x: pawn.position.x - 1, y: pawn.position.y }
-  const rightPosition: Position = { x: pawn.position.x + 1, y: pawn.position.y }
+  const normalMove = new Position(pawn.position.x, pawn.position.y + pawnDirection);
+  const specialMove = new Position(normalMove.x, normalMove.y + pawnDirection);
+  const upperLeftAttack = new Position(pawn.position.x - 1, pawn.position.y);
+  const upperRightAttack = new Position(pawn.position.x + 1, pawn.position.y);
+  const leftPosition = new Position(pawn.position.x - 1, pawn.position.y)
+  const rightPosition = new Position(pawn.position.x + 1, pawn.position.y)
 
   if (tileIsOccupied(normalMove, boardState)) {
       // push new position

@@ -1,4 +1,5 @@
-import { Piece, TeamType, Position, samePosition } from "../../Constants";
+import { Piece, Position } from "@/models";
+import { TeamType, samePosition } from "../../Constants";
 import { tileIsEmptyOrOccupiedByOpponent, tileIsOccupied, tileIsOccupiedByOpponent } from "../rules/GeneralRules";
 
  // Queen movement is the combination of the rook and bishop ones.
@@ -14,7 +15,7 @@ export const queenMove = (
     let multiplierX = (desiredPosition.x < initialPosition.x) ? -1 : (desiredPosition.x > initialPosition.x) ? 1 : 0;
     let multiplierY = (desiredPosition.y < initialPosition.y) ? -1 : (desiredPosition.y > initialPosition.y) ? 1 : 0;
 
-    let passedPosition: Position = {x: initialPosition.x + (i * multiplierX), y: initialPosition.y + (i * multiplierY)};
+    let passedPosition = new Position(initialPosition.x + (i * multiplierX), initialPosition.y + (i * multiplierY));
     // Check if the tile is the destination tile
     if (samePosition(passedPosition, desiredPosition)) {
       if (tileIsEmptyOrOccupiedByOpponent(passedPosition, boardState, team)) { return true; }
@@ -33,7 +34,7 @@ export const getPossibleQueenMoves = (
   // Copied from RookRule
   // top movement
   for (let i = 1; i < 8; i++) {
-    const destination: Position = { x: queen.position.x, y: queen.position.y + i };
+    const destination = new Position(queen.position.x, queen.position.y + i);
 
     if (!tileIsOccupied(destination, boardstate)) {
       possibleMoves.push(destination)
@@ -47,7 +48,7 @@ export const getPossibleQueenMoves = (
 
   // Bottom movement
   for (let i = 1; i < 8; i++) {
-    const destination: Position = { x: queen.position.x, y: queen.position.y - i };
+    const destination = new Position(queen.position.x, queen.position.y - i);
 
     if (!tileIsOccupied(destination, boardstate)) {
       possibleMoves.push(destination)
@@ -61,7 +62,7 @@ export const getPossibleQueenMoves = (
 
   // Left movement
   for (let i = 1; i < 8; i++) {
-    const destination: Position = { x: queen.position.x - i, y: queen.position.y };
+    const destination = new Position(queen.position.x - i, queen.position.y);
 
     if (!tileIsOccupied(destination, boardstate)) {
       possibleMoves.push(destination)
@@ -75,7 +76,7 @@ export const getPossibleQueenMoves = (
 
   // Right movement
   for (let i = 1; i < 8; i++) {
-    const destination: Position = { x: queen.position.x + i, y: queen.position.y };
+    const destination = new Position(queen.position.x + i, queen.position.y);
 
     if (!tileIsOccupied(destination, boardstate)) {
       possibleMoves.push(destination)
@@ -90,7 +91,7 @@ export const getPossibleQueenMoves = (
   // Copied from BishopRule
   // Up right
   for (let i = 1; i < 8; i++) {
-    const destination: Position = { x: queen.position.x + i, y: queen.position.y + i };
+    const destination = new Position(queen.position.x + i, queen.position.y + i);
     if (!tileIsOccupied(destination, boardstate)) {
      possibleMoves.push(destination)
     } else if (tileIsOccupiedByOpponent(destination, boardstate, queen.team)) {
@@ -103,7 +104,7 @@ export const getPossibleQueenMoves = (
  
    // Bottom right
    for (let i = 1; i < 8; i++) {
-    const destination: Position = { x: queen.position.x + i, y: queen.position.y - i };
+    const destination = new Position(queen.position.x + i, queen.position.y - i);
     if (!tileIsOccupied(destination, boardstate)) {
      possibleMoves.push(destination)
     } else if (tileIsOccupiedByOpponent(destination, boardstate, queen.team)) {
@@ -116,7 +117,7 @@ export const getPossibleQueenMoves = (
  
    // Bottom Left
    for (let i = 1; i < 8; i++) {
-    const destination: Position = { x: queen.position.x - i, y: queen.position.y - i };
+    const destination = new Position(queen.position.x - i, queen.position.y - i);
     if (!tileIsOccupied(destination, boardstate)) {
      possibleMoves.push(destination)
     } else if (tileIsOccupiedByOpponent(destination, boardstate, queen.team)) {
@@ -129,7 +130,7 @@ export const getPossibleQueenMoves = (
  
    // Up left
    for (let i = 1; i < 8; i++) {
-    const destination: Position = { x: queen.position.x - i, y: queen.position.y + i };
+    const destination = new Position(queen.position.x - i, queen.position.y + i);
     if (!tileIsOccupied(destination, boardstate)) {
      possibleMoves.push(destination)
     } else if (tileIsOccupiedByOpponent(destination, boardstate, queen.team)) {
