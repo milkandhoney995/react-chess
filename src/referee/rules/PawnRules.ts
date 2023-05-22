@@ -51,8 +51,8 @@ export const getPossiblePawnMoves = (pawn: Piece, boardState: Piece[]): Position
 
   const normalMove = new Position(pawn.position.x, pawn.position.y + pawnDirection);
   const specialMove = new Position(normalMove.x, normalMove.y + pawnDirection);
-  const upperLeftAttack = new Position(pawn.position.x - 1, pawn.position.y);
-  const upperRightAttack = new Position(pawn.position.x + 1, pawn.position.y);
+  const upperLeftAttack = new Position(pawn.position.x - 1, pawn.position.y + pawnDirection);
+  const upperRightAttack = new Position(pawn.position.x + 1, pawn.position.y + pawnDirection);
   const leftPosition = new Position(pawn.position.x - 1, pawn.position.y)
   const rightPosition = new Position(pawn.position.x + 1, pawn.position.y)
 
