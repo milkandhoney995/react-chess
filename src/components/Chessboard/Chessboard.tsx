@@ -85,10 +85,15 @@ export default function Chessboard({playMove, pieces}: Props) {
       const y = Math.abs(Math.ceil((e.clientY- chessboard.offsetTop - 800) / GRID_SIZE));
 
       // grabX, grabY: コマの位置(not changing value)
-      const currentPiece = pieces.find(p => p.samePosition(grabPosition));
+      const currentPiece = pieces.find(p =>
+        p.samePosition(grabPosition)
+      );
 
       if (currentPiece) {
-        let success = playMove(currentPiece, new Position(x, y));
+        let success = playMove(
+          currentPiece.clone(), // not to update playedPiece.position in Board.tsx
+          new Position(x, y)
+        );
 
         if (!success) {
           // 無効な移動だった場合、コマを元あった位置に戻す

@@ -12,11 +12,13 @@ export class Piece {
     position: Position,
     type: PieceType,
     team: TeamType,
+    possibleMoves: Position[] = []
   ) {
     this.image = `assets/images/${type}_${team}.png`;
     this.position = position;
     this.type = type;
     this.team = team;
+    this.possibleMoves =  possibleMoves;
   }
 
   // getをつけると、()がいらないパラメーターになる
@@ -45,5 +47,14 @@ export class Piece {
 
   samePosition(otherPosition: Position): boolean {
     return this.position.samePosition(otherPosition);
+  }
+
+  clone(): Piece {
+    return new Piece(
+      this.position.clone(), // not to update playedPiece.position in Board.tsx
+      this.type,
+      this.team,
+      this.possibleMoves?.map(m => m.clone())
+    )
   }
 }
