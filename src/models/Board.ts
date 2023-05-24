@@ -34,16 +34,18 @@ export class Board {
   }
 
   checkCurrentTeamMoves() {
-    // Loop through all the curent team's pieces
+        // Loop through all the current team's pieces
     for (const piece of this.pieces.filter(p => p.team === this.currentTeam)) {
       if (piece.possibleMoves === undefined) continue;
+
+            // Simulate all the piece moves
       for (const move of piece.possibleMoves) {
         const simulatedBoard = this.clone();
 
         // Remove the piece at the destination position
         simulatedBoard.pieces = simulatedBoard.pieces.filter(p => !p.samePosition(move));
 
-        // Simulate all the piece moves
+                // Get the piece of the cloned board
         const clonedPiece = simulatedBoard.pieces.find(p => p.samePiecePosition(piece))!;
         clonedPiece.position = move.clone();
 
@@ -53,7 +55,7 @@ export class Board {
         // Loop through all enemy pieces, update their possible moves
         // And check if the current team's king will be in danger
         for (const enemy of simulatedBoard.pieces.filter(p => p.team !== simulatedBoard.currentTeam)) {
-          enemy.possibleMoves = simulatedBoard.getValidMoves(enemy, simulatedBoard.pieces)
+          enemy.possibleMoves = simulatedBoard.getValidMoves(enemy, simulatedBoard.pieces);
 
           if (enemy.isPawn) {
             if (enemy.possibleMoves.some(m => m.x !== enemy.position.x
@@ -61,7 +63,7 @@ export class Board {
                 piece.possibleMoves = piece.possibleMoves?.filter(m => !m.samePosition(move));
             }
           } else {
-            if (enemy.possibleMoves.some(m=> m.samePosition(clonedKing.position))) {
+            if (enemy.possibleMoves.some(m => m.samePosition(clonedKing.position))) {
                 piece.possibleMoves = piece.possibleMoves?.filter(m => !m.samePosition(move));
             }
           }
@@ -71,8 +73,7 @@ export class Board {
   }
 
   getValidMoves(piece: Piece, boardState: Piece[]): Position[] {
-    switch(piece.type)
-    {
+    switch (piece.type) {
       case PieceType.PAWN:
         return getPossiblePawnMoves(piece, boardState);
       case PieceType.KNIGHT:
@@ -103,32 +104,37 @@ export class Board {
         if (piece.samePiecePosition(playedPiece)) {
           if (piece.isPawn) {
             (piece as Pawn).enPassant = false;
-          }
+        }
           piece.position.x = destination.x;
           piece.position.y = destination.y;
           results.push(piece);
-        } else if (!piece.samePosition(new Position(destination.x, destination.y - pawnDirection) )) {
+        } else if (
+          !piece.samePosition(new Position(destination.x, destination.y - pawnDirection))
+        ) {
           if (piece.isPawn) {
             (piece as Pawn).enPassant = false;
           }
           results.push(piece);
         }
+
         return results;
-      }, [] as Piece[])
+      }, [] as Piece[]);
 
       this.calculateAllMoves();
     } else if (validMove) {
     // reduce()
     // results: array of results
     // piece: a single object from the initial array(= value), the current piece we're handling
+    //UPDATES THE PIECE POSITION
+    //AND IF A PIECE IS ATTACKED, REMOVES IT
     this.pieces = this.pieces.reduce((results, piece) => {
       // Piece that we're currently moving
       if (piece.samePiecePosition(playedPiece)) {
-        // Special move
-        if (piece.isPawn) {
-          (piece as Pawn).enPassant = Math.abs(playedPiece.position.y - destination.y) === 2
-        }
-
+      //SPECIAL MOVE
+      if (piece.isPawn)
+        (piece as Pawn).enPassant =
+          Math.abs(playedPiece.position.y - destination.y) === 2 &&
+          piece.type === PieceType.PAWN;
         // x, y: 動かした後のコマの位置
         piece.position.x = destination.x;
         piece.position.y = destination.y;
@@ -142,11 +148,10 @@ export class Board {
       }
 
       // The piece at the destination location
-      // won't be pushed in the results
+      // Won't be pushed in the results
       return results;
-    }, [] as Piece[])
+    }, [] as Piece[]);
 
-    // コマの位置を更新する. And if a piece is attacked, remove it
     this.calculateAllMoves();
     } else {
       return false;
@@ -157,8 +162,6 @@ export class Board {
 
   clone(): Board {
     return new Board(this.pieces.map(p => p.clone()),
-     this.totalTurns)
-    // NG: return Board we're currently in.
-    // return this;
+      this.totalTurns);
   }
  }
