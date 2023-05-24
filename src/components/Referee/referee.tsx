@@ -18,17 +18,19 @@ export default function Referee() {
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    updatePossibleMoves();
+    board.calculateAllMoves;
   }, []);
 
-  function updatePossibleMoves() {
-    board.calculateAllMoves;
-  }
+  function playMove(playedPiece: Piece, destination: Position): boolean {
+    // If the playing piece doesn't have any moves return
+    if (playedPiece.possibleMoves === undefined) return false;
 
-  function playMove(
-    playedPiece: Piece,
-    destination: Position
-  ): boolean {
+    // Prevent the inactive team from playing
+    if (playedPiece.team === TeamType.OUR
+         && board.totalTurns % 2 !== 1) return false;
+
+    if (playedPiece.team === TeamType.OPPONENT
+         && board.totalTurns % 2 !== 0) return false;
     let playedMoveIsValid = false;
 
     const validMove = isValidMove(
@@ -39,6 +41,7 @@ export default function Referee() {
     )
 
     if (!validMove) return false;
+
     const enPassantMove = isEnPassantMove(
       playedPiece.position,
       destination,
@@ -47,14 +50,17 @@ export default function Referee() {
     );
 
     // Playmove modifies the board thus we need to call setBoard
-    setBoard((previousBpard) => {
+    setBoard((previousBoard) => {
+      const clonedBoard = board.clone();
+      clonedBoard.totalTurns += 1;
       // Playing the move
       // この書き方をすると、Reactがboardは同じオブジェクトであると認識するのでNG
       // board.playMove(enPassantMove,
       //   validMove, playedPiece, destination);
       // return board;
       playedMoveIsValid = board.playMove(enPassantMove,
-        validMove, playedPiece, destination);
+        validMove, playedPiece,
+        destination);
 
       return board.clone();
     })
@@ -159,6 +165,7 @@ export default function Referee() {
 
   return (
     <>
+    <p style={{fontSize: "1.5rem"}}>{board.totalTurns}</p>
       <div className={`${boardClasses.pawnPromotionModal} ${boardClasses.hidden}`} ref={modalRef}>
         <div className={boardClasses.pawnPromotionModal__body}>
           <Image onClick={() => promotePawn(PieceType.ROOK)} src={`/assets/images/rook_${promotionTeamType()}.png`} width={100} height={100} alt="debug" />
