@@ -27,10 +27,9 @@ export default function Referee() {
 
     // Prevent the inactive team from playing
     if (playedPiece.team === TeamType.OUR
-         && board.totalTurns % 2 !== 1) return false;
-
-    if (playedPiece.team === TeamType.OPPONENT
-         && board.totalTurns % 2 !== 0) return false;
+      && board.totalTurns % 2 !== 1) return false;
+  if (playedPiece.team === TeamType.OPPONENT
+      && board.totalTurns % 2 !== 0) return false;
     let playedMoveIsValid = false;
 
     const validMove = isValidMove(
@@ -58,7 +57,7 @@ export default function Referee() {
       // board.playMove(enPassantMove,
       //   validMove, playedPiece, destination);
       // return board;
-      playedMoveIsValid = board.playMove(enPassantMove,
+      playedMoveIsValid = clonedBoard.playMove(enPassantMove,
         validMove, playedPiece,
         destination);
 
@@ -68,100 +67,107 @@ export default function Referee() {
     // This is for promoting a pawn
     let promotionRow = (playedPiece.team === TeamType.OUR) ? 7 : 0;
 
-    if (destination.y === promotionRow && playedPiece.isPawn) {
-      modalRef.current?.classList.remove(`${boardClasses.hidden}`);
-      setPromotionPawn((previousPromotionPawn) => {
-        const clonedPlayedPiece = playedPiece.clone();
-        clonedPlayedPiece.position = destination.clone();
-        return clonedPlayedPiece;
-      });
-    }
+      if (destination.y === promotionRow && playedPiece.isPawn) {
+        modalRef.current?.classList.remove(`${boardClasses.hidden}`);
+        setPromotionPawn((previousPromotionPawn) => {
+          const clonedPlayedPiece = playedPiece.clone();
+          clonedPlayedPiece.position = destination.clone();
+          return clonedPlayedPiece;
+        });
+      }
 
-    return playedMoveIsValid;
+      return playedMoveIsValid;
   }
 
   function isEnPassantMove(
     initialPosition: Position,
     desiredPosition: Position,
     type: PieceType,
-    team: TeamType,
-  ) {
+    team: TeamType
+) {
     const pawnDirection = team === TeamType.OUR ? 1 : -1;
 
     if (type === PieceType.PAWN) {
       // Attack logic
       // Attack in upper left / upper right / || bottom left / bottom right corner
-      if ((desiredPosition.x - initialPosition.x === -1 && desiredPosition.x - initialPosition.x === 1) && desiredPosition.y - initialPosition.y === pawnDirection) {
+      if (
+        (desiredPosition.x - initialPosition.x === -1 ||
+            desiredPosition.x - initialPosition.x === 1) &&
+        desiredPosition.y - initialPosition.y === pawnDirection
+      ) {
         const piece = board.pieces.find(
-          p =>
-          p.position.x === desiredPosition.x &&
-          p.position.y === desiredPosition.y - pawnDirection &&
-          (p.isPawn && (p as Pawn).enPassant)// If a piece is under / above the attacked tile
+            (p) =>
+                p.position.x === desiredPosition.x &&
+                p.position.y === desiredPosition.y - pawnDirection &&
+                p.isPawn &&
+                (p as Pawn).enPassant
         );
         if (piece) {
-          return true;
+            return true;
         }
       }
     }
 
     return false;
-  }
+}
 
-  function isValidMove(
-    initialPosition: Position,
-    desiredPosition: Position,
-    type: PieceType,
-    team: TeamType,
-  ) {
-    let validMode = false;
-    switch (type) {
+function isValidMove(
+  initialPosition: Position,
+  desiredPosition: Position,
+  type: PieceType,
+  team: TeamType
+) {
+  let validMove = false;
+  switch (type) {
       case PieceType.PAWN:
-        validMode = pawnMove(initialPosition, desiredPosition, team, board.pieces)
-        break;
+          validMove = pawnMove(initialPosition, desiredPosition, team, board.pieces);
+          break;
       case PieceType.KNIGHT:
-        validMode = knightMove(initialPosition, desiredPosition, team, board.pieces);
-        break;
+          validMove = knightMove(initialPosition, desiredPosition, team, board.pieces);
+          break;
       case PieceType.BISHOP:
-        validMode = bishopMove(initialPosition, desiredPosition, team, board.pieces);
-        break;
+          validMove = bishopMove(initialPosition, desiredPosition, team, board.pieces);
+          break;
       case PieceType.ROOK:
-        validMode = rookMove(initialPosition, desiredPosition, team, board.pieces);
-        break;
+          validMove = rookMove(initialPosition, desiredPosition, team, board.pieces);
+          break;
       case PieceType.QUEEN:
-        validMode = queenMove(initialPosition, desiredPosition, team, board.pieces);
-        break;
+          validMove = queenMove(initialPosition, desiredPosition, team, board.pieces);
+          break;
       case PieceType.KING:
-        validMode = kingMove(initialPosition, desiredPosition, team, board.pieces);
-        break;
-    }
-
-    return validMode;
+          validMove = kingMove(initialPosition, desiredPosition, team, board.pieces);
   }
 
-  function promotePawn(pieceType: PieceType) {
-    if (promotionPawn === undefined) { return; }
-    setBoard((previousBoard) => {
+  return validMove;
+}
+
+function promotePawn(pieceType: PieceType) {
+  if (promotionPawn === undefined) {
+      return;
+  }
+
+  setBoard((previousBoard) => {
       const clonedBoard = board.clone();
       clonedBoard.pieces = clonedBoard.pieces.reduce((results, piece) => {
-        if (piece.samePiecePosition(promotionPawn)) {
-          results.push(new Piece(piece.position.clone(), pieceType,
-          piece.team))
-        } else {
-          results.push(piece)
-        }
-        return results
+          if (piece.samePiecePosition(promotionPawn)) {
+              results.push(new Piece(piece.position.clone(), pieceType,
+              piece.team));
+          } else {
+            results.push(piece);
+          }
+          return results;
       }, [] as Piece[]);
 
       clonedBoard.calculateAllMoves();
       return clonedBoard;
-    })
+  })
 
-    modalRef.current?.classList.add(`${boardClasses.hidden}`)
-  }
+  modalRef.current?.classList.add(`${boardClasses.hidden}`);
+}
 
-  function promotionTeamType() {
-    return (promotionPawn?.team === TeamType.OUR) ? "w" : "b";
-  }
+function promotionTeamType() {
+  return (promotionPawn?.team === TeamType.OUR) ? "w" : "b";
+}
 
   return (
     <>
@@ -175,8 +181,8 @@ export default function Referee() {
         </div>
       </div>
       <Chessboard
-       playMove={playMove}
-       pieces={board.pieces}
+        playMove={playMove}
+        pieces={board.pieces}
       />
     </>
   )
