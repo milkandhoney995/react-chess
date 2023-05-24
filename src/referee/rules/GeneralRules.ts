@@ -7,9 +7,8 @@ import { Piece, Position } from "@/models";
 export const tileIsOccupied = (
   position: Position, boardState: Piece[]
 ): boolean => {
-  const piece = boardState.find(
-    p => p.samePosition(position)
-  )
+  const piece = boardState.find((p) => p.samePosition(position));
+
   if (piece) {
     return true;
   } else {
@@ -33,11 +32,13 @@ export const tileIsOccupiedByOpponent = (
   }
 }
 
-export const tileIsEmptyOrOccupiedByOpponent = (
+export const tileIsEmptyOrOccupiedByOpponent =(
   position: Position,
   boardState: Piece[],
   team: TeamType
-): boolean => {
-  return !tileIsOccupied(position, boardState) ||
+) => {
+  return (
+    !tileIsOccupied(position, boardState) ||
     tileIsOccupiedByOpponent(position, boardState, team)
+  );
 }
