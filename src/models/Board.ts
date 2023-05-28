@@ -2,7 +2,7 @@ import { PieceType, TeamType } from "@/Types";
 import { Pawn } from "./Pawn";
 import { Piece } from "./Piece";
 import { Position } from "./Position";
-import { getPossibleBishopMoves, getPossibleKingMoves, getPossibleKnightMoves, getPossiblePawnMoves, getPossibleQueenMoves, getPossibleRookMoves } from "@/referee/rules";
+import { getCastingMoves, getPossibleBishopMoves, getPossibleKingMoves, getPossibleKnightMoves, getPossiblePawnMoves, getPossibleQueenMoves, getPossibleRookMoves } from "@/referee/rules";
 
 export class Board {
   pieces: Piece[];
@@ -23,6 +23,11 @@ export class Board {
       piece.possibleMoves = this.getValidMoves(piece, this.pieces);
     }
 
+    // Calculate casting moves
+    for (const king of this.pieces.filter(p => p.isKing)) {
+      if (king.possibleMoves === undefined) continue;
+      king.possibleMoves = [...king.possibleMoves, ...getCastingMoves(king, this.pieces)];
+    }
     // Check if the current team moves are valid
     this.checkCurrentTeamMoves();
 
@@ -99,6 +104,9 @@ export class Board {
   ): boolean {
     const pawnDirection = playedPiece.team === TeamType.OUR ? 1 : -1;
 
+    // If the move is a causting move do this
+    
+
     if (enPassantMove) {
       this.pieces = this.pieces.reduce((results, piece) => {
         if (piece.samePiecePosition(playedPiece)) {
@@ -107,6 +115,7 @@ export class Board {
         }
           piece.position.x = destination.x;
           piece.position.y = destination.y;
+          piece.hasMoved = true;
           results.push(piece);
         } else if (
           !piece.samePosition(new Position(destination.x, destination.y - pawnDirection))
@@ -138,7 +147,7 @@ export class Board {
         // x, y: 動かした後のコマの位置
         piece.position.x = destination.x;
         piece.position.y = destination.y;
-
+        piece.hasMoved = true;
         results.push(piece);
       } else if (!piece.samePosition(destination)) {
         if (piece.isPawn) {

@@ -8,17 +8,19 @@ export class Piece {
   type: PieceType;
   team: TeamType;
   possibleMoves?: Position[]
+  hasMoved: boolean;
   constructor(
     position: Position,
     type: PieceType,
-    team: TeamType,
-    possibleMoves: Position[] = []
+    team: TeamType, hasMoved :boolean,
+    possibleMoves: Position[] = [],
   ) {
     this.image = `assets/images/${type}_${team}.png`;
     this.position = position;
     this.type = type;
     this.team = team;
     this.possibleMoves =  possibleMoves;
+    this.hasMoved = hasMoved;
   }
 
   // getをつけると、()がいらないパラメーターになる
@@ -53,7 +55,7 @@ export class Piece {
     return new Piece(
       this.position.clone(), // not to update playedPiece.position in Board.tsx
       this.type,
-      this.team,
+      this.team, this.hasMoved,
       this.possibleMoves?.map(m => m.clone())
     )
   }

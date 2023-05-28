@@ -7,10 +7,11 @@ export class Pawn extends Piece {
   constructor(
     position: Position,
     team: TeamType,
+    hasMoved: boolean,
     enPassant?: boolean,
     possibleMoves: Position[] = []
   ) {
-    super(position, PieceType.PAWN, team, possibleMoves); // callling constructor in the Piece
+    super(position, PieceType.PAWN, team, hasMoved, possibleMoves); // callling constructor in the Piece
     this.enPassant = enPassant;
   }
 
@@ -18,6 +19,7 @@ export class Pawn extends Piece {
     return new Pawn(
       this.position.clone(),
       this.team,
+      this.hasMoved,
       this.enPassant,
       this.possibleMoves?.map(m => m.clone()))
   }
