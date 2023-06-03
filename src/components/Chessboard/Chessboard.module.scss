@@ -7,7 +7,7 @@
   background-color: rgb(184, 184, 246);
 }
 
-.pawnPromotionModal {
+.modal {
   position: absolute;
   top: 0;
   right: 0;
@@ -15,7 +15,7 @@
   bottom: 0;
   &__body {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     position: absolute;
     top: calc(50% - 150px);
@@ -32,8 +32,27 @@
     border-radius: 50%;
     cursor: pointer;
   }
+  & > &__body > .checkmate__body {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    & > span {
+      font-size: 2rem;
+    }
+    & > button {
+      background-color: #779556;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 1.5rem 3rem;
+      font-size: 2rem;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
 }
 
-.pawnPromotionModal.hidden {
+.modal.hidden {
   display: none;
 }
