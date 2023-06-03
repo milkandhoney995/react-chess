@@ -1,10 +1,11 @@
+import Link from 'next/link';
 import styles from './page.module.scss'
-import Referee from '@/components/Referee/referee';
 
 export default function Home() {
   return (
     <main className={styles.main}>
-      <Referee />
+      <h1>Top Page</h1>
+      <Link href={'/chess'}>Chess</Link>
     </main>
   )
 }
