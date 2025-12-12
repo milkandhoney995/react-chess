@@ -17,6 +17,7 @@ export default function Referee() {
   const modalRef = useRef<HTMLDivElement>(null);
   const checkmateModalRef =useRef<HTMLDivElement>(null);
 
+  console.log(modalRef.current)
 
   function playMove(playedPiece: Piece, destination: Position): boolean {
     // If the playing piece doesn't have any moves return
@@ -25,7 +26,7 @@ export default function Referee() {
     // Prevent the inactive team from playing
     if (playedPiece.team === TeamType.OUR
       && board.totalTurns % 2 !== 1) return false;
-  if (playedPiece.team === TeamType.OPPONENT
+    if (playedPiece.team === TeamType.OPPONENT
       && board.totalTurns % 2 !== 0) return false;
     let playedMoveIsValid = false;
 
