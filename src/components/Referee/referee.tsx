@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Chessboard from "../Chessboard/Chessboard"
 import { bishopMove,kingMove, knightMove, pawnMove, queenMove, rookMove } from "@/referee/rules";
 import boardClasses from "../Chessboard/Chessboard.module.scss"
