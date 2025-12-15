@@ -1,8 +1,8 @@
 'use client';
 
 import classes from "./Chessboard.module.scss"
-import TileClasses from "../Title/Tile.module.scss"
-import Tile from "../Title/Tile"
+import TileClasses from "../Tile/Tile.module.scss"
+import Tile from "../Tile/Tile"
 import { useRef, useState } from "react";
 import {
   VERTICAL_AXIS,
