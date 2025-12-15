@@ -145,6 +145,10 @@ export default function Chessboard({playMove, pieces} : Props) {
         onMouseUp={(e) => dropPiece(e)}
         className={classes.chessboard}
         ref={chessboardRef}
+        role="grid"
+        aria-label="Chess board"
+        aria-rowcount={8}
+        aria-colcount={8}
       >
         {board}
       </div>
