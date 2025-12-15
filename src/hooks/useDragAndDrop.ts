@@ -9,6 +9,7 @@ interface UseDragAndDropProps {
 
 const useDragAndDrop = ({ playMove, pieces }: UseDragAndDropProps) => {
   const [activePiece, setActivePiece] = useState<HTMLElement | null>(null);
+  // const [grabPosition, setGrabPosition] = useState<Position>(new Position(-1, -1));
   const [draggingPiece, setDraggingPiece] = useState<Piece | null>(null);
   const chessboardRef = useRef<HTMLDivElement>(null);
 
@@ -23,6 +24,10 @@ const useDragAndDrop = ({ playMove, pieces }: UseDragAndDropProps) => {
       const grabY = 7 - Math.floor((e.clientY - boardRect.top) / GRID_SIZE);
       const position = new Position(grabX, grabY);
 
+      // 駒を掴んだ位置に対応するピースを設定
+      const piece = pieces.find(p => p.samePosition(position));
+      if (piece) setDraggingPiece(piece);
+
       // 駒を掴んだ際のスタイル設定
       element.style.position = "fixed";
       element.style.left = `${e.clientX - GRID_SIZE / 2}px`;
@@ -30,13 +35,7 @@ const useDragAndDrop = ({ playMove, pieces }: UseDragAndDropProps) => {
       element.style.pointerEvents = "none";
       element.style.zIndex = "1000";
 
-      setActivePiece(element);  // アクティブな駒をセット
-
-      // 駒を掴んだ位置に対応するピースを設定
-      const piece = pieces.find(p => p.samePosition(position));
-      if (piece) {
-        setDraggingPiece(piece);
-      }
+      setActivePiece(element);
     }
   };
 
@@ -53,11 +52,12 @@ const useDragAndDrop = ({ playMove, pieces }: UseDragAndDropProps) => {
     if (!activePiece || !chessboard) return;
 
     const rect = chessboard.getBoundingClientRect();
+    // 動かした後のコマの位置
     const x = Math.floor((e.clientX - rect.left) / GRID_SIZE);
     const y = 7 - Math.floor((e.clientY - rect.top) / GRID_SIZE);
 
     // 移動後のピースを検索して、playMoveを呼び出す
-    const currentPiece = pieces.find(p => p.samePosition(draggingPiece?.position || new Position(-1, -1)));
+    const currentPiece = draggingPiece;
 
     if (currentPiece) {
       const success = playMove(currentPiece.clone(), new Position(x, y));
@@ -73,7 +73,7 @@ const useDragAndDrop = ({ playMove, pieces }: UseDragAndDropProps) => {
     }
 
     setActivePiece(null);
-    setDraggingPiece(null);  // ドロップ後に状態リセット
+    setDraggingPiece(null);
   };
 
   return {

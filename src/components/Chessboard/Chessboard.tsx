@@ -10,6 +10,7 @@ import {
   GRID_SIZE,
 } from "@/Constants";
 import { Piece, Position } from "@/models";
+import useDragAndDrop from "@/hooks/useDragAndDrop";
 
 interface Props {
   playMove: (piece: Piece, position: Position) => boolean;
@@ -17,75 +18,71 @@ interface Props {
 }
 
 const Chessboard = ({playMove, pieces} : Props) => {
-  const [activePiece, setActivePiece] = useState<HTMLElement | null>(null);
-  const [grabPosition, setGrabPosition] = useState<Position>(new Position(-1, -1));
-  const [draggingPiece, setDraggingPiece] = useState<Piece | null>(null);
-  const chessboardRef = useRef<HTMLDivElement>(null);
+  const { grabPiece, movePiece, dropPiece, chessboardRef, activePiece, draggingPiece } = useDragAndDrop({ playMove, pieces });
+  // function grabPiece(e: React.MouseEvent) {
+  //   const element = e.target as HTMLElement;
+  //   const chessboard = chessboardRef.current;
 
-  function grabPiece(e: React.MouseEvent) {
-    const element = e.target as HTMLElement;
-    const chessboard = chessboardRef.current;
+  //   if (element.classList.contains(TileClasses.tile__image) && chessboard) {
+  //     const boardRect = chessboard.getBoundingClientRect();
+  //     // GRID_SIZEで割ることで、0 < x < 8, 0 < y< 8になる
+  //     // そのままだと、from bottom left to top rightになるので、subtract 800して、top leftが(0, 0)、bottom leftが(800, 0)になるようにする
+  //     const grabX = Math.floor((e.clientX - boardRect.left) / GRID_SIZE);
+  //     const grabY = 7 - Math.floor((e.clientY - boardRect.top) / GRID_SIZE);
+  //     const position = new Position(grabX, grabY);
+  //     setGrabPosition(position);
 
-    if (element.classList.contains(TileClasses.tile__image) && chessboard) {
-      const boardRect = chessboard.getBoundingClientRect();
-      // GRID_SIZEで割ることで、0 < x < 8, 0 < y< 8になる
-      // そのままだと、from bottom left to top rightになるので、subtract 800して、top leftが(0, 0)、bottom leftが(800, 0)になるようにする
-      const grabX = Math.floor((e.clientX - boardRect.left) / GRID_SIZE);
-      const grabY = 7 - Math.floor((e.clientY - boardRect.top) / GRID_SIZE);
-      const position = new Position(grabX, grabY);
-      setGrabPosition(position);
-
-      const piece = pieces.find(p => p.samePosition(position));
-      if (piece) setDraggingPiece(piece);
+  //     const piece = pieces.find(p => p.samePosition(position));
+  //     if (piece) setDraggingPiece(piece);
 
 
-      element.style.position = "fixed";
-      element.style.left = `${e.clientX - GRID_SIZE / 2}px`;
-      element.style.top = `${e.clientY - GRID_SIZE / 2}px`;
-      element.style.pointerEvents = "none";
-      element.style.zIndex = "1000";
+  //     element.style.position = "fixed";
+  //     element.style.left = `${e.clientX - GRID_SIZE / 2}px`;
+  //     element.style.top = `${e.clientY - GRID_SIZE / 2}px`;
+  //     element.style.pointerEvents = "none";
+  //     element.style.zIndex = "1000";
 
-      setActivePiece(element);
-    }
-  }
+  //     setActivePiece(element);
+  //   }
+  // }
 
-  function movePiece(e: React.MouseEvent) {
-    if (!activePiece) return;
+  // function movePiece(e: React.MouseEvent) {
+  //   if (!activePiece) return;
 
-    activePiece.style.left = `${e.clientX - GRID_SIZE / 2}px`;
-    activePiece.style.top = `${e.clientY - GRID_SIZE / 2}px`;
-  }
+  //   activePiece.style.left = `${e.clientX - GRID_SIZE / 2}px`;
+  //   activePiece.style.top = `${e.clientY - GRID_SIZE / 2}px`;
+  // }
 
-  function dropPiece(e: React.MouseEvent) {
-    const chessboard = chessboardRef.current;
-    if (!activePiece || !chessboard) return;
+  // function dropPiece(e: React.MouseEvent) {
+  //   const chessboard = chessboardRef.current;
+  //   if (!activePiece || !chessboard) return;
 
-    const rect = chessboard.getBoundingClientRect();
-    // 動かした後のコマの位置
-    const x = Math.floor((e.clientX - rect.left) / GRID_SIZE);
-    const y = 7 - Math.floor((e.clientY - rect.top) / GRID_SIZE);
-    // 動かす前のコマの位置
-    const currentPiece = pieces.find(p => p.samePosition(grabPosition));
+  //   const rect = chessboard.getBoundingClientRect();
+  //   // 動かした後のコマの位置
+  //   const x = Math.floor((e.clientX - rect.left) / GRID_SIZE);
+  //   const y = 7 - Math.floor((e.clientY - rect.top) / GRID_SIZE);
+  //   // 動かす前のコマの位置
+  //   const currentPiece = pieces.find(p => p.samePosition(grabPosition));
 
-    if (currentPiece) {
-      const success = playMove(
-        currentPiece.clone(),
-        new Position(x, y)
-      );
+  //   if (currentPiece) {
+  //     const success = playMove(
+  //       currentPiece.clone(),
+  //       new Position(x, y)
+  //     );
 
-      if (!success) {
-        activePiece.style.position = "relative";
-        activePiece.style.removeProperty("top");
-        activePiece.style.removeProperty("left");
-        activePiece.style.removeProperty("z-index");
-        activePiece.style.removeProperty("pointer-events");
-      }
-    }
+  //     if (!success) {
+  //       activePiece.style.position = "relative";
+  //       activePiece.style.removeProperty("top");
+  //       activePiece.style.removeProperty("left");
+  //       activePiece.style.removeProperty("z-index");
+  //       activePiece.style.removeProperty("pointer-events");
+  //     }
+  //   }
 
-    setActivePiece(null);
-    setDraggingPiece(null);
+  //   setActivePiece(null);
+  //   setDraggingPiece(null);
 
-  }
+  // }
 
   let board = [];
 
@@ -97,9 +94,9 @@ const Chessboard = ({playMove, pieces} : Props) => {
       );
       let image = piece ? piece.image : undefined;
 
-      let currentPiece = activePiece !== null ? pieces.find(p => p.samePosition(grabPosition)) : undefined;
+      // let currentPiece = activePiece !== null ? pieces.find(p => p.samePosition(grabPosition)) : undefined;
       let highlight = draggingPiece?.possibleMoves ?
-      draggingPiece.possibleMoves.some(p => p.samePosition(new Position(i, j))) : false;
+        draggingPiece.possibleMoves.some(p => p.samePosition(new Position(i, j))) : false;
 
       board.push(<Tile key={`${j},${i}`} image={image} number={number} highlight={highlight} />);
     }
