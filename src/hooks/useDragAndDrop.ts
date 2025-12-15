@@ -9,42 +9,58 @@ interface UseDragAndDropProps {
 
 const useDragAndDrop = ({ playMove, pieces }: UseDragAndDropProps) => {
   const [activePiece, setActivePiece] = useState<HTMLElement | null>(null);
-  // const [grabPosition, setGrabPosition] = useState<Position>(new Position(-1, -1));
   const [draggingPiece, setDraggingPiece] = useState<Piece | null>(null);
   const chessboardRef = useRef<HTMLDivElement>(null);
 
-  // grabPositionの変更に依存せず、activePieceとdraggingPieceで動かす
   const grabPiece = (e: React.MouseEvent) => {
     const element = e.target as HTMLElement;
-    const chessboard = chessboardRef.current;
+    console.log("Clicked element:", element);
+    console.log("Element classes:", element.classList);
 
-    if (element.classList.contains("tile__image") && chessboard) {
-      const boardRect = chessboard.getBoundingClientRect();
-      const grabX = Math.floor((e.clientX - boardRect.left) / GRID_SIZE);
-      const grabY = 7 - Math.floor((e.clientY - boardRect.top) / GRID_SIZE);
-      const position = new Position(grabX, grabY);
+    // 動的に生成されたクラス名にマッチするか確認
+    if (element.classList.contains("Tile-module-scss-module__ty3Weq__tile__image")) {
+      console.log("Tile image clicked:", element);
+      const chessboard = chessboardRef.current;
+      if (chessboard) {
+        const boardRect = chessboard.getBoundingClientRect();
+        const grabX = Math.floor((e.clientX - boardRect.left) / GRID_SIZE);
+        const grabY = 7 - Math.floor((e.clientY - boardRect.top) / GRID_SIZE);
+        const position = new Position(grabX, grabY);
 
-      // 駒を掴んだ位置に対応するピースを設定
-      const piece = pieces.find(p => p.samePosition(position));
-      if (piece) setDraggingPiece(piece);
+        console.log("Grab position:", position);
 
-      // 駒を掴んだ際のスタイル設定
-      element.style.position = "fixed";
-      element.style.left = `${e.clientX - GRID_SIZE / 2}px`;
-      element.style.top = `${e.clientY - GRID_SIZE / 2}px`;
-      element.style.pointerEvents = "none";
-      element.style.zIndex = "1000";
+        const piece = pieces.find(p => p.samePosition(position));
+        if (piece) {
+          setDraggingPiece(piece);
+          console.log("Piece found:", piece);
+        }
 
-      setActivePiece(element);
+        element.style.position = "fixed";
+        element.style.left = `${e.clientX - GRID_SIZE / 2}px`;
+        element.style.top = `${e.clientY - GRID_SIZE / 2}px`;
+        element.style.pointerEvents = "none";
+        element.style.zIndex = "1000";
+
+        setActivePiece(element);
+      }
+    } else {
+      console.log("Clicked element is not a tile image");
     }
   };
+
+
 
   const movePiece = (e: React.MouseEvent) => {
     if (!activePiece) return;
 
+    const chessboard = chessboardRef.current;
+    if (!chessboard) return;
+
     // 駒の位置をマウスの位置に合わせる
     activePiece.style.left = `${e.clientX - GRID_SIZE / 2}px`;
     activePiece.style.top = `${e.clientY - GRID_SIZE / 2}px`;
+
+    console.log(`Moving piece to: ${e.clientX - GRID_SIZE / 2} ${e.clientY - GRID_SIZE / 2}`);
   };
 
   const dropPiece = (e: React.MouseEvent) => {
@@ -52,18 +68,16 @@ const useDragAndDrop = ({ playMove, pieces }: UseDragAndDropProps) => {
     if (!activePiece || !chessboard) return;
 
     const rect = chessboard.getBoundingClientRect();
-    // 動かした後のコマの位置
     const x = Math.floor((e.clientX - rect.left) / GRID_SIZE);
     const y = 7 - Math.floor((e.clientY - rect.top) / GRID_SIZE);
 
-    // 移動後のピースを検索して、playMoveを呼び出す
     const currentPiece = draggingPiece;
 
     if (currentPiece) {
       const success = playMove(currentPiece.clone(), new Position(x, y));
 
       if (!success) {
-        // 移動が成功しなかった場合、駒を元の位置に戻す
+        // 移動が失敗した場合、駒を元の位置に戻す
         activePiece.style.position = "relative";
         activePiece.style.removeProperty("top");
         activePiece.style.removeProperty("left");
@@ -72,6 +86,7 @@ const useDragAndDrop = ({ playMove, pieces }: UseDragAndDropProps) => {
       }
     }
 
+    // 駒をドロップ後、状態をリセット
     setActivePiece(null);
     setDraggingPiece(null);
   };
@@ -84,6 +99,6 @@ const useDragAndDrop = ({ playMove, pieces }: UseDragAndDropProps) => {
     activePiece,
     draggingPiece
   };
-}
+};
 
 export default useDragAndDrop;
