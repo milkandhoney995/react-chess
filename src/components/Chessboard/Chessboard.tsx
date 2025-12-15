@@ -8,7 +8,7 @@ import {
   VERTICAL_AXIS,
   HORIZONTAL_AXIS,
   GRID_SIZE,
-} from "../../Constants";
+} from "@/Constants";
 import { Piece, Position } from "@/models";
 
 interface Props {
@@ -16,7 +16,7 @@ interface Props {
   pieces: Piece[];
 }
 
-export default function Chessboard({playMove, pieces} : Props) {
+const Chessboard = ({playMove, pieces} : Props) => {
   const [activePiece, setActivePiece] = useState<HTMLElement | null>(null);
   const [grabPosition, setGrabPosition] = useState<Position>(new Position(-1, -1));
   const [draggingPiece, setDraggingPiece] = useState<Piece | null>(null);
@@ -123,3 +123,5 @@ export default function Chessboard({playMove, pieces} : Props) {
     </>
   );
 }
+
+export default Chessboard;

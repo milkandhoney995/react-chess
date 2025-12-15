@@ -11,7 +11,7 @@ import { initialBoard } from "@/Constants";
 import { Board } from "@/models/Board";
 
 
-export default function Referee() {
+const Referee = () => {
   const [board, setBoard] = useState<Board>(initialBoard.clone());
   const [promotionPawn, setPromotionPawn] = useState<Piece>();
   const modalRef = useRef<HTMLDivElement>(null);
@@ -192,3 +192,5 @@ function restartGame() {
     </>
   )
 }
+
+export default Referee;

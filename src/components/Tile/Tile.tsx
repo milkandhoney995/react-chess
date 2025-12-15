@@ -5,7 +5,7 @@ interface Props {
   highlight: boolean;
 }
 
-export default function Tile({ number, image, highlight }: Props) {
+const Tile = ({ number, image, highlight }: Props) => {
   const className: string = [
   classes.tile,
   number % 2 === 0 ? classes.tile__blackTile : classes.tile__whiteTile,
@@ -35,3 +35,5 @@ export default function Tile({ number, image, highlight }: Props) {
     </div>
   )
 }
+
+export default Tile;
