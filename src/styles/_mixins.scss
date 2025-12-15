@@ -55,6 +55,7 @@
   grid-template-rows: repeat($chess-grid-rows, $tile-size);
   width: $board-size;
   height: $board-size;
+  position: relative;
 }
 
 // ========================================

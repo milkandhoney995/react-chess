@@ -27,99 +27,64 @@ export default function Chessboard({playMove, pieces} : Props) {
     const chessboard = chessboardRef.current;
 
     if (element.classList.contains(TileClasses.tile__image) && chessboard) {
+      const boardRect = chessboard.getBoundingClientRect();
       // GRID_SIZEで割ることで、0 < x < 8, 0 < y< 8になる
       // そのままだと、from bottom left to top rightになるので、subtract 800して、top leftが(0, 0)、bottom leftが(800, 0)になるようにする
-      const grabX = Math.floor((e.clientX - chessboard.offsetLeft) / GRID_SIZE);
-      const grabY = 7 - Math.floor((e.clientY - chessboard.offsetTop) / GRID_SIZE);
+      const grabX = Math.floor((e.clientX - boardRect.left) / GRID_SIZE);
+      const grabY = 7 - Math.floor((e.clientY - boardRect.top) / GRID_SIZE);
       const position = new Position(grabX, grabY);
       setGrabPosition(position);
 
       const piece = pieces.find(p => p.samePosition(position));
-      if (piece) {
-        setDraggingPiece(piece);
-      }
+      if (piece) setDraggingPiece(piece);
 
-      const x = e.clientX - GRID_SIZE / 2;
-      const y = e.clientY - GRID_SIZE / 2;
-      element.style.position = "absolute";
-      element.style.left = `${x}px`;
-      element.style.top = `${y}px`;
+
+      element.style.position = "fixed";
+      element.style.left = `${e.clientX - GRID_SIZE / 2}px`;
+      element.style.top = `${e.clientY - GRID_SIZE / 2}px`;
       element.style.pointerEvents = "none";
+      element.style.zIndex = "1000";
 
       setActivePiece(element);
     }
   }
 
   function movePiece(e: React.MouseEvent) {
-    const chessboard = chessboardRef.current;
-    if (activePiece && chessboard) {
-      const minX = chessboard.offsetLeft - 50;
-      const minY = chessboard.offsetTop - 50;
-      const maxX = chessboard.offsetLeft + chessboard.clientWidth - 50;
-      const maxY = chessboard.offsetTop + chessboard.clientHeight - 50;
-      const x = e.clientX - 50;
-      const y = e.clientY - 50;
-      activePiece.style.position = "absolute";
+    if (!activePiece) return;
 
-      //If x is smaller than minimum amount
-      if (x < minX) {
-        activePiece.style.left = `${minX}px`;
-      }
-      //If x is bigger than maximum amount
-      else if (x > maxX) {
-        activePiece.style.left = `${maxX}px`;
-      }
-      //If x is in the constraints
-      else {
-        activePiece.style.left = `${x}px`;
-      }
-
-      //If y is smaller than minimum amount
-      if (y < minY) {
-        activePiece.style.top = `${minY}px`;
-      }
-      //If y is bigger than maximum amount
-      else if (y > maxY) {
-        activePiece.style.top = `${maxY}px`;
-      }
-      //If y is in the constraints
-      else {
-        activePiece.style.top = `${y}px`;
-      }
-    }
+    activePiece.style.left = `${e.clientX - GRID_SIZE / 2}px`;
+    activePiece.style.top = `${e.clientY - GRID_SIZE / 2}px`;
   }
 
   function dropPiece(e: React.MouseEvent) {
     const chessboard = chessboardRef.current;
-    if (activePiece && chessboard) {
-      // 動かした後のコマの位置
-      const x = Math.floor((e.clientX - chessboard.offsetLeft) / GRID_SIZE);
-      const y = 7 - Math.floor((e.clientY - chessboard.offsetTop) / GRID_SIZE);
+    if (!activePiece || !chessboard) return;
 
-      // grabX, grabY: コマの位置(not changing value)
-      const currentPiece = pieces.find((p) =>
-        p.samePosition(grabPosition)
+    const rect = chessboard.getBoundingClientRect();
+    // 動かした後のコマの位置
+    const x = Math.floor((e.clientX - rect.left) / GRID_SIZE);
+    const y = 7 - Math.floor((e.clientY - rect.top) / GRID_SIZE);
+    // 動かす前のコマの位置
+    const currentPiece = pieces.find(p => p.samePosition(grabPosition));
+
+    if (currentPiece) {
+      const success = playMove(
+        currentPiece.clone(),
+        new Position(x, y)
       );
 
-      if (currentPiece) {
-        let success = playMove(
-          currentPiece.clone(),  // not to update playedPiece.position in Board.tsx
-          new Position(x, y)
-        );
-
-        if(!success) {
-          // 無効な移動だった場合、コマを元あった位置に戻す
-          //RESETS THE PIECE POSITION
-          activePiece.style.position = "relative";
-          activePiece.style.removeProperty("top");
-          activePiece.style.removeProperty("left");
-          activePiece.style.removeProperty("pointer-events");
-        }
+      if (!success) {
+        activePiece.style.position = "relative";
+        activePiece.style.removeProperty("top");
+        activePiece.style.removeProperty("left");
+        activePiece.style.removeProperty("z-index");
+        activePiece.style.removeProperty("pointer-events");
       }
-
-      setActivePiece(null);
-      setDraggingPiece(null);
     }
+
+    setActivePiece(null);
+    setDraggingPiece(null);
+
   }
 
   let board = [];
