@@ -34,6 +34,7 @@ const Tile = ({ number, image, highlight }: Props) => {
         <div
           style={{ backgroundImage: `url(${image})` }}
           className={classes.tile__image}
+          data-piece="true"
           role="img"
           aria-label={`Chess piece on ${squareName}`}
         ></div>

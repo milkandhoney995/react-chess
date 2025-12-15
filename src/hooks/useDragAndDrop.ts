@@ -17,35 +17,26 @@ const useDragAndDrop = ({ playMove, pieces }: UseDragAndDropProps) => {
     console.log("Clicked element:", element);
     console.log("Element classes:", element.classList);
 
-    // 動的に生成されたクラス名にマッチするか確認
-    if (element.classList.contains("Tile-module-scss-module__ty3Weq__tile__image")) {
-      console.log("Tile image clicked:", element);
-      const chessboard = chessboardRef.current;
-      if (chessboard) {
-        const boardRect = chessboard.getBoundingClientRect();
-        const grabX = Math.floor((e.clientX - boardRect.left) / GRID_SIZE);
-        const grabY = 7 - Math.floor((e.clientY - boardRect.top) / GRID_SIZE);
-        const position = new Position(grabX, grabY);
+    if (element.dataset.piece !== "true") return;
+    const chessboard = chessboardRef.current;
+    if (!chessboard) return;
 
-        console.log("Grab position:", position);
+    const boardRect = chessboard.getBoundingClientRect();
+    const grabX = Math.floor((e.clientX - boardRect.left) / GRID_SIZE);
+    const grabY = 7 - Math.floor((e.clientY - boardRect.top) / GRID_SIZE);
+    const position = new Position(grabX, grabY);
+    const piece = pieces.find(p => p.samePosition(position));
+    if (!piece) return;
 
-        const piece = pieces.find(p => p.samePosition(position));
-        if (piece) {
-          setDraggingPiece(piece);
-          console.log("Piece found:", piece);
-        }
+    setDraggingPiece(piece);
 
-        element.style.position = "fixed";
-        element.style.left = `${e.clientX - GRID_SIZE / 2}px`;
-        element.style.top = `${e.clientY - GRID_SIZE / 2}px`;
-        element.style.pointerEvents = "none";
-        element.style.zIndex = "1000";
+    element.style.position = "fixed";
+    element.style.left = `${e.clientX - GRID_SIZE / 2}px`;
+    element.style.top = `${e.clientY - GRID_SIZE / 2}px`;
+    element.style.pointerEvents = "none";
+    element.style.zIndex = "1000";
 
-        setActivePiece(element);
-      }
-    } else {
-      console.log("Clicked element is not a tile image");
-    }
+    setActivePiece(element);
   };
 
 
