@@ -26,16 +26,12 @@ export default function Referee() {
       && board.totalTurns % 2 !== 1) return false;
     if (playedPiece.team === TeamType.OPPONENT
       && board.totalTurns % 2 !== 0) return false;
-    let playedMoveIsValid = false;
+    // Check if the destination is a valid move for this piece
+    const isValidDestination = playedPiece.possibleMoves.some(move =>
+      move.samePosition(destination)
+    );
 
-    const validMove = isValidMove(
-      playedPiece.position,
-      destination,
-      playedPiece.type,
-      playedPiece.team
-    )
-
-    if (!validMove) return false;
+    if (!isValidDestination) return false;
 
     const enPassantMove = isEnPassantMove(
       playedPiece.position,
@@ -49,12 +45,8 @@ export default function Referee() {
       const clonedBoard = board.clone();
       clonedBoard.totalTurns += 1;
       // Playing the move
-      // この書き方をすると、Reactがboardは同じオブジェクトであると認識するのでNG
-      // board.playMove(enPassantMove,
-      //   validMove, playedPiece, destination);
-      // return board;
-      playedMoveIsValid = clonedBoard.playMove(enPassantMove,
-        validMove, playedPiece,
+      const playedMoveIsValid = clonedBoard.playMove(enPassantMove,
+        true, playedPiece,
         destination);
 
       if(clonedBoard.winningTeam !== undefined) {
@@ -76,7 +68,7 @@ export default function Referee() {
         });
       }
 
-      return playedMoveIsValid;
+      return true;
   }
 
   function isEnPassantMove(

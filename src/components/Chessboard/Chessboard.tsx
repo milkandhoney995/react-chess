@@ -19,26 +19,32 @@ interface Props {
 export default function Chessboard({playMove, pieces} : Props) {
   const [activePiece, setActivePiece] = useState<HTMLElement | null>(null);
   const [grabPosition, setGrabPosition] = useState<Position>(new Position(-1, -1));
+  const [draggingPiece, setDraggingPiece] = useState<Piece | null>(null);
   const chessboardRef = useRef<HTMLDivElement>(null);
 
   function grabPiece(e: React.MouseEvent) {
     const element = e.target as HTMLElement;
     const chessboard = chessboardRef.current;
 
-    if (element.classList.contains(`${TileClasses.tile__image}`) && chessboard) {
+    if (element.classList.contains(TileClasses.tile__image) && chessboard) {
       // GRID_SIZEで割ることで、0 < x < 8, 0 < y< 8になる
       // そのままだと、from bottom left to top rightになるので、subtract 800して、top leftが(0, 0)、bottom leftが(800, 0)になるようにする
       const grabX = Math.floor((e.clientX - chessboard.offsetLeft) / GRID_SIZE);
-      const grabY = Math.abs(
-        Math.ceil((e.clientY - chessboard.offsetTop - 800) / GRID_SIZE)
-      );
-      setGrabPosition(new Position(grabX, grabY));
+      const grabY = 7 - Math.floor((e.clientY - chessboard.offsetTop) / GRID_SIZE);
+      const position = new Position(grabX, grabY);
+      setGrabPosition(position);
+
+      const piece = pieces.find(p => p.samePosition(position));
+      if (piece) {
+        setDraggingPiece(piece);
+      }
 
       const x = e.clientX - GRID_SIZE / 2;
       const y = e.clientY - GRID_SIZE / 2;
       element.style.position = "absolute";
       element.style.left = `${x}px`;
       element.style.top = `${y}px`;
+      element.style.pointerEvents = "none";
 
       setActivePiece(element);
     }
@@ -47,10 +53,10 @@ export default function Chessboard({playMove, pieces} : Props) {
   function movePiece(e: React.MouseEvent) {
     const chessboard = chessboardRef.current;
     if (activePiece && chessboard) {
-      const minX = chessboard.offsetLeft - 25;
-      const minY = chessboard.offsetTop - 25;
-      const maxX = chessboard.offsetLeft + chessboard.clientWidth - 75;
-      const maxY = chessboard.offsetTop + chessboard.clientHeight - 75;
+      const minX = chessboard.offsetLeft - 50;
+      const minY = chessboard.offsetTop - 50;
+      const maxX = chessboard.offsetLeft + chessboard.clientWidth - 50;
+      const maxY = chessboard.offsetTop + chessboard.clientHeight - 50;
       const x = e.clientX - 50;
       const y = e.clientY - 50;
       activePiece.style.position = "absolute";
@@ -88,9 +94,7 @@ export default function Chessboard({playMove, pieces} : Props) {
     if (activePiece && chessboard) {
       // 動かした後のコマの位置
       const x = Math.floor((e.clientX - chessboard.offsetLeft) / GRID_SIZE);
-      const y = Math.abs(
-        Math.ceil((e.clientY - chessboard.offsetTop - 800) / GRID_SIZE)
-      );
+      const y = 7 - Math.floor((e.clientY - chessboard.offsetTop) / GRID_SIZE);
 
       // grabX, grabY: コマの位置(not changing value)
       const currentPiece = pieces.find((p) =>
@@ -109,10 +113,12 @@ export default function Chessboard({playMove, pieces} : Props) {
           activePiece.style.position = "relative";
           activePiece.style.removeProperty("top");
           activePiece.style.removeProperty("left");
+          activePiece.style.removeProperty("pointer-events");
         }
       }
 
       setActivePiece(null);
+      setDraggingPiece(null);
     }
   }
 
@@ -127,11 +133,8 @@ export default function Chessboard({playMove, pieces} : Props) {
       let image = piece ? piece.image : undefined;
 
       let currentPiece = activePiece !== null ? pieces.find(p => p.samePosition(grabPosition)) : undefined;
-      // some()
-      // Determines whether the specified callback function returns true for any element of an array.
-      // @param predicate
-      let highlight = currentPiece?.possibleMoves ?
-      currentPiece.possibleMoves.some(p => p.samePosition(new Position(i, j))) : false;
+      let highlight = draggingPiece?.possibleMoves ?
+      draggingPiece.possibleMoves.some(p => p.samePosition(new Position(i, j))) : false;
 
       board.push(<Tile key={`${j},${i}`} image={image} number={number} highlight={highlight} />);
     }

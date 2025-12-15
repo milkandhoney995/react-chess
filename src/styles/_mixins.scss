@@ -107,6 +107,7 @@
   @include flex-center;
   width: $tile-size;
   height: $tile-size;
+  position: relative;
 }
 
 @mixin tile-highlight {
@@ -144,6 +145,7 @@
   background-size: $piece-size;
   background-position: center;
   background-repeat: no-repeat;
+  z-index: $z-tile-image;
 
   @include grab-cursor;
 }
