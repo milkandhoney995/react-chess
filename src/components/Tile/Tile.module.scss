@@ -1,40 +1,26 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
 .tile {
-  display: grid;
-  place-items: center;
-  width: 6.25rem;
-  height: 6.25rem;
+  @include tile-base;
+
   &__blackTile {
-    background-color: #779556;
+    background-color: $chess-dark-square;
   }
+
   &__whiteTile {
-    background-color: #ebecd0;
+    background-color: $chess-light-square;
   }
+
   &__image {
-    width: 6.25rem;
-    height: 6.25rem;
-    background-size: 5rem;
-    background-position: center;
-    background-repeat: no-repeat;
-    &:hover {
-      cursor: grab;
-    }
-    &:active {
-      cursor: grabbing;
-    }
+    @include chess-piece;
   }
-  &__highlight:not(.tile__pieceImage)::before {
-    content: " ";
-    width: 6.25rem;
-    height: 6.25rem;
-    border-radius: 50%;
-    background-color: rgb(0, 0, 0, 0.4);
+
+  &__highlight:not(.tile__pieceImage) {
+    @include tile-highlight;
   }
-  &__highlight.tile__pieceImage::before {
-    position: absolute;
-    content: " ";
-    width: 6.25rem;
-    height: 6.25rem;
-    border-radius: 50%;
-    border: 5px solid rgb(0, 0, 0, 0.4);
+
+  &__highlight.tile__pieceImage {
+    @include tile-highlight-piece;
   }
 }

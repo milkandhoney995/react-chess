@@ -1,17 +1,16 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
 .main {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6rem;
+  @include flex-column;
+  @include flex-center;
+  padding: $spacing-xxl;
   min-height: 100vh;
 }
 
 .description {
-  display: inherit;
-  justify-content: inherit;
-  align-items: inherit;
-  font-size: 0.85rem;
+  @include flex-center;
+  font-size: $font-size-sm;
   max-width: var(--max-width);
   width: 100%;
   z-index: 2;
@@ -19,16 +18,14 @@
 }
 
 .description a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
+  @include flex-center;
+  gap: $spacing-sm;
 }
 
 .description p {
   position: relative;
   margin: 0;
-  padding: 1rem;
+  padding: $spacing-md;
   background-color: rgba(var(--callout-rgb), 0.5);
   border: 1px solid rgba(var(--callout-border-rgb), 0.3);
   border-radius: var(--border-radius);
@@ -47,7 +44,7 @@
 }
 
 .card {
-  padding: 1rem 1.2rem;
+  padding: $spacing-md $spacing-lg;
   border-radius: var(--border-radius);
   background: rgba(var(--card-rgb), 0);
   border: 1px solid rgba(var(--card-border-rgb), 0);

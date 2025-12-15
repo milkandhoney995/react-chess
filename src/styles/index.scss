@@ -1,0 +1,8 @@
+// ========================================
+// CHESS GAME - MAIN STYLES INDEX
+// ========================================
+
+// Import component styles using @use for modern Sass
+@use '../components/Chessboard/Chessboard.module';
+@use '../components/Tile/Tile.module';
+@use '../app/page.module';

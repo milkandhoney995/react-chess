@@ -1,0 +1,143 @@
+// ========================================
+// CHESS GAME - UTILITY CLASSES
+// ========================================
+
+// Forward variables and mixins so they're available
+@forward 'variables';
+@forward 'mixins';
+
+// ========================================
+// VISIBILITY UTILITIES
+// ========================================
+
+.hidden {
+  display: none !important;
+}
+
+.visible {
+  display: block !important;
+}
+
+// ========================================
+// FLEX UTILITIES
+// ========================================
+
+.flex {
+  display: flex;
+}
+
+.flex-column {
+  @include flex-column;
+}
+
+.flex-center {
+  @include flex-center;
+}
+
+.flex-between {
+  @include flex-between;
+}
+
+// ========================================
+// SPACING UTILITIES
+// ========================================
+
+@each $size, $value in (
+  xs: $spacing-xs,
+  sm: $spacing-sm,
+  md: $spacing-md,
+  lg: $spacing-lg,
+  xl: $spacing-xl,
+  xxl: $spacing-xxl
+) {
+  .m-#{$size} { margin: $value; }
+  .mt-#{$size} { margin-top: $value; }
+  .mr-#{$size} { margin-right: $value; }
+  .mb-#{$size} { margin-bottom: $value; }
+  .ml-#{$size} { margin-left: $value; }
+  .mx-#{$size} { margin-left: $value; margin-right: $value; }
+  .my-#{$size} { margin-top: $value; margin-bottom: $value; }
+
+  .p-#{$size} { padding: $value; }
+  .pt-#{$size} { padding-top: $value; }
+  .pr-#{$size} { padding-right: $value; }
+  .pb-#{$size} { padding-bottom: $value; }
+  .pl-#{$size} { padding-left: $value; }
+  .px-#{$size} { padding-left: $value; padding-right: $value; }
+  .py-#{$size} { padding-top: $value; padding-bottom: $value; }
+}
+
+// ========================================
+// TEXT UTILITIES
+// ========================================
+
+@each $size, $value in (
+  sm: $font-size-sm,
+  base: $font-size-base,
+  lg: $font-size-lg,
+  xl: $font-size-xl
+) {
+  .text-#{$size} { font-size: $value; }
+}
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+// ========================================
+// COLOR UTILITIES
+// ========================================
+
+.text-primary { color: $button-primary; }
+.text-white { color: $button-text; }
+.bg-primary { background-color: $button-primary; }
+.bg-light { background-color: $chess-light-square; }
+.bg-dark { background-color: $chess-dark-square; }
+
+// ========================================
+// INTERACTION UTILITIES
+// ========================================
+
+.clickable {
+  @include clickable;
+}
+
+.grab {
+  @include grab-cursor;
+}
+
+// ========================================
+// POSITIONING UTILITIES
+// ========================================
+
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+
+.top-0 { top: 0; }
+.right-0 { right: 0; }
+.bottom-0 { bottom: 0; }
+.left-0 { left: 0; }
+
+.inset-0 {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+// ========================================
+// BORDER RADIUS UTILITIES
+// ========================================
+
+.rounded { border-radius: $border-radius-sm; }
+.rounded-full { border-radius: $border-radius-full; }
+
+// ========================================
+// SIZE UTILITIES
+// ========================================
+
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.w-tile { width: $tile-size; }
+.h-tile { height: $tile-size; }

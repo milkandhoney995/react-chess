@@ -1,0 +1,88 @@
+// ========================================
+// CHESS GAME - SASS VARIABLES
+// ========================================
+
+// ========================================
+// COLORS
+// ========================================
+
+// Chess board colors
+$chess-light-square: #ebecd0;
+$chess-dark-square: #779556;
+$chess-highlight: rgba(0, 0, 0, 0.4);
+
+// Modal colors
+$modal-overlay: rgba(127, 127, 127, 0.8);
+$modal-hover: rgba(255, 255, 255, 0.3);
+
+// Button colors
+$button-primary: $chess-dark-square;
+$button-text: white;
+
+// ========================================
+// SIZES
+// ========================================
+
+// Chess board dimensions
+$board-size: 50rem; // 800px
+$tile-size: 6.25rem; // 100px
+$tile-size-px: 100px;
+
+// Piece dimensions
+$piece-size: 5rem; // 80px
+$piece-size-px: 80px;
+
+// Modal dimensions
+$modal-width: 50rem;
+$modal-height: 25rem;
+$modal-offset: 150px;
+
+// ========================================
+// SPACING
+// ========================================
+
+$spacing-xs: 0.25rem; // 4px
+$spacing-sm: 0.5rem; // 8px
+$spacing-md: 1rem; // 16px
+$spacing-lg: 1.5rem; // 24px
+$spacing-xl: 3rem; // 48px
+$spacing-xxl: 6rem; // 96px
+
+// ========================================
+// BORDER RADIUS
+// ========================================
+
+$border-radius-sm: 0.5rem;
+$border-radius-full: 50%;
+
+// ========================================
+// FONT SIZES
+// ========================================
+
+$font-size-sm: 0.85rem;
+$font-size-base: 1rem;
+$font-size-lg: 1.5rem;
+$font-size-xl: 2rem;
+
+// ========================================
+// Z-INDEX
+// ========================================
+
+$z-modal: 1000;
+$z-tile-highlight: 10;
+
+// ========================================
+// BREAKPOINTS (for future responsive design)
+// ========================================
+
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+// ========================================
+// GRID
+// ========================================
+
+$chess-grid-columns: 8;
+$chess-grid-rows: 8;

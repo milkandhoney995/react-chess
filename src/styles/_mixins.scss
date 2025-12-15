@@ -1,0 +1,174 @@
+// ========================================
+// CHESS GAME - SASS MIXINS
+// ========================================
+
+// Use variables so they're available in mixins
+@use 'variables' as *;
+
+// ========================================
+// FLEXBOX MIXINS
+// ========================================
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+// ========================================
+// POSITIONING MIXINS
+// ========================================
+
+@mixin absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin absolute-full {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+}
+
+// ========================================
+// GRID MIXINS
+// ========================================
+
+@mixin chess-grid {
+  display: grid;
+  grid-template-columns: repeat($chess-grid-columns, $tile-size);
+  grid-template-rows: repeat($chess-grid-rows, $tile-size);
+  width: $board-size;
+  height: $board-size;
+}
+
+// ========================================
+// INTERACTION MIXINS
+// ========================================
+
+@mixin clickable {
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+@mixin grab-cursor {
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+// ========================================
+// MODAL MIXINS
+// ========================================
+
+@mixin modal-overlay {
+  @include absolute-full;
+  background: $modal-overlay;
+  z-index: $z-modal;
+}
+
+@mixin modal-body {
+  @include flex-center;
+  @include absolute-center;
+  width: $modal-width;
+  height: $modal-height;
+}
+
+// ========================================
+// TILE MIXINS
+// ========================================
+
+@mixin tile-base {
+  @include flex-center;
+  width: $tile-size;
+  height: $tile-size;
+}
+
+@mixin tile-highlight {
+  &::before {
+    content: " ";
+    @include absolute-center;
+    width: $tile-size;
+    height: $tile-size;
+    border-radius: $border-radius-full;
+    background-color: $chess-highlight;
+    z-index: $z-tile-highlight;
+  }
+}
+
+@mixin tile-highlight-piece {
+  &::before {
+    position: absolute;
+    content: " ";
+    @include absolute-center;
+    width: $tile-size;
+    height: $tile-size;
+    border-radius: $border-radius-full;
+    border: 5px solid $chess-highlight;
+    z-index: $z-tile-highlight;
+  }
+}
+
+// ========================================
+// PIECE MIXINS
+// ========================================
+
+@mixin chess-piece {
+  width: $tile-size;
+  height: $tile-size;
+  background-size: $piece-size;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  @include grab-cursor;
+}
+
+// ========================================
+// BUTTON MIXINS
+// ========================================
+
+@mixin button-base {
+  background-color: $button-primary;
+  color: $button-text;
+  border: none;
+  border-radius: $border-radius-sm;
+  padding: $spacing-lg $spacing-xl;
+  font-size: $font-size-xl;
+
+  @include clickable;
+}
+
+// ========================================
+// RESPONSIVE MIXINS
+// ========================================
+
+@mixin responsive($breakpoint) {
+  @media (min-width: $breakpoint) {
+    @content;
+  }
+}
