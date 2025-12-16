@@ -9,6 +9,8 @@ interface UseDragAndDropProps {
 interface DragState {
   piece: Piece;
   pointerId: number;
+  offsetX: number;
+  offsetY: number;
   clientX: number;
   clientY: number;
 }
@@ -17,16 +19,19 @@ const useDragAndDrop = ({ playMove }: UseDragAndDropProps) => {
   const chessboardRef = useRef<HTMLDivElement>(null);
   const [dragState, setDragState] = useState<DragState | null>(null);
 
-  const onPointerDown = (
-    e: React.PointerEvent,
-    piece: Piece
-  ) => {
+  const onPointerDown = (e: React.PointerEvent, piece: Piece) => {
     e.preventDefault();
     e.currentTarget.setPointerCapture(e.pointerId);
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left;
+    const offsetY = e.clientY - rect.top;
 
     setDragState({
       piece,
       pointerId: e.pointerId,
+      offsetX,
+      offsetY,
       clientX: e.clientX,
       clientY: e.clientY,
     });
