@@ -46,6 +46,7 @@ const Chessboard = ({ playMove, pieces }: Props) => {
                 }
               : undefined;
 
+          // 今ドラッグしている駒がルール上動かせるマスをハイライトする
           const highlight =
             !!dragState?.piece.possibleMoves?.some(move =>
               move.samePosition(position)
