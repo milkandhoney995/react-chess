@@ -46,12 +46,17 @@ const Chessboard = ({ playMove, pieces }: Props) => {
                 }
               : undefined;
 
+          const highlight =
+            !!dragState?.piece.possibleMoves?.some(move =>
+              move.samePosition(position)
+            );
+
           return (
             <Tile
               key={`${x}-${y}`}
               image={piece?.image}
               number={x + y + 2}
-              highlight={false}
+              highlight={highlight}
               pieceStyle={style}
             />
           );
