@@ -3,15 +3,17 @@ interface Props {
   image?: string;
   number: number;
   highlight: boolean;
+  pieceStyle?: React.CSSProperties;
 }
 
-const Tile = ({ number, image, highlight }: Props) => {
-  const className: string = [
+const Tile = ({ number, image, highlight, pieceStyle }: Props) => {
+  const className = [
     classes.tile,
     number % 2 === 0 ? classes.tile__blackTile : classes.tile__whiteTile,
     highlight && classes.tile__highlight,
-    image && classes.tile__pieceImage
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   const file = String.fromCharCode(97 + (number % 8)); // a-h
   const rank = Math.floor(number / 8) + 1; // 1-8
@@ -20,6 +22,10 @@ const Tile = ({ number, image, highlight }: Props) => {
   const handleTileClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // バブリングを止める
     // 必要に応じて他の処理を追加
+  };
+
+  const imageStyle: React.CSSProperties = {
+    backgroundImage: `url(${image})`,
   };
 
   return (
@@ -32,7 +38,7 @@ const Tile = ({ number, image, highlight }: Props) => {
     >
       {image && (
         <div
-          style={{ backgroundImage: `url(${image})` }}
+          style={{ ...imageStyle, ...pieceStyle }}
           className={classes.tile__image}
           data-piece="true"
           role="img"
