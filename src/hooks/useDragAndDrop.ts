@@ -8,34 +8,48 @@ interface UseDragAndDropProps {
 
 interface DragState {
   piece: Piece;
-  mouseX: number;
-  mouseY: number;
+  pointerId: number;
+  clientX: number;
+  clientY: number;
 }
 
 const useDragAndDrop = ({ playMove }: UseDragAndDropProps) => {
   const chessboardRef = useRef<HTMLDivElement>(null);
   const [dragState, setDragState] = useState<DragState | null>(null);
 
-  const grabPiece = (e: React.MouseEvent, piece: Piece) => {
+  const onPointerDown = (
+    e: React.PointerEvent,
+    piece: Piece
+  ) => {
+    e.preventDefault();
+    e.currentTarget.setPointerCapture(e.pointerId);
+
     setDragState({
       piece,
-      mouseX: e.clientX,
-      mouseY: e.clientY,
+      pointerId: e.pointerId,
+      clientX: e.clientX,
+      clientY: e.clientY,
     });
   };
 
-  const movePiece = (e: React.MouseEvent) => {
-    if (!dragState) return;
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!dragState || e.pointerId !== dragState.pointerId) return;
 
     setDragState(prev =>
       prev
-        ? { ...prev, mouseX: e.clientX, mouseY: e.clientY }
+        ? {
+            ...prev,
+            clientX: e.clientX,
+            clientY: e.clientY,
+          }
         : null
     );
   };
 
-  const dropPiece = (e: React.MouseEvent) => {
+  const onPointerUp = (e: React.PointerEvent) => {
     if (!dragState || !chessboardRef.current) return;
+
+    e.currentTarget.releasePointerCapture(dragState.pointerId);
 
     const rect = chessboardRef.current.getBoundingClientRect();
     const x = Math.floor((e.clientX - rect.left) / GRID_SIZE);
@@ -47,9 +61,9 @@ const useDragAndDrop = ({ playMove }: UseDragAndDropProps) => {
 
   return {
     chessboardRef,
-    grabPiece,
-    movePiece,
-    dropPiece,
+    onPointerDown,
+    onPointerMove,
+    onPointerUp,
     dragState,
   };
 };

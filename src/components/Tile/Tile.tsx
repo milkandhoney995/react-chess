@@ -6,10 +6,16 @@ interface Props {
   number: number;
   highlight: boolean;
   pieceStyle?: React.CSSProperties;
-  onGrabPiece: (e: React.MouseEvent, piece: Piece) => void;
+  onPointerDown: (e: React.PointerEvent, piece: Piece) => void;
 }
 
-const Tile = ({ number, piece, highlight, pieceStyle, onGrabPiece }: Props) => {
+const Tile = ({
+  piece,
+  number,
+  highlight,
+  pieceStyle,
+  onPointerDown,
+}: Props) => {
   const className = [
     classes.tile,
     number % 2 === 0 ? classes.tile__blackTile : classes.tile__whiteTile,
@@ -18,7 +24,7 @@ const Tile = ({ number, piece, highlight, pieceStyle, onGrabPiece }: Props) => {
     .filter(Boolean)
     .join(" ");
 
-  const imageStyle: React.CSSProperties | undefined = piece
+  const imageStyle = piece
     ? { backgroundImage: `url(${piece.image})` }
     : undefined;
 
@@ -28,7 +34,7 @@ const Tile = ({ number, piece, highlight, pieceStyle, onGrabPiece }: Props) => {
         <div
           className={classes.tile__image}
           style={{ ...imageStyle, ...pieceStyle }}
-          onMouseDown={(e) => onGrabPiece(e, piece)}
+          onPointerDown={(e) => onPointerDown(e, piece)}
         />
       )}
     </div>

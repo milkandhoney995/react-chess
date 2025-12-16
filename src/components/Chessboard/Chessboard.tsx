@@ -18,9 +18,9 @@ interface Props {
 
 const Chessboard = ({ playMove, pieces }: Props) => {
   const {
-    grabPiece,
-    movePiece,
-    dropPiece,
+    onPointerDown,
+    onPointerMove,
+    onPointerUp,
     chessboardRef,
     dragState,
   } = useDragAndDrop({ playMove });
@@ -29,8 +29,8 @@ const Chessboard = ({ playMove, pieces }: Props) => {
     <div
       ref={chessboardRef}
       className={classes.chessboard}
-      onMouseMove={movePiece}
-      onMouseUp={dropPiece}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
     >
       {VERTICAL_AXIS.map((_, y) =>
         HORIZONTAL_AXIS.map((_, x) => {
@@ -44,8 +44,8 @@ const Chessboard = ({ playMove, pieces }: Props) => {
             isDragging && dragState
               ? {
                   position: "fixed",
-                  left: dragState.mouseX - GRID_SIZE / 2,
-                  top: dragState.mouseY - GRID_SIZE / 2,
+                  left: dragState.clientX - GRID_SIZE / 2,
+                  top: dragState.clientY - GRID_SIZE / 2,
                   zIndex: 1000,
                   pointerEvents: "none",
                 }
@@ -64,7 +64,7 @@ const Chessboard = ({ playMove, pieces }: Props) => {
               number={x + y + 2}
               highlight={highlight}
               pieceStyle={pieceStyle}
-              onGrabPiece={grabPiece}
+              onPointerDown={onPointerDown}
             />
           );
         })
