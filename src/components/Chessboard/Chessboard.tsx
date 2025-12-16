@@ -28,8 +28,11 @@ const Chessboard = ({ playMove, pieces }: Props) => {
           const position = new Position(x, 7 - y);
           const piece = pieces.find(p => p.samePosition(position));
 
-          const isDragging = !!dragState && piece?.samePiecePosition(dragState.piece);
+          // ドラッグ中の駒かどうか
+          const isDragging =
+            !!dragState && piece?.samePiecePosition(dragState.piece);
 
+          // ドラッグ中の駒スタイル
           const pieceStyle: CSSProperties | undefined =
             isDragging && dragState
               ? {
@@ -41,9 +44,9 @@ const Chessboard = ({ playMove, pieces }: Props) => {
                 }
               : undefined;
 
-          // 今ドラッグしている駒がルール上動かせるマスをハイライトする
+          // 移動可能マスのハイライト
           const highlight =
-            !!dragState?.piece.possibleMoves?.some(move =>
+            !!dragState?.piece.possibleMoves?.some((move) =>
               move.samePosition(position)
             );
 

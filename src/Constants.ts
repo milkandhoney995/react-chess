@@ -3,12 +3,16 @@ import { Piece, Position } from "./models";
 import { Board } from "./models/Board";
 import { Pawn } from "./models/Pawn";
 
+// 縦・横の軸
 export const VERTICAL_AXIS = ["1", "2", "3", "4", "5", "6", "7", "8"];
 export const HORIZONTAL_AXIS = ["a", "b", "c", "d", "e", "f", "g", "h"];
 
+// マスのサイズ(px)
 export const GRID_SIZE = 100;
 
+// 初期配置
 export const initialBoard = new Board([
+  // 相手側
   new Piece(new Position(0, 7), PieceType.ROOK, TeamType.OPPONENT, false),
   new Piece(new Position(1, 7), PieceType.KNIGHT, TeamType.OPPONENT, false),
   new Piece(new Position(2, 7), PieceType.BISHOP, TeamType.OPPONENT, false),
@@ -27,6 +31,7 @@ export const initialBoard = new Board([
   new Pawn(new Position(6, 6), TeamType.OPPONENT, false),
   new Pawn(new Position(7, 6), TeamType.OPPONENT, false),
 
+  // 自分側
   new Pawn(new Position(0, 1), TeamType.OUR, false),
   new Pawn(new Position(1, 1), TeamType.OUR, false),
   new Pawn(new Position(2, 1), TeamType.OUR, false),
@@ -44,7 +49,7 @@ export const initialBoard = new Board([
   new Piece(new Position(5, 0), PieceType.BISHOP, TeamType.OUR, false),
   new Piece(new Position(6, 0), PieceType.KNIGHT, TeamType.OUR, false),
   new Piece(new Position(7, 0), PieceType.ROOK, TeamType.OUR, false),
-
 ], 1);
 
+// 初期盤面の全駒の合法手計算
 initialBoard.calculateAllMoves();

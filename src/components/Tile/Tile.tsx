@@ -9,13 +9,7 @@ interface Props {
   onPointerDown: (e: React.PointerEvent, piece: Piece) => void;
 }
 
-const Tile = ({
-  piece,
-  number,
-  highlight,
-  pieceStyle,
-  onPointerDown,
-}: Props) => {
+const Tile = ({ piece, number, highlight, pieceStyle, onPointerDown }: Props) => {
   const className = [
     classes.tile,
     number % 2 === 0 ? classes.tile__blackTile : classes.tile__whiteTile,
@@ -24,9 +18,7 @@ const Tile = ({
     .filter(Boolean)
     .join(" ");
 
-  const imageStyle = piece
-    ? { backgroundImage: `url(${piece.image})` }
-    : undefined;
+  const imageStyle = piece ? { backgroundImage: `url(${piece.image})` } : undefined;
 
   return (
     <div className={className}>
