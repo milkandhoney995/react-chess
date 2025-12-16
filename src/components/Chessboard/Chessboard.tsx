@@ -17,13 +17,18 @@ interface Props {
 }
 
 const Chessboard = ({ playMove, pieces }: Props) => {
-  const { grabPiece, movePiece, dropPiece, chessboardRef, dragState } = useDragAndDrop({ playMove, pieces });
+  const {
+    grabPiece,
+    movePiece,
+    dropPiece,
+    chessboardRef,
+    dragState,
+  } = useDragAndDrop({ playMove });
 
   return (
     <div
       ref={chessboardRef}
       className={classes.chessboard}
-      onMouseDown={grabPiece}
       onMouseMove={movePiece}
       onMouseUp={dropPiece}
     >
@@ -33,12 +38,12 @@ const Chessboard = ({ playMove, pieces }: Props) => {
           const piece = pieces.find(p => p.samePosition(position));
 
           const isDragging =
-            dragState?.piece.samePosition(piece?.position ?? new Position(-1, -1));
+            !!dragState && piece?.samePiecePosition(dragState.piece);
 
-          const style: CSSProperties | undefined =
+          const pieceStyle: CSSProperties | undefined =
             isDragging && dragState
               ? {
-                  position: "fixed" as const,
+                  position: "fixed",
                   left: dragState.mouseX - GRID_SIZE / 2,
                   top: dragState.mouseY - GRID_SIZE / 2,
                   zIndex: 1000,
@@ -55,10 +60,11 @@ const Chessboard = ({ playMove, pieces }: Props) => {
           return (
             <Tile
               key={`${x}-${y}`}
-              image={piece?.image}
+              piece={piece}
               number={x + y + 2}
               highlight={highlight}
-              pieceStyle={style}
+              pieceStyle={pieceStyle}
+              onGrabPiece={grabPiece}
             />
           );
         })
@@ -66,4 +72,5 @@ const Chessboard = ({ playMove, pieces }: Props) => {
     </div>
   );
 };
+
 export default Chessboard;

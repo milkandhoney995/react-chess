@@ -1,12 +1,15 @@
 import classes from "./Tile.module.scss"
+import { Piece } from "@/models"
+
 interface Props {
-  image?: string;
+  piece?: Piece;
   number: number;
   highlight: boolean;
   pieceStyle?: React.CSSProperties;
+  onGrabPiece: (e: React.MouseEvent, piece: Piece) => void;
 }
 
-const Tile = ({ number, image, highlight, pieceStyle }: Props) => {
+const Tile = ({ number, piece, highlight, pieceStyle, onGrabPiece }: Props) => {
   const className = [
     classes.tile,
     number % 2 === 0 ? classes.tile__blackTile : classes.tile__whiteTile,
@@ -15,35 +18,18 @@ const Tile = ({ number, image, highlight, pieceStyle }: Props) => {
     .filter(Boolean)
     .join(" ");
 
-  const file = String.fromCharCode(97 + (number % 8)); // a-h
-  const rank = Math.floor(number / 8) + 1; // 1-8
-  const squareName = `${file}${rank}`;
-
-  const handleTileClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // バブリングを止める
-    // 必要に応じて他の処理を追加
-  };
-
-  const imageStyle: React.CSSProperties = {
-    backgroundImage: `url(${image})`,
-  };
+  const imageStyle: React.CSSProperties | undefined = piece
+    ? { backgroundImage: `url(${piece.image})` }
+    : undefined;
 
   return (
-    <div
-      className={className}
-      role="gridcell"
-      aria-label={`Square ${squareName}${image ? ', occupied' : ', empty'}`}
-      tabIndex={-1}
-      onClick={handleTileClick}  // クリック時に呼ばれる
-    >
-      {image && (
+    <div className={className}>
+      {piece && (
         <div
-          style={{ ...imageStyle, ...pieceStyle }}
           className={classes.tile__image}
-          data-piece="true"
-          role="img"
-          aria-label={`Chess piece on ${squareName}`}
-        ></div>
+          style={{ ...imageStyle, ...pieceStyle }}
+          onMouseDown={(e) => onGrabPiece(e, piece)}
+        />
       )}
     </div>
   );
