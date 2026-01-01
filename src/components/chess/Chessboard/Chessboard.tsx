@@ -1,23 +1,46 @@
 'use client';
 
-import classes from "@/components/chess/Chessboard/Chessboard.module.scss";
-import { VERTICAL_AXIS, HORIZONTAL_AXIS } from "@/domain/chess/constants";
-import useDragAndDrop from "@/hooks/useDragAndDrop";
 import { CSSProperties } from "react";
-import Square from "@/components/chess/Square/Square";
-import { samePosition, samePiecePosition } from "@/domain/chess/utils";
+import classes from "./Chessboard.module.scss";
+import { VERTICAL_AXIS, HORIZONTAL_AXIS } from "@/domain/chess/constants";
 import { Piece, Position } from "@/domain/chess/types";
+import { samePosition } from "@/domain/chess/utils";
+import Square from "@/components/chess/Square/Square";
+import useDragAndDrop from "@/hooks/useDragAndDrop";
+import { ChessAction } from "@/features/chess/actions";
 
 interface Props {
-  playMove: (piece: Piece, position: Position) => boolean;
   pieces: Piece[];
-  draggingPiece?: Piece | null;
-  onPieceClick: (piece: Piece) => void;
+  possibleMoves: Position[];
+  draggingPieceId: string | null;
+  dispatch: React.Dispatch<ChessAction>;
+  onDragStart: (piece: Piece) => void;
+  onDragEnd: () => void;
 }
 
-const Chessboard = ({ playMove, pieces, draggingPiece, onPieceClick }: Props) => {
-  const { onPointerDown, onPointerMove, onPointerUp, chessboardRef, dragState } =
-    useDragAndDrop({ playMove, setDraggingPiece: () => {} });
+const Chessboard = ({
+  pieces,
+  possibleMoves,
+  draggingPieceId,
+  dispatch,
+  onDragStart,
+  onDragEnd,
+}: Props) => {
+  const {
+    chessboardRef,
+    dragState,
+    onPointerDown,
+    onPointerMove,
+    onPointerUp,
+  } = useDragAndDrop({
+    onDrop: (pieceId, position) => {
+      dispatch({
+        type: "MOVE_PIECE",
+        payload: { pieceId, to: position },
+      });
+    },
+    onDragEnd,
+  });
 
   return (
     <div
@@ -31,27 +54,36 @@ const Chessboard = ({ playMove, pieces, draggingPiece, onPieceClick }: Props) =>
           const position: Position = { x, y: 7 - yIndex };
           const piece = pieces.find(p => samePosition(p.position, position));
 
-          const isDragging = !!dragState && piece && samePiecePosition(dragState.piece, piece);
+          const isDragging =
+            dragState && piece && dragState.piece.id === piece.id;
 
-          const pieceStyle: CSSProperties | undefined = isDragging && dragState ? {
-            position: "fixed",
-            left: dragState.clientX - dragState.offsetX,
-            top: dragState.clientY - dragState.offsetY,
-            zIndex: 1000,
-            pointerEvents: "none",
-          } : undefined;
+          const pieceStyle: CSSProperties | undefined =
+            isDragging && dragState
+              ? {
+                  position: "fixed",
+                  left: dragState.clientX - dragState.offsetX,
+                  top: dragState.clientY - dragState.offsetY,
+                  zIndex: 1000,
+                  pointerEvents: "none",
+                }
+              : undefined;
 
-          // ハイライト判定
-          const highlight = draggingPiece?.possibleMoves?.some(m => samePosition(m, position));
+          // ★ 移動可能マスのハイライト判定
+          const highlight = possibleMoves.some(m =>
+            samePosition(m, position)
+          );
 
           return (
             <Square
               key={`${x}-${yIndex}`}
               piece={piece}
               number={x + yIndex + 2}
-              highlight={!!highlight}
+              highlight={highlight}
               pieceStyle={pieceStyle}
-              onPointerDown={(e, p) => { onPointerDown(e, p); onPieceClick(p); }}
+              onPointerDown={(e, p) => {
+                onPointerDown(e, p);
+                onDragStart(p);
+              }}
             />
           );
         })

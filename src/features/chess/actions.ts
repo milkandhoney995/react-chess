@@ -4,8 +4,8 @@ export type ChessAction =
   | {
       type: "MOVE_PIECE";
       payload: {
-        from: Position;
+        pieceId: string;
         to: Position;
       };
     }
-  | { type: "NEXT_TURN" };
+  | { type: "RESET_GAME" };
