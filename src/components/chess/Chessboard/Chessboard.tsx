@@ -11,16 +11,13 @@ import { Piece, Position } from "@/domain/chess/types";
 interface Props {
   playMove: (piece: Piece, position: Position) => boolean;
   pieces: Piece[];
+  draggingPiece?: Piece | null;
+  onPieceClick: (piece: Piece) => void;
 }
 
-const Chessboard = ({ playMove, pieces }: Props) => {
-  const {
-    onPointerDown,
-    onPointerMove,
-    onPointerUp,
-    chessboardRef,
-    dragState
-  } = useDragAndDrop({ playMove });
+const Chessboard = ({ playMove, pieces, draggingPiece, onPieceClick }: Props) => {
+  const { onPointerDown, onPointerMove, onPointerUp, chessboardRef, dragState } =
+    useDragAndDrop({ playMove, setDraggingPiece: () => {} });
 
   return (
     <div
@@ -32,37 +29,29 @@ const Chessboard = ({ playMove, pieces }: Props) => {
       {VERTICAL_AXIS.map((_, yIndex) =>
         HORIZONTAL_AXIS.map((_, x) => {
           const position: Position = { x, y: 7 - yIndex };
-
           const piece = pieces.find(p => samePosition(p.position, position));
 
-          const isDragging =
-            !!dragState && piece && samePiecePosition(dragState.piece, piece);
+          const isDragging = !!dragState && piece && samePiecePosition(dragState.piece, piece);
 
-          const pieceStyle: CSSProperties | undefined =
-            isDragging && dragState
-              ? {
-                  position: "fixed",
-                  left: dragState.clientX - dragState.offsetX,
-                  top: dragState.clientY - dragState.offsetY,
-                  zIndex: 1000,
-                  pointerEvents: "none",
-                }
-              : undefined;
-          console.log(pieceStyle)
+          const pieceStyle: CSSProperties | undefined = isDragging && dragState ? {
+            position: "fixed",
+            left: dragState.clientX - dragState.offsetX,
+            top: dragState.clientY - dragState.offsetY,
+            zIndex: 1000,
+            pointerEvents: "none",
+          } : undefined;
 
-          const highlight =
-            !!dragState?.piece.possibleMoves?.some(move =>
-              samePosition(move, position)
-            );
+          // ハイライト判定
+          const highlight = draggingPiece?.possibleMoves?.some(m => samePosition(m, position));
 
           return (
             <Square
               key={`${x}-${yIndex}`}
               piece={piece}
               number={x + yIndex + 2}
-              highlight={highlight}
+              highlight={!!highlight}
               pieceStyle={pieceStyle}
-              onPointerDown={onPointerDown}
+              onPointerDown={(e, p) => { onPointerDown(e, p); onPieceClick(p); }}
             />
           );
         })
