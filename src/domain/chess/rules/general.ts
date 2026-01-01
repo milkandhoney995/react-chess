@@ -1,44 +1,28 @@
+import { Piece, Position } from "@/domain/chess/types";
 import { TeamType } from "@/domain/chess/types";
-import { Piece, Position } from "@/models";
 
-// px, px: previous position
-// x, y: current position
-// type: コマの種類
+const samePosition = (a: Position, b: Position) =>
+  a.x === b.x && a.y === b.y;
+
 export const tileIsOccupied = (
-  position: Position, boardState: Piece[]
-): boolean => {
-  const piece = boardState.find((p) => p.samePosition(position));
-
-  if (piece) {
-    return true;
-  } else {
-    return false;
-  }
-}
+  position: Position,
+  board: Piece[]
+): boolean =>
+  board.some(p => samePosition(p.position, position));
 
 export const tileIsOccupiedByOpponent = (
   position: Position,
-  boardState: Piece[],
+  board: Piece[],
   team: TeamType
-): boolean => {
-  const piece = boardState.find(
-    (p) => p.samePosition(position) && p.team !== team
+): boolean =>
+  board.some(
+    p => samePosition(p.position, position) && p.team !== team
   );
 
-  if (piece) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-export const tileIsEmptyOrOccupiedByOpponent =(
+export const tileIsEmptyOrOccupiedByOpponent = (
   position: Position,
-  boardState: Piece[],
+  board: Piece[],
   team: TeamType
-) => {
-  return (
-    !tileIsOccupied(position, boardState) ||
-    tileIsOccupiedByOpponent(position, boardState, team)
-  );
-}
+): boolean =>
+  !tileIsOccupied(position, board) ||
+  tileIsOccupiedByOpponent(position, board, team);

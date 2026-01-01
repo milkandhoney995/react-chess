@@ -1,5 +1,6 @@
-import classes from "@/components/chess/Square/Square.module.scss"
-import { Piece } from "@/models"
+import classes from "@/components/chess/Square/Square.module.scss";
+import { Piece } from "@/domain/chess/types";
+import { getPieceImage } from "@/domain/chess/utils";
 
 interface Props {
   piece?: Piece;
@@ -14,19 +15,17 @@ const Square = ({ piece, number, highlight, pieceStyle, onPointerDown }: Props) 
     classes.tile,
     number % 2 === 0 ? classes.tile__blackTile : classes.tile__whiteTile,
     highlight && classes.tile__highlight,
-  ]
-    .filter(Boolean)
-    .join(" ");
-
-  const imageStyle = piece ? { backgroundImage: `url(${piece.image})` } : undefined;
+  ].filter(Boolean).join(" ");
 
   return (
     <div className={className}>
       {piece && (
-        <div
+        <img
           className={classes.tile__image}
-          style={{ ...imageStyle, ...pieceStyle }}
+          src={getPieceImage(piece)}
+          style={pieceStyle}
           onPointerDown={(e) => onPointerDown(e, piece)}
+          alt={`${piece.type}_${piece.team}`}
         />
       )}
     </div>

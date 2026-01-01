@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Piece, Position } from "@/models";
+import { Piece, Position } from "@/domain/chess/types";
 import { GRID_SIZE } from "@/domain/chess/constants";
 
 interface UseDragAndDropProps {
@@ -24,14 +24,11 @@ const useDragAndDrop = ({ playMove }: UseDragAndDropProps) => {
     e.currentTarget.setPointerCapture(e.pointerId);
 
     const rect = e.currentTarget.getBoundingClientRect();
-    const offsetX = e.clientX - rect.left;
-    const offsetY = e.clientY - rect.top;
-
     setDragState({
       piece,
       pointerId: e.pointerId,
-      offsetX,
-      offsetY,
+      offsetX: e.clientX - rect.left,
+      offsetY: e.clientY - rect.top,
       clientX: e.clientX,
       clientY: e.clientY,
     });
@@ -39,38 +36,21 @@ const useDragAndDrop = ({ playMove }: UseDragAndDropProps) => {
 
   const onPointerMove = (e: React.PointerEvent) => {
     if (!dragState || e.pointerId !== dragState.pointerId) return;
-
-    setDragState(prev =>
-      prev
-        ? {
-            ...prev,
-            clientX: e.clientX,
-            clientY: e.clientY,
-          }
-        : null
-    );
+    setDragState({ ...dragState, clientX: e.clientX, clientY: e.clientY });
   };
 
   const onPointerUp = (e: React.PointerEvent) => {
     if (!dragState || !chessboardRef.current) return;
 
-    e.currentTarget.releasePointerCapture(dragState.pointerId);
-
     const rect = chessboardRef.current.getBoundingClientRect();
     const x = Math.floor((e.clientX - rect.left) / GRID_SIZE);
     const y = 7 - Math.floor((e.clientY - rect.top) / GRID_SIZE);
 
-    playMove(dragState.piece.clone(), new Position(x, y));
+    playMove({ ...dragState.piece }, { x, y });
     setDragState(null);
   };
 
-  return {
-    chessboardRef,
-    onPointerDown,
-    onPointerMove,
-    onPointerUp,
-    dragState,
-  };
+  return { chessboardRef, onPointerDown, onPointerMove, onPointerUp, dragState };
 };
 
 export default useDragAndDrop;

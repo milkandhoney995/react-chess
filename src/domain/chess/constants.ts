@@ -1,55 +1,55 @@
-import { PieceType, TeamType } from "@/domain/chess/types";
-import { Piece, Position } from "@/models";
-import { Board } from "@/models/Board";
-import { Pawn } from "@/models/Pawn";
+import { PieceType, TeamType, BoardData } from "@/domain/chess/types";
+import { createId } from "@/domain/chess/board/createBoard";
 
-// 縦・横の軸
-export const VERTICAL_AXIS = ["1", "2", "3", "4", "5", "6", "7", "8"];
-export const HORIZONTAL_AXIS = ["a", "b", "c", "d", "e", "f", "g", "h"];
-
-// マスのサイズ(px)
+export const VERTICAL_AXIS = ["1","2","3","4","5","6","7","8"];
+export const HORIZONTAL_AXIS = ["a","b","c","d","e","f","g","h"];
 export const GRID_SIZE = 100;
 
-// 初期配置
-export const initialBoard = new Board([
-  // 相手側
-  new Piece(new Position(0, 7), PieceType.ROOK, TeamType.OPPONENT, false),
-  new Piece(new Position(1, 7), PieceType.KNIGHT, TeamType.OPPONENT, false),
-  new Piece(new Position(2, 7), PieceType.BISHOP, TeamType.OPPONENT, false),
-  new Piece(new Position(3, 7), PieceType.QUEEN, TeamType.OPPONENT, false),
-  new Piece(new Position(4, 7), PieceType.KING, TeamType.OPPONENT, false),
-  new Piece(new Position(5, 7), PieceType.BISHOP, TeamType.OPPONENT, false),
-  new Piece(new Position(6, 7), PieceType.KNIGHT, TeamType.OPPONENT, false),
-  new Piece(new Position(7, 7), PieceType.ROOK, TeamType.OPPONENT, false),
+// 初期盤面データ
+export const initialBoard: BoardData = {
+  totalTurns: 1,
+  pieces: [
+    // 相手側
+    { id: createId(), position: { x: 0, y: 7 }, type: PieceType.ROOK, team: TeamType.OPPONENT, hasMoved: false, possibleMoves: [] },
+    { id: createId(), position: { x: 1, y: 7 }, type: PieceType.KNIGHT, team: TeamType.OPPONENT, hasMoved: false, possibleMoves: [] },
+    { id: createId(), position: { x: 2, y: 7 }, type: PieceType.BISHOP, team: TeamType.OPPONENT, hasMoved: false, possibleMoves: [] },
+    { id: createId(), position: { x: 3, y: 7 }, type: PieceType.QUEEN, team: TeamType.OPPONENT, hasMoved: false, possibleMoves: [] },
+    { id: createId(), position: { x: 4, y: 7 }, type: PieceType.KING, team: TeamType.OPPONENT, hasMoved: false, possibleMoves: [] },
+    { id: createId(), position: { x: 5, y: 7 }, type: PieceType.BISHOP, team: TeamType.OPPONENT, hasMoved: false, possibleMoves: [] },
+    { id: createId(), position: { x: 6, y: 7 }, type: PieceType.KNIGHT, team: TeamType.OPPONENT, hasMoved: false, possibleMoves: [] },
+    { id: createId(), position: { x: 7, y: 7 }, type: PieceType.ROOK, team: TeamType.OPPONENT, hasMoved: false, possibleMoves: [] },
+    // 相手のポーン
+    ...Array(8).fill(0).map((_, i) => ({
+      id: createId(),
+      position: { x: i, y: 6 },
+      type: PieceType.PAWN,
+      team: TeamType.OPPONENT,
+      hasMoved: false,
+      possibleMoves: [],
+      isPawn: true,
+      enPassant: false
+    })),
 
-  new Pawn(new Position(0, 6), TeamType.OPPONENT, false),
-  new Pawn(new Position(1, 6), TeamType.OPPONENT, false),
-  new Pawn(new Position(2, 6), TeamType.OPPONENT, false),
-  new Pawn(new Position(3, 6), TeamType.OPPONENT, false),
-  new Pawn(new Position(4, 6), TeamType.OPPONENT, false),
-  new Pawn(new Position(5, 6), TeamType.OPPONENT, false),
-  new Pawn(new Position(6, 6), TeamType.OPPONENT, false),
-  new Pawn(new Position(7, 6), TeamType.OPPONENT, false),
+    // 自分のポーン
+    ...Array(8).fill(0).map((_, i) => ({
+      id: createId(),
+      position: { x: i, y: 1 },
+      type: PieceType.PAWN,
+      team: TeamType.OUR,
+      hasMoved: false,
+      possibleMoves: [],
+      isPawn: true,
+      enPassant: false
+    })),
 
-  // 自分側
-  new Pawn(new Position(0, 1), TeamType.OUR, false),
-  new Pawn(new Position(1, 1), TeamType.OUR, false),
-  new Pawn(new Position(2, 1), TeamType.OUR, false),
-  new Pawn(new Position(3, 1), TeamType.OUR, false),
-  new Pawn(new Position(4, 1), TeamType.OUR, false),
-  new Pawn(new Position(5, 1), TeamType.OUR, false),
-  new Pawn(new Position(6, 1), TeamType.OUR, false),
-  new Pawn(new Position(7, 1), TeamType.OUR, false),
-
-  new Piece(new Position(0, 0), PieceType.ROOK, TeamType.OUR, false),
-  new Piece(new Position(1, 0), PieceType.KNIGHT, TeamType.OUR, false),
-  new Piece(new Position(2, 0), PieceType.BISHOP, TeamType.OUR, false),
-  new Piece(new Position(3, 0), PieceType.QUEEN, TeamType.OUR, false),
-  new Piece(new Position(4, 0), PieceType.KING, TeamType.OUR, false),
-  new Piece(new Position(5, 0), PieceType.BISHOP, TeamType.OUR, false),
-  new Piece(new Position(6, 0), PieceType.KNIGHT, TeamType.OUR, false),
-  new Piece(new Position(7, 0), PieceType.ROOK, TeamType.OUR, false),
-], 1);
-
-// 初期盤面の全駒の合法手計算
-initialBoard.calculateAllMoves();
+    // 自分側
+    { id: createId(), position: { x: 0, y: 0 }, type: PieceType.ROOK, team: TeamType.OUR, hasMoved: false, possibleMoves: [] },
+    { id: createId(), position: { x: 1, y: 0 }, type: PieceType.KNIGHT, team: TeamType.OUR, hasMoved: false, possibleMoves: [] },
+    { id: createId(), position: { x: 2, y: 0 }, type: PieceType.BISHOP, team: TeamType.OUR, hasMoved: false, possibleMoves: [] },
+    { id: createId(), position: { x: 3, y: 0 }, type: PieceType.QUEEN, team: TeamType.OUR, hasMoved: false, possibleMoves: [] },
+    { id: createId(), position: { x: 4, y: 0 }, type: PieceType.KING, team: TeamType.OUR, hasMoved: false, possibleMoves: [] },
+    { id: createId(), position: { x: 5, y: 0 }, type: PieceType.BISHOP, team: TeamType.OUR, hasMoved: false, possibleMoves: [] },
+    { id: createId(), position: { x: 6, y: 0 }, type: PieceType.KNIGHT, team: TeamType.OUR, hasMoved: false, possibleMoves: [] },
+    { id: createId(), position: { x: 7, y: 0 }, type: PieceType.ROOK, team: TeamType.OUR, hasMoved: false, possibleMoves: [] },
+  ]
+};

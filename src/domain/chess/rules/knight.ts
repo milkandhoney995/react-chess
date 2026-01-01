@@ -1,54 +1,30 @@
-import { Piece, Position } from "@/models";
+// src/domain/chess/rules/knight.ts
+import { Piece, Position } from "@/domain/chess/types";
 import { tileIsEmptyOrOccupiedByOpponent } from "@/domain/chess/rules/general";
-import { TeamType } from "@/domain/chess/types";
-
-export const knightMove = (
-  initialPosition: Position,
-  desiredPosition: Position,
-  team: TeamType,
-  boardState: Piece[]
-): boolean => {
-  // moving logic
-  // 8 different moving patterns
-  for (let i = -1; i < 2; i+=2) {
-    for (let j = -1; j < 2; j+=2) {
-      // Top & bottom side movement
-      if (desiredPosition.y - initialPosition.y === 2*i) {
-        if (desiredPosition.x - initialPosition.x === j) {
-          return tileIsEmptyOrOccupiedByOpponent(desiredPosition, boardState, team);
-        }
-      }
-
-      // Right / Left movement
-      if (desiredPosition.x - initialPosition.x === 2*i) {
-        if (desiredPosition.y - initialPosition.y === j) {
-          return tileIsEmptyOrOccupiedByOpponent(desiredPosition, boardState, team);
-        }
-      }
-    }
-  }
-  return false;
-}
 
 export const getPossibleKnightMoves = (
-  knight: Piece, boardstate: Piece[]
+  knight: Piece,
+  board: Piece[]
 ): Position[] => {
-  const possibleMoves: Position[] = [];
+  const moves: Position[] = [];
 
-  for (let i = -1; i < 2; i+=2) {
-    for (let j = -1; j < 2; j+=2) {
-      const verticalMove = new Position(knight.position.x + j, knight.position.y + i*2)
-      const horizontalMove = new Position(knight.position.x + i*2 , knight.position.y + j)
+  const offsets = [
+    [1, 2], [2, 1], [-1, 2], [-2, 1],
+    [1, -2], [2, -1], [-1, -2], [-2, -1],
+  ];
 
-      if (tileIsEmptyOrOccupiedByOpponent(verticalMove, boardstate, knight.team)) {
-        possibleMoves.push(verticalMove);
-      }
-      if (tileIsEmptyOrOccupiedByOpponent(horizontalMove, boardstate, knight.team)) {
-        possibleMoves.push(horizontalMove);
-      }
+  for (const [dx, dy] of offsets) {
+    const dest = {
+      x: knight.position.x + dx,
+      y: knight.position.y + dy,
+    };
 
+    if (dest.x < 0 || dest.x > 7 || dest.y < 0 || dest.y > 7) continue;
+
+    if (tileIsEmptyOrOccupiedByOpponent(dest, board, knight.team)) {
+      moves.push(dest);
     }
   }
 
-  return possibleMoves;
-}
+  return moves;
+};

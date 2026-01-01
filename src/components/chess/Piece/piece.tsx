@@ -1,182 +1,137 @@
 'use client';
 import { useRef, useState } from "react";
-import Chessboard from "@/components/chess/Chessboard/Chessboard"
-import { bishopMove,kingMove, knightMove, queenMove, pawnMove, rookMove} from "@/domain/chess/rules/index";
-import boardClasses from "@/components/chess/Chessboard/Chessboard.module.scss"
+import Chessboard from "@/components/chess/Chessboard/Chessboard";
+import boardClasses from "@/components/chess/Chessboard/Chessboard.module.scss";
 import Image from "next/image";
-import { Piece, Position } from "@/models";
-import { PieceType, TeamType } from "@/domain/chess/types";
-import { Pawn } from "@/models/Pawn";
 import { initialBoard } from "@/domain/chess/constants";
-import { Board } from "@/models/Board";
-
+import { samePosition, samePiecePosition, checkWinningTeam } from "@/domain/chess/utils";
+import { BoardData, Piece, PieceType, Position, TeamType } from "@/domain/chess/types";
 
 const Referee = () => {
-  const [board, setBoard] = useState<Board>(initialBoard.clone());
-  const [promotionPawn, setPromotionPawn] = useState<Piece>();
+  const [board, setBoard] = useState<BoardData>({ ...initialBoard });
+  const [promotionPawn, setPromotionPawn] = useState<Piece | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const checkmateModalRef = useRef<HTMLDivElement>(null);
 
   function playMove(playedPiece: Piece, destination: Position): boolean {
-    // If the playing piece doesn't have any moves return
-    if (playedPiece.possibleMoves === undefined) return false;
+    if (!playedPiece.possibleMoves) return false;
 
-    // Prevent the inactive team from playing
-    if (playedPiece.team === TeamType.OUR
-      && board.totalTurns % 2 !== 1) return false;
-    if (playedPiece.team === TeamType.OPPONENT
-      && board.totalTurns % 2 !== 0) return false;
-    // Check if the destination is a valid move for this piece
-    const isValidDestination = playedPiece.possibleMoves.some(move =>
-      move.samePosition(destination)
-    );
-
-    if (!isValidDestination) return false;
-
-    const enPassantMove = isEnPassantMove(
-      playedPiece.position,
-      destination,
-      playedPiece.type,
-      playedPiece.team,
-    );
-
-    // Playmove modifies the board thus we need to call setBoard
-    setBoard(() => {
-      const clonedBoard = board.clone();
-      clonedBoard.totalTurns += 1;
-      // Playing the move
-      const playedMoveIsValid = clonedBoard.playMove(enPassantMove,
-        true, playedPiece,
-        destination);
-
-      if(clonedBoard.winningTeam !== undefined) {
-        checkmateModalRef.current?.classList.remove(`${boardClasses.hidden}`);
-      }
-
-      return clonedBoard;
-    })
-
-    // This is for promoting a pawn
-    let promotionRow = (playedPiece.team === TeamType.OUR) ? 7 : 0;
-
-      if (destination.y === promotionRow && playedPiece.isPawn) {
-        modalRef.current?.classList.remove(`${boardClasses.hidden}`);
-        setPromotionPawn((previousPromotionPawn) => {
-          const clonedPlayedPiece = playedPiece.clone();
-          clonedPlayedPiece.position = destination.clone();
-          return clonedPlayedPiece;
-        });
-      }
-
-      return true;
-  }
-
-  function isEnPassantMove(
-    initialPosition: Position,
-    desiredPosition: Position,
-    type: PieceType,
-    team: TeamType
-) {
-    const pawnDirection = team === TeamType.OUR ? 1 : -1;
-
-    if (type === PieceType.PAWN) {
-      // Attack logic
-      // Attack in upper left / upper right / || bottom left / bottom right corner
-      if (
-        (desiredPosition.x - initialPosition.x === -1 ||
-            desiredPosition.x - initialPosition.x === 1) &&
-        desiredPosition.y - initialPosition.y === pawnDirection
-      ) {
-        const piece = board.pieces.find(
-            (p) =>
-                p.position.x === desiredPosition.x &&
-                p.position.y === desiredPosition.y - pawnDirection &&
-                p.isPawn &&
-                (p as Pawn).enPassant
-        );
-        if (piece) {
-          return true;
-        }
-      }
+    // チームの順番チェック
+    if ((playedPiece.team === TeamType.OUR && board.totalTurns % 2 !== 1) ||
+        (playedPiece.team === TeamType.OPPONENT && board.totalTurns % 2 !== 0)) {
+      return false;
     }
 
-    return false;
-}
+    // 合法手か確認
+    const isValidDestination = playedPiece.possibleMoves.some(move =>
+      samePosition(move, destination)
+    );
+    if (!isValidDestination) return false;
 
-function isValidMove(
-  initialPosition: Position,
-  desiredPosition: Position,
-  type: PieceType,
-  team: TeamType
-) {
-  let validMove = false;
-  switch (type) {
-      case PieceType.PAWN:
-          validMove = pawnMove(initialPosition, desiredPosition, team, board.pieces);
-          break;
-      case PieceType.KNIGHT:
-          validMove = knightMove(initialPosition, desiredPosition, team, board.pieces);
-          break;
-      case PieceType.BISHOP:
-          validMove = bishopMove(initialPosition, desiredPosition, team, board.pieces);
-          break;
-      case PieceType.ROOK:
-          validMove = rookMove(initialPosition, desiredPosition, team, board.pieces);
-          break;
-      case PieceType.QUEEN:
-          validMove = queenMove(initialPosition, desiredPosition, team, board.pieces);
-          break;
-      case PieceType.KING:
-          validMove = kingMove(initialPosition, desiredPosition, team, board.pieces);
+    const enPassant = isEnPassantMove(playedPiece, destination);
+
+    // ボード更新
+    setBoard(prev => {
+      const newBoard = { ...prev, totalTurns: prev.totalTurns + 1 };
+
+      // 駒移動処理
+      const movingPieceIndex = newBoard.pieces.findIndex(p =>
+        samePiecePosition(p, playedPiece)
+      );
+
+      if (movingPieceIndex === -1) return prev;
+
+      newBoard.pieces[movingPieceIndex] = {
+        ...playedPiece,
+        position: { ...destination },
+        hasMoved: true,
+      };
+
+      // エンパッサン処理
+      if (enPassant) {
+        newBoard.pieces = newBoard.pieces.filter(p =>
+          !(p.isPawn &&
+            p.team !== playedPiece.team &&
+            p.position.x === destination.x &&
+            p.position.y === playedPiece.position.y)
+        );
+      }
+
+      // 勝利判定（簡略化）
+      newBoard.winningTeam = checkWinningTeam(newBoard.pieces);
+
+      if (newBoard.winningTeam !== undefined) {
+        checkmateModalRef.current?.classList.remove(boardClasses.hidden);
+      }
+
+      return newBoard;
+    });
+
+    // 昇格処理
+    const promotionRow = playedPiece.team === TeamType.OUR ? 7 : 0;
+    if (playedPiece.isPawn && destination.y === promotionRow) {
+      modalRef.current?.classList.remove(boardClasses.hidden);
+      setPromotionPawn({ ...playedPiece, position: { ...destination } });
+    }
+
+    return true;
   }
 
-  return validMove;
-}
+  function isEnPassantMove(piece: Piece, destination: Position) {
+    if (!piece.isPawn) return false;
+    const dir = piece.team === TeamType.OUR ? 1 : -1;
 
-function promotePawn(pieceType: PieceType) {
-  if (promotionPawn === undefined) {
-      return;
+    return board.pieces.some(p =>
+      p.isPawn &&
+      p.team !== piece.team &&
+      p.position.x === destination.x &&
+      p.position.y === destination.y - dir &&
+      (p as Piece).enPassant
+    );
   }
 
-  setBoard(() => {
-      const clonedBoard = board.clone();
-      clonedBoard.pieces = clonedBoard.pieces.reduce((results, piece) => {
-          if (piece.samePiecePosition(promotionPawn)) {
-              results.push(new Piece(piece.position.clone(), pieceType,
-              piece.team, piece.hasMoved));
-          } else {
-            results.push(piece);
-          }
-          return results;
-      }, [] as Piece[]);
+  function promotePawn(pieceType: PieceType) {
+    if (!promotionPawn) return;
 
-      clonedBoard.calculateAllMoves();
-      return clonedBoard;
-  })
+    setBoard(prev => {
+      const newPieces = prev.pieces.map(p =>
+        samePiecePosition(p, promotionPawn)
+          ? { ...p, type: pieceType }
+          : p
+      );
 
-  modalRef.current?.classList.add(`${boardClasses.hidden}`);
-}
+      return {
+        ...prev,
+        pieces: newPieces,
+      };
+    });
 
-function promotionTeamType() {
-  return (promotionPawn?.team === TeamType.OUR) ? "w" : "b";
-}
+    modalRef.current?.classList.add(boardClasses.hidden);
+    setPromotionPawn(null);
+  }
 
-function restartGame() {
-  checkmateModalRef.current?.classList.add(`${boardClasses.hidden}`);
-  setBoard(initialBoard.clone())
-}
+  function promotionTeamType() {
+    return promotionPawn?.team === TeamType.OUR ? "w" : "b";
+  }
+
+  function restartGame() {
+    checkmateModalRef.current?.classList.add(boardClasses.hidden);
+    setBoard({ ...initialBoard });
+  }
 
   return (
     <>
-    <p style={{fontSize: "1.5rem", textAlign: "center"}}>Total turns: {board.totalTurns}</p>
+      <p style={{ fontSize: "1.5rem", textAlign: "center" }}>Total turns: {board.totalTurns}</p>
+
       <div className={`${boardClasses.modal} ${boardClasses.hidden}`} ref={modalRef}>
         <div className={boardClasses.modal__body}>
           <Image onClick={() => promotePawn(PieceType.ROOK)} src={`/assets/images/rook_${promotionTeamType()}.png`} width={100} height={100} alt="Promote pawn to rook" />
-          <Image onClick={() => promotePawn(PieceType.BISHOP)} src={`/assets/images/bishop_${promotionTeamType()}.png`}  width={100} height={100} alt="Promote pawn to bishop" />
-          <Image onClick={() => promotePawn(PieceType.KNIGHT)} src={`/assets/images/knight_${promotionTeamType()}.png`}  width={100} height={100} alt="Promote pawn to knight" />
-          <Image onClick={() => promotePawn(PieceType.QUEEN)} src={`/assets/images/queen_${promotionTeamType()}.png`}  width={100} height={100} alt="Promote pawn to queen" />
+          <Image onClick={() => promotePawn(PieceType.BISHOP)} src={`/assets/images/bishop_${promotionTeamType()}.png`} width={100} height={100} alt="Promote pawn to bishop" />
+          <Image onClick={() => promotePawn(PieceType.KNIGHT)} src={`/assets/images/knight_${promotionTeamType()}.png`} width={100} height={100} alt="Promote pawn to knight" />
+          <Image onClick={() => promotePawn(PieceType.QUEEN)} src={`/assets/images/queen_${promotionTeamType()}.png`} width={100} height={100} alt="Promote pawn to queen" />
         </div>
       </div>
+
       <div className={`${boardClasses.modal} ${boardClasses.hidden}`} ref={checkmateModalRef}>
         <div className={boardClasses.modal__body}>
           <div className={boardClasses.checkmate__body}>
@@ -185,12 +140,10 @@ function restartGame() {
           </div>
         </div>
       </div>
-      <Chessboard
-        playMove={playMove}
-        pieces={board.pieces}
-      />
+
+      <Chessboard playMove={playMove} pieces={board.pieces} />
     </>
-  )
-}
+  );
+};
 
 export default Referee;

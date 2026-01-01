@@ -40,15 +40,60 @@ pnpm dev
 
 ## ディレクトリ構成
 ```
-src/
-├─ components/
-│  ├─ Chessboard/   # 盤面コンポーネント
-│  └─ Tile/         # マスコンポーネント
-├─ hooks/
-│  └─ useDragAndDrop.ts  # ドラッグ＆ドロップのロジック
-├─ models/          # Piece / Position モデル
-├─ Constants.ts     # 盤面設定や初期配置
-└─ Types.ts         # PieceType / TeamType 等
+src
+├── app
+│   ├── chess
+│   │   └── page.tsx
+│   ├── globals.scss
+│   ├── layout.tsx
+│   ├── page.module.scss
+│   └── page.tsx
+├── assets
+├── components
+│   ├── chess
+│   │   ├── Chessboard # 盤面コンポーネント
+│   │   │   ├── Chessboard.module.scss
+│   │   │   └── Chessboard.tsx
+│   │   ├── Piece # 駒コンポーネント
+│   │   │   ├── Piece.module.scss
+│   │   │   └── Piece.tsx
+│   │   └── Square # マスコンポーネント
+│   │       ├── Square.module.scss
+│   │       └── Square.tsx
+│   └── ui
+├── domain
+│   └── chess
+│       ├── board
+│       │   ├── cloneBoard.ts
+│       │   ├── createBoard.ts
+│       │   └── movePiece.ts
+│       ├── constants.ts　# 盤面設定や初期配置
+│       ├── rules
+│       │   ├── bishop.ts
+│       │   ├── general.ts
+│       │   ├── index.ts
+│       │   ├── king.ts
+│       │   ├── knight.ts
+│       │   ├── pawn.ts
+│       │   ├── queen.ts
+│       │   └── rook.ts
+│       ├── types.ts　# PieceType / TeamType 等
+│       └── utils.ts
+├── features # 状態管理
+│   └── chess
+│       ├── actions.ts
+│       ├── reducer.ts
+│       ├── selectors.ts
+│       ├── state.ts
+│       └── types.ts
+├── hooks
+│   └── useDragAndDrop.ts　# ドラッグ＆ドロップのロジック
+└── styles
+    ├── README.md
+    ├── _mixins.scss
+    ├── _utilities.scss
+    ├── _variables.scss
+    └── index.scss
 ```
 
 ## 使い方

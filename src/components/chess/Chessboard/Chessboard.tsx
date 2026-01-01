@@ -1,11 +1,12 @@
 'use client';
 
-import classes from "@/components/chess/Chessboard/Chessboard.module.scss"
-import { VERTICAL_AXIS, HORIZONTAL_AXIS, GRID_SIZE } from "@/domain/chess/constants";
-import { Piece, Position } from "@/models";
+import classes from "@/components/chess/Chessboard/Chessboard.module.scss";
+import { VERTICAL_AXIS, HORIZONTAL_AXIS } from "@/domain/chess/constants";
 import useDragAndDrop from "@/hooks/useDragAndDrop";
 import { CSSProperties } from "react";
 import Square from "@/components/chess/Square/Square";
+import { samePosition, samePiecePosition } from "@/domain/chess/utils";
+import { Piece, Position } from "@/domain/chess/types";
 
 interface Props {
   playMove: (piece: Piece, position: Position) => boolean;
@@ -13,8 +14,13 @@ interface Props {
 }
 
 const Chessboard = ({ playMove, pieces }: Props) => {
-  const { onPointerDown, onPointerMove, onPointerUp, chessboardRef, dragState } =
-    useDragAndDrop({ playMove });
+  const {
+    onPointerDown,
+    onPointerMove,
+    onPointerUp,
+    chessboardRef,
+    dragState
+  } = useDragAndDrop({ playMove });
 
   return (
     <div
@@ -23,16 +29,15 @@ const Chessboard = ({ playMove, pieces }: Props) => {
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
     >
-      {VERTICAL_AXIS.map((_, y) =>
+      {VERTICAL_AXIS.map((_, yIndex) =>
         HORIZONTAL_AXIS.map((_, x) => {
-          const position = new Position(x, 7 - y);
-          const piece = pieces.find(p => p.samePosition(position));
+          const position: Position = { x, y: 7 - yIndex };
 
-          // ドラッグ中の駒かどうか
+          const piece = pieces.find(p => samePosition(p.position, position));
+
           const isDragging =
-            !!dragState && piece?.samePiecePosition(dragState.piece);
+            !!dragState && piece && samePiecePosition(dragState.piece, piece);
 
-          // ドラッグ中の駒スタイル
           const pieceStyle: CSSProperties | undefined =
             isDragging && dragState
               ? {
@@ -43,18 +48,18 @@ const Chessboard = ({ playMove, pieces }: Props) => {
                   pointerEvents: "none",
                 }
               : undefined;
+          console.log(pieceStyle)
 
-          // 移動可能マスのハイライト
           const highlight =
-            !!dragState?.piece.possibleMoves?.some((move) =>
-              move.samePosition(position)
+            !!dragState?.piece.possibleMoves?.some(move =>
+              samePosition(move, position)
             );
 
           return (
             <Square
-              key={`${x}-${y}`}
+              key={`${x}-${yIndex}`}
               piece={piece}
-              number={x + y + 2}
+              number={x + yIndex + 2}
               highlight={highlight}
               pieceStyle={pieceStyle}
               onPointerDown={onPointerDown}
