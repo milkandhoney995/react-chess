@@ -1,4 +1,4 @@
-import { PieceType, TeamType } from "@/Types";
+import { PieceType, TeamType } from "@/domain/chess/types";
 import { Position } from "./Position";
 
 // 駒クラス

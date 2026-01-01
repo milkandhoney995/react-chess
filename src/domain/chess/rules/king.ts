@@ -1,6 +1,6 @@
 import { Piece, Position } from "@/models";
-import { tileIsEmptyOrOccupiedByOpponent, tileIsOccupied, tileIsOccupiedByOpponent } from "./GeneralRules";
-import { TeamType } from "@/Types";
+import { tileIsEmptyOrOccupiedByOpponent, tileIsOccupied, tileIsOccupiedByOpponent } from "@/domain/chess/rules/general";
+import { TeamType } from "@/domain/chess/types";
 
 export const kingMove = (
   initialPosition: Position,

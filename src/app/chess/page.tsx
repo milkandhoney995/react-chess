@@ -1,9 +1,9 @@
-import Referee from '@/components/Referee/referee'
-import styles from '../page.module.scss'
+import Piece from '@/components/chess/Piece/Piece'
+import styles from '@/app/page.module.scss'
 export default function Home() {
   return (
     <main className={styles.main}>
-      <Referee />
+      <Piece />
     </main>
   )
 }

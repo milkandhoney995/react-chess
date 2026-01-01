@@ -1,4 +1,4 @@
-import { TeamType } from "@/Types";
+import { TeamType } from "@/domain/chess/types";
 import { Piece, Position } from "@/models";
 
 // px, px: previous position

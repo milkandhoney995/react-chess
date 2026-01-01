@@ -1,11 +1,11 @@
 'use client';
 
-import classes from "./Chessboard.module.scss"
-import Tile from "../Tile/Tile"
-import { VERTICAL_AXIS, HORIZONTAL_AXIS, GRID_SIZE } from "@/Constants";
+import classes from "@/components/chess/Chessboard/Chessboard.module.scss"
+import { VERTICAL_AXIS, HORIZONTAL_AXIS, GRID_SIZE } from "@/domain/chess/constants";
 import { Piece, Position } from "@/models";
 import useDragAndDrop from "@/hooks/useDragAndDrop";
 import { CSSProperties } from "react";
+import Square from "@/components/chess/Square/Square";
 
 interface Props {
   playMove: (piece: Piece, position: Position) => boolean;
@@ -51,7 +51,7 @@ const Chessboard = ({ playMove, pieces }: Props) => {
             );
 
           return (
-            <Tile
+            <Square
               key={`${x}-${y}`}
               piece={piece}
               number={x + y + 2}

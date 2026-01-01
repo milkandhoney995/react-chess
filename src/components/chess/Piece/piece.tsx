@@ -1,13 +1,13 @@
 'use client';
 import { useRef, useState } from "react";
-import Chessboard from "../Chessboard/Chessboard"
-import { bishopMove,kingMove, knightMove, pawnMove, queenMove, rookMove } from "@/referee/rules";
-import boardClasses from "../Chessboard/Chessboard.module.scss"
+import Chessboard from "@/components/chess/Chessboard/Chessboard"
+import { bishopMove,kingMove, knightMove, queenMove, pawnMove, rookMove} from "@/domain/chess/rules/index";
+import boardClasses from "@/components/chess/Chessboard/Chessboard.module.scss"
 import Image from "next/image";
 import { Piece, Position } from "@/models";
-import { PieceType, TeamType } from "@/Types";
+import { PieceType, TeamType } from "@/domain/chess/types";
 import { Pawn } from "@/models/Pawn";
-import { initialBoard } from "@/Constants";
+import { initialBoard } from "@/domain/chess/constants";
 import { Board } from "@/models/Board";
 
 

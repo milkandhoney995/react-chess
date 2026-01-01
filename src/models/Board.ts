@@ -1,8 +1,8 @@
-import { PieceType, TeamType } from "@/Types";
+import { PieceType, TeamType } from "@/domain/chess/types";
 import { Pawn } from "./Pawn";
 import { Piece } from "./Piece";
 import { Position } from "./Position";
-import { getCastingMoves, getPossibleBishopMoves, getPossibleKingMoves, getPossibleKnightMoves, getPossiblePawnMoves, getPossibleQueenMoves, getPossibleRookMoves } from "@/referee/rules";
+import { getCastingMoves, getPossibleBishopMoves, getPossibleRookMoves, getPossiblePawnMoves, getPossibleKingMoves, getPossibleKnightMoves, getPossibleQueenMoves } from "@/domain/chess/rules/index"
 
 export class Board {
   pieces: Piece[];

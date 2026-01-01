@@ -1,7 +1,7 @@
-import { PieceType, TeamType } from "./Types";
-import { Piece, Position } from "./models";
-import { Board } from "./models/Board";
-import { Pawn } from "./models/Pawn";
+import { PieceType, TeamType } from "@/domain/chess/types";
+import { Piece, Position } from "@/models";
+import { Board } from "@/models/Board";
+import { Pawn } from "@/models/Pawn";
 
 // 縦・横の軸
 export const VERTICAL_AXIS = ["1", "2", "3", "4", "5", "6", "7", "8"];

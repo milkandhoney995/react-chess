@@ -1,4 +1,4 @@
-import classes from "./Tile.module.scss"
+import classes from "@/components/chess/Square/Square.module.scss"
 import { Piece } from "@/models"
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
   onPointerDown: (e: React.PointerEvent, piece: Piece) => void;
 }
 
-const Tile = ({ piece, number, highlight, pieceStyle, onPointerDown }: Props) => {
+const Square = ({ piece, number, highlight, pieceStyle, onPointerDown }: Props) => {
   const className = [
     classes.tile,
     number % 2 === 0 ? classes.tile__blackTile : classes.tile__whiteTile,
@@ -33,4 +33,4 @@ const Tile = ({ piece, number, highlight, pieceStyle, onPointerDown }: Props) =>
   );
 };
 
-export default Tile;
+export default Square;

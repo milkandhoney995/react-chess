@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { Piece, Position } from "@/models";
-import { GRID_SIZE } from "@/Constants";
+import { GRID_SIZE } from "@/domain/chess/constants";
 
 interface UseDragAndDropProps {
   playMove: (piece: Piece, position: Position) => boolean;
