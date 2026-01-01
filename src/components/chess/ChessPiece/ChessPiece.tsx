@@ -7,7 +7,7 @@ import { initialBoard } from "@/domain/chess/constants";
 import { samePosition, samePiecePosition, checkWinningTeam } from "@/domain/chess/utils";
 import { BoardData, Piece, PieceType, Position, TeamType } from "@/domain/chess/types";
 
-const Referee = () => {
+const ChessPiece = () => {
   const [board, setBoard] = useState<BoardData>({ ...initialBoard });
   const [promotionPawn, setPromotionPawn] = useState<Piece | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -146,4 +146,4 @@ const Referee = () => {
   );
 };
 
-export default Referee;
+export default ChessPiece;
