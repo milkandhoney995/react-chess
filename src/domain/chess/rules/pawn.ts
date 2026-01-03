@@ -6,50 +6,85 @@ import {
 } from "@/domain/chess/rules/general";
 import { samePosition } from "@/domain/chess/utils";
 
+/* =====================
+   Public API
+===================== */
 export const getPossiblePawnMoves = (
   pawn: Piece,
   board: Piece[]
 ): Position[] => {
+  return [
+    ...getForwardMoves(pawn, board),
+    ...getCaptureMoves(pawn, board),
+    ...getEnPassantMoves(pawn, board),
+  ];
+};
+
+/* =====================
+   Helpers
+===================== */
+
+const getForwardMoves = (pawn: Piece, board: Piece[]): Position[] => {
   const moves: Position[] = [];
+  const dir = getPawnDirection(pawn.team);
 
-  const dir = pawn.team === TeamType.OUR ? 1 : -1;
-  const startRow = pawn.team === TeamType.OUR ? 1 : 6;
+  const oneStep = move(pawn.position, 0, dir);
+  if (tileIsOccupied(oneStep, board)) return moves;
 
-  const one: Position = { x: pawn.position.x, y: pawn.position.y + dir };
-  const two: Position = { x: pawn.position.x, y: pawn.position.y + dir * 2 };
+  moves.push(oneStep);
 
-  if (!tileIsOccupied(one, board)) {
-    moves.push(one);
-
-    if (
-      pawn.position.y === startRow &&
-      !tileIsOccupied(two, board)
-    ) {
-      moves.push(two);
-    }
-  }
-
-  for (const dx of [-1, 1]) {
-    const diag: Position = {
-      x: pawn.position.x + dx,
-      y: pawn.position.y + dir,
-    };
-
-    if (tileIsOccupiedByOpponent(diag, board, pawn.team)) {
-      moves.push(diag);
-    } else {
-      const side = board.find(p =>
-        samePosition(p.position, {
-          x: pawn.position.x + dx,
-          y: pawn.position.y,
-        })
-      );
-
-      if (side?.type === PieceType.PAWN && side.enPassant) {
-        moves.push(diag);
-      }
+  if (isPawnStartRow(pawn)) {
+    const twoStep = move(pawn.position, 0, dir * 2);
+    if (!tileIsOccupied(twoStep, board)) {
+      moves.push(twoStep);
     }
   }
 
   return moves;
 };
+
+const getCaptureMoves = (pawn: Piece, board: Piece[]): Position[] => {
+  const dir = getPawnDirection(pawn.team);
+
+  return [-1, 1]
+    .map(dx => move(pawn.position, dx, dir))
+    .filter(pos =>
+      tileIsOccupiedByOpponent(pos, board, pawn.team)
+    );
+};
+
+const getEnPassantMoves = (pawn: Piece, board: Piece[]): Position[] => {
+  const dir = getPawnDirection(pawn.team);
+
+  return [-1, 1]
+    .map(dx => {
+      const side = board.find(p =>
+        samePosition(p.position, move(pawn.position, dx, 0))
+      );
+
+      if (side?.type === PieceType.PAWN && side.enPassant) {
+        return move(pawn.position, dx, dir);
+      }
+      return null;
+    })
+    .filter((p): p is Position => p !== null);
+};
+
+/* =====================
+   Domain Utilities
+===================== */
+
+const getPawnDirection = (team: TeamType): number =>
+  team === TeamType.OUR ? 1 : -1;
+
+const isPawnStartRow = (pawn: Piece): boolean =>
+  pawn.position.y === (pawn.team === TeamType.OUR ? 1 : 6);
+
+const move = (
+  position: Position,
+  dx: number,
+  dy: number
+): Position => ({
+  x: position.x + dx,
+  y: position.y + dy,
+});

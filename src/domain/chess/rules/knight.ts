@@ -1,30 +1,63 @@
-// src/domain/chess/rules/knight.ts
 import { Piece, Position } from "@/domain/chess/types";
-import { tileIsEmptyOrOccupiedByOpponent } from "@/domain/chess/rules/general";
+import {
+  tileIsEmptyOrOccupiedByOpponent,
+} from "@/domain/chess/rules/general";
 
+/* =====================
+   Public API
+===================== */
 export const getPossibleKnightMoves = (
   knight: Piece,
   board: Piece[]
 ): Position[] => {
-  const moves: Position[] = [];
-
-  const offsets = [
-    [1, 2], [2, 1], [-1, 2], [-2, 1],
-    [1, -2], [2, -1], [-1, -2], [-2, -1],
-  ];
-
-  for (const [dx, dy] of offsets) {
-    const dest = {
-      x: knight.position.x + dx,
-      y: knight.position.y + dy,
-    };
-
-    if (dest.x < 0 || dest.x > 7 || dest.y < 0 || dest.y > 7) continue;
-
-    if (tileIsEmptyOrOccupiedByOpponent(dest, board, knight.team)) {
-      moves.push(dest);
-    }
-  }
-
-  return moves;
+  return getJumpMoves(knight, board);
 };
+
+/* =====================
+   Knight Logic
+===================== */
+
+const getJumpMoves = (
+  piece: Piece,
+  board: Piece[]
+): Position[] => {
+  return KNIGHT_OFFSETS
+    .map(([dx, dy]) => move(piece.position, dx, dy))
+    .filter(isInsideBoard)
+    .filter(pos =>
+      tileIsEmptyOrOccupiedByOpponent(pos, board, piece.team)
+    );
+};
+
+/* =====================
+   Knight Constants
+===================== */
+
+const KNIGHT_OFFSETS: Offset[] = [
+  [1, 2],
+  [2, 1],
+  [-1, 2],
+  [-2, 1],
+  [1, -2],
+  [2, -1],
+  [-1, -2],
+  [-2, -1],
+];
+
+type Offset = [dx: number, dy: number];
+
+/* =====================
+   Domain Utilities
+===================== */
+
+const isInsideBoard = ({ x, y }: Position): boolean =>
+  x >= 0 && x < 8 && y >= 0 && y < 8;
+
+const move = (
+  position: Position,
+  dx: number,
+  dy: number
+): Position => ({
+  x: position.x + dx,
+  y: position.y + dy,
+});

@@ -1,62 +1,20 @@
 import { Piece, Position } from "@/domain/chess/types";
 import { PieceType, TeamType } from "@/domain/chess/types";
-import {
-  getPossiblePawnMoves,
-  getPossibleKnightMoves,
-  getPossibleBishopMoves,
-  getPossibleRookMoves,
-  getPossibleQueenMoves,
-  getPossibleKingMoves,
-  getCastingMoves,
-} from "@/domain/chess/rules";
 import { cloneBoard } from "@/domain/chess/board/cloneBoard";
-
-function getValidMoves(piece: Piece, board: Piece[]): Position[] {
-  switch (piece.type) {
-    case PieceType.PAWN:
-      return getPossiblePawnMoves(piece, board);
-    case PieceType.KNIGHT:
-      return getPossibleKnightMoves(piece, board);
-    case PieceType.BISHOP:
-      return getPossibleBishopMoves(piece, board);
-    case PieceType.ROOK:
-      return getPossibleRookMoves(piece, board);
-    case PieceType.QUEEN:
-      return getPossibleQueenMoves(piece, board);
-    case PieceType.KING:
-      return getPossibleKingMoves(piece, board);
-    default:
-      return [];
-  }
-}
+import { getPossibleMoves } from "@/domain/chess/utils";
 
 function calculateAllMoves(pieces: Piece[], totalTurns: number): Piece[] {
   const currentTeam =
     totalTurns % 2 === 0 ? TeamType.OPPONENT : TeamType.OUR;
 
   let next = cloneBoard(pieces);
-
-  // 通常の possibleMoves
   next = next.map(piece => ({
     ...piece,
     possibleMoves:
       piece.team === currentTeam
-        ? getValidMoves(piece, next)
+        ? getPossibleMoves(piece, next)
         : [],
   }));
-
-  // キャスリング
-  next = next.map(piece =>
-    piece.type === PieceType.KING && piece.team === currentTeam
-      ? {
-          ...piece,
-          possibleMoves: [
-            ...piece.possibleMoves,
-            ...getCastingMoves(piece, next),
-          ],
-        }
-      : piece
-  );
 
   return next;
 }
