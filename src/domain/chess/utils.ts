@@ -60,3 +60,17 @@ export function getPossibleMoves(piece: Piece, board: Piece[]): Position[] {
   const fn = possibleMovesMap[piece.type];
   return fn ? fn(piece, board) : [];
 }
+
+
+/* =====================
+   その他
+===================== */
+/**
+ * 現在のターンが指定した駒のチームのターンかどうか判定
+ */
+export function isOurTurn(pieceTeam: TeamType, totalTurns: number): boolean {
+  return (
+    (pieceTeam === TeamType.OUR && totalTurns % 2 === 0) ||
+    (pieceTeam === TeamType.OPPONENT && totalTurns % 2 === 1)
+  );
+}

@@ -1,7 +1,6 @@
 import { ChessState } from "@/features/chess/types";
 import { ChessAction } from "@/features/chess/actions";
-import { getPossibleMoves, checkWinningTeam, samePosition } from "@/domain/chess/utils";
-import { TeamType } from "@/domain/chess/types";
+import { checkWinningTeam, isOurTurn } from "@/domain/chess/utils";
 import { movePiece } from "@/domain/chess/board/movePiece";
 
 export function chessReducer(
@@ -13,11 +12,7 @@ export function chessReducer(
       const piece = state.pieces.find(p => p.id === action.payload.pieceId);
       if (!piece) return state;
 
-      const isOurTurn =
-        (piece.team === TeamType.OUR && state.totalTurns % 2 === 0) ||
-        (piece.team === TeamType.OPPONENT && state.totalTurns % 2 === 1);
-
-      if (!isOurTurn) return state;
+      if (!isOurTurn(piece.team, state.totalTurns)) return state;
 
       const newPieces = movePiece(
         state.pieces,
