@@ -1,4 +1,5 @@
-import { Piece, PieceType, Position, TeamType } from "@/domain/chess/types";
+import { CSSProperties } from "react";
+import { Piece, PieceType, Position, TeamType, DragState } from "@/domain/chess/types";
 import { getPossibleBishopMoves, getPossibleKingMoves, getPossibleKnightMoves, getPossiblePawnMoves, getPossibleQueenMoves, getPossibleRookMoves } from "@/domain/chess/rules";
 
 /* =====================
@@ -6,6 +7,53 @@ import { getPossibleBishopMoves, getPossibleKingMoves, getPossibleKnightMoves, g
 ===================== */
 export function samePosition(a: Position, b: Position): boolean {
   return a.x === b.x && a.y === b.y;
+}
+
+/* =====================
+   駒取得
+===================== */
+/**
+ * 指定した位置にある駒を返す
+ * @param pieces 駒の配列
+ * @param position チェスボード上の位置
+ * @returns 該当する Piece または undefined
+ */
+export function getPieceAt(pieces: Piece[], position: Position): Piece | undefined {
+  return pieces.find(p => samePosition(p.position, position));
+}
+
+/**
+ * 駒のスタイルを計算
+ * @param piece 対象の駒
+ * @param dragState 現在のドラッグ状態
+ * @param draggingPieceId 現在ドラッグ中の駒ID
+ * @returns CSSProperties または undefined
+ */
+export function getPieceStyle(
+  piece: Piece | undefined,
+  dragState: DragState | null | undefined,
+  draggingPieceId: string | null
+): CSSProperties | undefined {
+  if (!piece) return undefined;
+
+  // ドラッグ中かどうか
+  const isDragging = dragState?.piece.id === piece.id;
+
+  // ドラッグ中の座標固定
+  const baseStyle: CSSProperties = isDragging && dragState
+    ? {
+        position: "fixed",
+        left: dragState.clientX - dragState.offsetX,
+        top: dragState.clientY - dragState.offsetY,
+        zIndex: 1000,
+        pointerEvents: "none",
+      }
+    : {};
+
+  // draggingPieceId による半透明
+  const dragOpacity: CSSProperties = piece.id === draggingPieceId ? { opacity: 0.5 } : {};
+
+  return { ...baseStyle, ...dragOpacity };
 }
 
 /* =====================

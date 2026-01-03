@@ -1,14 +1,6 @@
 import { useRef, useState } from "react";
-import { Piece, Position } from "@/domain/chess/types";
+import { DragState, Piece, Position } from "@/domain/chess/types";
 import { GRID_SIZE } from "@/domain/chess/constants";
-
-interface DragState {
-  piece: Piece;
-  offsetX: number;
-  offsetY: number;
-  clientX: number;
-  clientY: number;
-}
 
 interface Props {
   onDrop: (pieceId: string, position: Position) => void;

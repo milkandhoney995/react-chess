@@ -27,3 +27,11 @@ export interface Piece {
   possibleMoves: Position[];
   enPassant?: boolean;
 }
+
+export interface DragState {
+  piece: Piece;
+  offsetX: number;
+  offsetY: number;
+  clientX: number;
+  clientY: number;
+}
