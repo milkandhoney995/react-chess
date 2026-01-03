@@ -5,9 +5,10 @@
   background-color: $button-primary;
   color: $button-text;
   border: none;
-  border-radius: $border-radius-sm;
-  padding: $spacing-lg $spacing-xl;
-  font-size: $font-size-xl;
+  border-radius: $border-radius-md;
+  padding: $spacing-md $spacing-xl;
+  font-size: $font-size-lg;
+  letter-spacing: 0.03em;
 
   @include clickable;
 }

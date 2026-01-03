@@ -1,21 +1,21 @@
 // BOARD
-$board-size: 50rem;
-$tile-size: 6.25rem;
+$board-size: 48rem;
+$tile-size: 6rem;
 
 // GRID
 $chess-grid-columns: 8;
 $chess-grid-rows: 8;
 
 // PIECE
-$piece-size: 5rem;
+$piece-size: 4.8rem;
 
 // COLORS
-$chess-light-square: #ebecd0;
-$chess-dark-square: #779556;
-$chess-highlight: rgba(0, 0, 0, 0.4);
+$chess-light-square: #f4f5f2; // 霧がかった白
+$chess-dark-square: #b7c2b0;  // セージグリーン
+$chess-highlight: rgba(80, 120, 100, 0.35);
 
 // MODAL
-$modal-overlay: rgba(127, 127, 127, 0.8);
-$modal-hover: rgba(255, 255, 255, 0.3);
-$modal-width: 50rem;
-$modal-height: 25rem;
+$modal-overlay: rgba(20, 30, 25, 0.55);
+$modal-hover: rgba(255, 255, 255, 0.2);
+$modal-width: 46rem;
+$modal-height: 24rem;

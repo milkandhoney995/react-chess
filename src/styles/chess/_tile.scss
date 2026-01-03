@@ -8,14 +8,16 @@
   width: $tile-size;
   height: $tile-size;
   position: relative;
+  border-radius: 0.4rem;
+  transition: background-color 0.2s ease;
 }
 
 @mixin tile-highlight {
   &::before {
     content: '';
     @include absolute-center;
-    width: $tile-size;
-    height: $tile-size;
+    width: 70%;
+    height: 70%;
     border-radius: $border-radius-full;
     background-color: $chess-highlight;
     z-index: $z-tile-highlight;
@@ -26,10 +28,10 @@
   &::before {
     content: '';
     @include absolute-center;
-    width: $tile-size;
-    height: $tile-size;
+    width: 80%;
+    height: 80%;
     border-radius: $border-radius-full;
-    border: 5px solid $chess-highlight;
+    border: 3px solid $chess-highlight;
     z-index: $z-tile-highlight;
   }
 }

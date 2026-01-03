@@ -6,7 +6,6 @@
 
 .chessboard {
   @include chess-grid;
-  background-color: rgb(184, 184, 246);
   touch-action: none;
 }
 

@@ -6,6 +6,7 @@
 @mixin modal-overlay {
   @include absolute-full;
   background: $modal-overlay;
+  backdrop-filter: blur(4px);
   z-index: $z-modal;
 }
 
@@ -14,4 +15,7 @@
   @include absolute-center;
   width: $modal-width;
   height: $modal-height;
+  background: #f7f8f6;
+  border-radius: $border-radius-md;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
