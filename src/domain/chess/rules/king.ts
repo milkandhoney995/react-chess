@@ -5,9 +5,7 @@ import {
   tileIsOccupiedByOpponent,
 } from "@/domain/chess/rules/general";
 import { TeamType } from "@/domain/chess/types";
-
-const samePosition = (a: Position, b: Position) =>
-  a.x === b.x && a.y === b.y;
+import { samePosition } from "@/domain/chess/utils";
 
 export const kingMove = (
   initialPosition: Position,

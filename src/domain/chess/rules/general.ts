@@ -1,8 +1,6 @@
 import { Piece, Position } from "@/domain/chess/types";
 import { TeamType } from "@/domain/chess/types";
-
-const samePosition = (a: Position, b: Position) =>
-  a.x === b.x && a.y === b.y;
+import { samePosition } from "@/domain/chess/utils";
 
 export const tileIsOccupied = (
   position: Position,
