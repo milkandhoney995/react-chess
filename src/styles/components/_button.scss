@@ -1,0 +1,13 @@
+@use '../foundation/variables' as *;
+@use '../mixins/interaction' as *;
+
+@mixin button-base {
+  background-color: $button-primary;
+  color: $button-text;
+  border: none;
+  border-radius: $border-radius-sm;
+  padding: $spacing-lg $spacing-xl;
+  font-size: $font-size-xl;
+
+  @include clickable;
+}

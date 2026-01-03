@@ -1,0 +1,14 @@
+@use './variables' as *;
+@use '../foundation/variables' as *;
+@use '../mixins/interaction' as *;
+
+@mixin chess-piece {
+  width: $tile-size;
+  height: $tile-size;
+  background-size: $piece-size;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: $z-tile-image;
+
+  @include grab-cursor;
+}

@@ -1,0 +1,20 @@
+@mixin clickable {
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+@mixin grab-cursor {
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+}

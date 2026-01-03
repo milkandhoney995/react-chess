@@ -90,10 +90,11 @@ src
 │   └── useDragAndDrop.ts　# ドラッグ＆ドロップのロジック
 └── styles
     ├── README.md
-    ├── _mixins.scss
-    ├── _utilities.scss
-    ├── _variables.scss
-    └── index.scss
+    ├── foundation/           # 設計の土台（変更頻度 低）
+    ├── mixins/                # 再利用ロジック
+    ├── components/            # UI共通コンポーネント用
+    ├── chess/                 # ♟ Chess ドメイン専用
+    └── index.scss            # グローバルエントリ（layout.tsx から import）
 ```
 
 ## 使い方

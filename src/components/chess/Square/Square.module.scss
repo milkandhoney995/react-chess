@@ -1,5 +1,5 @@
-@use '../../../styles/variables' as *;
-@use '../../../styles/mixins' as *;
+@use '../../../styles/chess/variables' as *;
+@use '../../../styles/chess' as *;
 
 .tile {
   @include tile-base;

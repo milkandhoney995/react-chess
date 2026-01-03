@@ -13,7 +13,7 @@ export function chessReducer(
       if (!piece) return state;
 
       const isOurTurn =
-        (piece.team === TeamType.OUR && state.totalTurns % 2 === 0) || // ← ここを修正
+        (piece.team === TeamType.OUR && state.totalTurns % 2 === 0) ||
         (piece.team === TeamType.OPPONENT && state.totalTurns % 2 === 1);
 
       if (!isOurTurn) return state;

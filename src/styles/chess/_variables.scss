@@ -1,0 +1,21 @@
+// BOARD
+$board-size: 50rem;
+$tile-size: 6.25rem;
+
+// GRID
+$chess-grid-columns: 8;
+$chess-grid-rows: 8;
+
+// PIECE
+$piece-size: 5rem;
+
+// COLORS
+$chess-light-square: #ebecd0;
+$chess-dark-square: #779556;
+$chess-highlight: rgba(0, 0, 0, 0.4);
+
+// MODAL
+$modal-overlay: rgba(127, 127, 127, 0.8);
+$modal-hover: rgba(255, 255, 255, 0.3);
+$modal-width: 50rem;
+$modal-height: 25rem;

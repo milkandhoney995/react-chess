@@ -9,7 +9,6 @@ src/styles/
 ├── index.scss          # Main entry point - imports all component styles
 ├── _variables.scss     # Sass variables (colors, sizes, spacing, etc.)
 ├── _mixins.scss        # Reusable Sass mixins
-├── _utilities.scss     # Utility classes
 └── README.md          # This documentation
 ```
 
@@ -53,25 +52,6 @@ src/styles/
 - `@include clickable` - Hover and active states
 - `@include grab-cursor` - Drag cursor states
 
-## 🛠️ Utilities (`_utilities.scss`)
-
-### Spacing Utilities
-- Margin: `.m-{size}`, `.mt-{size}`, `.mr-{size}`, etc.
-- Padding: `.p-{size}`, `.pt-{size}`, `.pr-{size}`, etc.
-
-### Typography Utilities
-- Font sizes: `.text-sm`, `.text-base`, `.text-lg`, `.text-xl`
-- Text alignment: `.text-center`, `.text-left`, `.text-right`
-
-### Color Utilities
-- Text colors: `.text-primary`, `.text-white`
-- Background colors: `.bg-primary`, `.bg-light`, `.bg-dark`
-
-### Layout Utilities
-- Flex utilities: `.flex`, `.flex-column`, `.flex-center`
-- Positioning: `.relative`, `.absolute`, `.fixed`
-- Size utilities: `.w-full`, `.h-full`, `.w-tile`, `.h-tile`
-
 ## 📝 Usage Examples
 
 ### Using Variables
@@ -91,13 +71,6 @@ src/styles/
 }
 ```
 
-### Using Utilities
-```html
-<div class="flex flex-center p-md bg-primary text-white">
-  Centered content with primary background
-</div>
-```
-
 ## 🎯 Benefits
 
 1. **Consistency**: Centralized variables ensure consistent styling
@@ -110,7 +83,7 @@ src/styles/
 
 ### Modern Sass Architecture
 - **All files** now use `@use` for proper module system
-- **Internal partials** (`_variables.scss`, `_mixins.scss`, `_utilities.scss`) use `@use` for encapsulation
+- **Internal partials** (`_variables.scss`, `_mixins.scss`) use `@use` for encapsulation
 - **Component files** use `@use` for modern Sass syntax
 
 ### Why This Approach?

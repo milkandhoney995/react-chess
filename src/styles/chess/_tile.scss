@@ -1,0 +1,35 @@
+@use './variables' as *;
+@use '../foundation/variables' as *;
+@use '../mixins/position' as *;
+@use '../mixins/flex' as *;
+
+@mixin tile-base {
+  @include flex-center;
+  width: $tile-size;
+  height: $tile-size;
+  position: relative;
+}
+
+@mixin tile-highlight {
+  &::before {
+    content: '';
+    @include absolute-center;
+    width: $tile-size;
+    height: $tile-size;
+    border-radius: $border-radius-full;
+    background-color: $chess-highlight;
+    z-index: $z-tile-highlight;
+  }
+}
+
+@mixin tile-highlight-piece {
+  &::before {
+    content: '';
+    @include absolute-center;
+    width: $tile-size;
+    height: $tile-size;
+    border-radius: $border-radius-full;
+    border: 5px solid $chess-highlight;
+    z-index: $z-tile-highlight;
+  }
+}

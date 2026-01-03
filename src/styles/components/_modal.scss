@@ -1,0 +1,17 @@
+@use '../foundation/variables' as *;
+@use '../chess/variables' as *;
+@use '../mixins/position' as *;
+@use '../mixins/flex' as *;
+
+@mixin modal-overlay {
+  @include absolute-full;
+  background: $modal-overlay;
+  z-index: $z-modal;
+}
+
+@mixin modal-body {
+  @include flex-center;
+  @include absolute-center;
+  width: $modal-width;
+  height: $modal-height;
+}

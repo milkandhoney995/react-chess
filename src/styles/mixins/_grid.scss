@@ -1,0 +1,10 @@
+@use '../chess/variables' as *;
+
+@mixin chess-grid {
+  display: grid;
+  grid-template-columns: repeat($chess-grid-columns, $tile-size);
+  grid-template-rows: repeat($chess-grid-rows, $tile-size);
+  width: $board-size;
+  height: $board-size;
+  position: relative;
+}
