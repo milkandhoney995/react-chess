@@ -8,11 +8,6 @@ export function samePosition(a: Position, b: Position): boolean {
   return a.x === b.x && a.y === b.y;
 }
 
-// 駒同士の比較
-export function samePiecePosition(a: Piece, b: Piece): boolean {
-  return samePosition(a.position, b.position) && a.type === b.type && a.team === b.team;
-}
-
 /* =====================
    画像取得
 ===================== */

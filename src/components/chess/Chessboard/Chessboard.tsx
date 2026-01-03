@@ -68,6 +68,10 @@ const Chessboard = ({
                 }
               : undefined;
 
+          // ★ 追加: draggingPieceId を使った半透明
+          const draggingStyle: CSSProperties = piece && piece.id === draggingPieceId
+            ? { opacity: 0.5 }
+            : {};
           // ★ 移動可能マスのハイライト判定
           const highlight = possibleMoves.some(m =>
             samePosition(m, position)
@@ -79,7 +83,7 @@ const Chessboard = ({
               piece={piece}
               number={x + yIndex + 2}
               highlight={highlight}
-              pieceStyle={pieceStyle}
+              pieceStyle={{ ...pieceStyle, ...draggingStyle }}
               onPointerDown={(e, p) => {
                 onPointerDown(e, p);
                 onDragStart(p);
