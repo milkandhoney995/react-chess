@@ -72,6 +72,7 @@ src
 │       │   ├── bishop.ts
 │       │   ├── general.ts
 │       │   ├── index.ts
+│       │   ├── slidingMoves.ts
 │       │   ├── king.ts
 │       │   ├── knight.ts
 │       │   ├── pawn.ts

@@ -1,7 +1,7 @@
 import { Piece, Position } from "@/domain/chess/types";
 import { PieceType, TeamType } from "@/domain/chess/types";
 import { cloneBoard } from "@/domain/chess/board/cloneBoard";
-import { getPossibleMoves } from "@/domain/chess/utils";
+import { getPossibleMoves, samePosition } from "@/domain/chess/utils";
 
 function calculateAllMoves(pieces: Piece[], totalTurns: number): Piece[] {
   const currentTeam =
@@ -31,6 +31,12 @@ export function movePiece(
     p => p.position.x === from.x && p.position.y === from.y
   );
   if (!movingPiece) return pieces;
+
+  // 合法手判定
+  const possibleMoves = getPossibleMoves(movingPiece, board);
+  if (!possibleMoves.some(m => samePosition(m, to))) {
+    return pieces;
+  }
 
   const pawnDir = movingPiece.team === TeamType.OUR ? 1 : -1;
 
