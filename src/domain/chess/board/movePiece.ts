@@ -1,23 +1,28 @@
-import { Piece, Position } from "@/domain/chess/types";
-import { PieceType, TeamType } from "@/domain/chess/types";
+import { Piece, Position, PieceType, TeamType } from "@/domain/chess/types";
 import { cloneBoard } from "@/domain/chess/board/cloneBoard";
 import { getPossibleMoves, samePosition } from "@/domain/chess/utils";
+
+/* =====================
+   次ターン用 possibleMoves 再計算
+===================== */
 
 function calculateAllMoves(pieces: Piece[], totalTurns: number): Piece[] {
   const currentTeam =
     totalTurns % 2 === 0 ? TeamType.OPPONENT : TeamType.OUR;
 
-  let next = cloneBoard(pieces);
-  next = next.map(piece => ({
+  const next = cloneBoard(pieces);
+  return next.map(piece => ({
     ...piece,
     possibleMoves:
       piece.team === currentTeam
         ? getPossibleMoves(piece, next)
         : [],
   }));
-
-  return next;
 }
+
+/* =====================
+   駒移動（キャスリング対応）
+===================== */
 
 export function movePiece(
   pieces: Piece[],
@@ -27,9 +32,7 @@ export function movePiece(
 ): Piece[] {
   const board = cloneBoard(pieces);
 
-  const movingPiece = board.find(
-    p => p.position.x === from.x && p.position.y === from.y
-  );
+  const movingPiece = board.find(p => samePosition(p.position, from));
   if (!movingPiece) return pieces;
 
   // 合法手判定
@@ -38,21 +41,33 @@ export function movePiece(
     return pieces;
   }
 
+  const isCastling =
+    movingPiece.type === PieceType.KING &&
+    Math.abs(to.x - from.x) === 2 &&
+    from.y === to.y;
+
   const pawnDir = movingPiece.team === TeamType.OUR ? 1 : -1;
 
-  // en passant
-  const enPassantTarget =
+  // en passant 判定
+  const isEnPassant =
     movingPiece.type === PieceType.PAWN &&
     Math.abs(from.y - to.y) === 1 &&
     from.x !== to.x &&
-    !board.some(p => p.position.x === to.x && p.position.y === to.y);
+    !board.some(p => samePosition(p.position, to));
+
+  /* =====================
+     駒の除去（capture / en passant）
+  ===================== */
 
   let next = board.filter(p => {
     if (p.id === movingPiece.id) return true;
-    if (p.position.x === to.x && p.position.y === to.y) return false;
 
+    // 通常キャプチャ
+    if (samePosition(p.position, to)) return false;
+
+    // en passant
     if (
-      enPassantTarget &&
+      isEnPassant &&
       p.position.x === to.x &&
       p.position.y === to.y - pawnDir
     ) {
@@ -62,18 +77,62 @@ export function movePiece(
     return true;
   });
 
-  next = next.map(p =>
-    p.id === movingPiece.id
-      ? {
+  /* =====================
+     駒の移動
+  ===================== */
+
+  next = next.map(p => {
+    // 移動した駒
+    if (p.id === movingPiece.id) {
+      return {
+        ...p,
+        position: { ...to },
+        hasMoved: true,
+        enPassant: false,
+      };
+    }
+
+    // キャスリング時のルーク移動
+    if (
+      isCastling &&
+      p.type === PieceType.ROOK &&
+      p.team === movingPiece.team &&
+      p.position.y === from.y
+    ) {
+      const isKingSide = to.x > from.x;
+
+      if (
+        (isKingSide && p.position.x === 7) ||
+        (!isKingSide && p.position.x === 0)
+      ) {
+        return {
           ...p,
-          position: { ...to },
+          position: {
+            x: isKingSide ? 5 : 3,
+            y: from.y,
+          },
           hasMoved: true,
-          enPassant:
-            p.type === PieceType.PAWN &&
-            Math.abs(from.y - to.y) === 2,
-        }
-      : p.type === PieceType.PAWN
-      ? { ...p, enPassant: false }
+        };
+      }
+    }
+
+    // 他ポーンの enPassant フラグ解除
+    if (p.type === PieceType.PAWN) {
+      return { ...p, enPassant: false };
+    }
+
+    return p;
+  });
+
+  /* =====================
+     ポーン2マス前進フラグ
+  ===================== */
+
+  next = next.map(p =>
+    p.id === movingPiece.id &&
+    p.type === PieceType.PAWN &&
+    Math.abs(from.y - to.y) === 2
+      ? { ...p, enPassant: true }
       : p
   );
 

@@ -2,7 +2,6 @@ import { Piece, PieceType, Position, TeamType } from "@/domain/chess/types";
 import {
   tileIsEmptyOrOccupiedByOpponent,
   tileIsOccupied,
-  tileIsOccupiedByOpponent,
 } from "@/domain/chess/rules/general";
 import { samePosition } from "@/domain/chess/utils";
 
@@ -32,9 +31,9 @@ const getAdjacentMoves = (
     .map(([dx, dy]) => move(king.position, dx, dy))
     .filter(isInsideBoard)
     .filter(pos =>
-      !tileIsOccupied(pos, board) ||
-      tileIsOccupiedByOpponent(pos, board, king.team)
-    );
+      tileIsEmptyOrOccupiedByOpponent(pos, board, king.team)
+    )
+    .filter(pos => !isSquareAttacked(pos, king.team, board));
 };
 
 /* =====================
@@ -47,52 +46,94 @@ const getCastlingMoves = (
 ): Position[] => {
   if (king.hasMoved) return [];
 
-  const rooks = board.filter(
+  // 現在チェックされているなら不可
+  if (isSquareAttacked(king.position, king.team, board)) {
+    return [];
+  }
+
+  const moves: Position[] = [];
+  const y = king.position.y;
+
+  // キングサイド
+  if (canCastle(king, board, "king")) {
+    moves.push({ x: king.position.x + 2, y });
+  }
+
+  // クイーンサイド
+  if (canCastle(king, board, "queen")) {
+    moves.push({ x: king.position.x - 2, y });
+  }
+
+  return moves;
+};
+
+const canCastle = (
+  king: Piece,
+  board: Piece[],
+  side: "king" | "queen"
+): boolean => {
+  const y = king.position.y;
+  const rookX = side === "king" ? 7 : 0;
+  const direction = side === "king" ? 1 : -1;
+
+  const rook = board.find(
     p =>
       p.type === PieceType.ROOK &&
       p.team === king.team &&
-      !p.hasMoved
+      !p.hasMoved &&
+      p.position.x === rookX &&
+      p.position.y === y
   );
 
-  return rooks
-    .filter(rook => canCastleWithRook(king, rook, board))
-    .map(rook => ({ ...rook.position }));
-};
+  if (!rook) return false;
 
-const canCastleWithRook = (
-  king: Piece,
-  rook: Piece,
-  board: Piece[]
-): boolean => {
-  const direction = king.position.x > rook.position.x ? 1 : -1;
+  // キングとルークの間のマス
+  const between: Position[] = [];
+  for (
+    let x = king.position.x + direction;
+    x !== rookX;
+    x += direction
+  ) {
+    between.push({ x, y });
+  }
 
-  const adjacentToKing = move(king.position, -direction, 0);
+  // 間に駒があれば不可
+  if (between.some(pos => tileIsOccupied(pos, board))) {
+    return false;
+  }
 
+  // キングが通過・到達するマス
+  const kingPath: Position[] = [
+    { x: king.position.x + direction, y },
+    { x: king.position.x + direction * 2, y },
+  ];
+
+  // 通過・到達マスが攻撃されていたら不可
   if (
-    !rook.possibleMoves.some(m =>
-      samePosition(m, adjacentToKing)
+    kingPath.some(pos =>
+      isSquareAttacked(pos, king.team, board)
     )
   ) {
     return false;
   }
 
-  const tilesBetween = rook.possibleMoves.filter(
-    m => m.y === king.position.y
-  );
-
-  return isPathSafeFromEnemies(tilesBetween, king.team, board);
+  return true;
 };
 
-const isPathSafeFromEnemies = (
-  path: Position[],
+/* =====================
+   Square Attack Check
+===================== */
+
+const isSquareAttacked = (
+  square: Position,
   team: TeamType,
   board: Piece[]
 ): boolean => {
   const enemies = board.filter(p => p.team !== team);
 
-  return enemies.every(enemy =>
-    enemy.possibleMoves.every(
-      move => !path.some(tile => samePosition(tile, move))
+  return enemies.some(enemy =>
+    enemy.possibleMoves.some(move =>
+      samePosition(move, square)
     )
   );
 };
@@ -111,11 +152,29 @@ export const canKingMove = (
   const dx = Math.sign(to.x - from.x);
   const dy = Math.sign(to.y - from.y);
 
-  const next = move(from, dx, dy);
+  // Castling（横に2マス）
+  if (Math.abs(to.x - from.x) === 2 && dy === 0) {
+    const king = board.find(
+      p =>
+        p.type === PieceType.KING &&
+        p.team === team &&
+        samePosition(p.position, from)
+    );
+    if (!king) return false;
 
+    return getCastlingMoves(king, board).some(pos =>
+      samePosition(pos, to)
+    );
+  }
+
+  // 通常移動（1マス）
+  const next = move(from, dx, dy);
   if (!samePosition(next, to)) return false;
 
-  return tileIsEmptyOrOccupiedByOpponent(next, board, team);
+  if (!tileIsEmptyOrOccupiedByOpponent(next, board, team)) return false;
+
+  // 移動先が攻撃されていないか
+  return !isSquareAttacked(next, team, board);
 };
 
 /* =====================

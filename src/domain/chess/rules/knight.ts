@@ -53,11 +53,7 @@ type Offset = [dx: number, dy: number];
 const isInsideBoard = ({ x, y }: Position): boolean =>
   x >= 0 && x < 8 && y >= 0 && y < 8;
 
-const move = (
-  position: Position,
-  dx: number,
-  dy: number
-): Position => ({
+const move = (position: Position, dx: number, dy: number): Position => ({
   x: position.x + dx,
   y: position.y + dy,
 });
