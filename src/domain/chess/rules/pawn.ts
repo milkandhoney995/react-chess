@@ -4,9 +4,7 @@ import {
   tileIsOccupied,
   tileIsOccupiedByOpponent,
 } from "@/domain/chess/rules/general";
-
-const samePosition = (a: Position, b: Position) =>
-  a.x === b.x && a.y === b.y;
+import { samePosition } from "@/domain/chess/utils";
 
 export const getPossiblePawnMoves = (
   pawn: Piece,

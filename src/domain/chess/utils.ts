@@ -13,7 +13,7 @@ export function samePiecePosition(a: Piece, b: Piece): boolean {
 
 // 駒の画像パスを取得
 export function getPieceImage(piece: Piece): string {
-  const teamChar = piece.team === TeamType.OUR ? "w" : "b";
+  const teamChar = piece.team === TeamType.OUR ? TeamType.OUR : TeamType.OPPONENT;
   return `/assets/images/${piece.type.toLowerCase()}_${teamChar}.png`;
 }
 

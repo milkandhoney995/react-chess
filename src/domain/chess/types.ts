@@ -27,9 +27,3 @@ export interface Piece {
   possibleMoves: Position[];
   enPassant?: boolean;
 }
-
-export interface BoardData {
-  pieces: Piece[];
-  totalTurns: number;
-  winningTeam?: TeamType;
-}
