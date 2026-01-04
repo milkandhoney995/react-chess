@@ -1,7 +1,8 @@
 import { ChessState } from "@/features/chess/types";
 import { ChessAction } from "@/features/chess/actions";
-import { checkWinningTeam, isOurTurn } from "@/domain/chess/utils";
+import { checkWinningTeam, samePosition } from "@/domain/chess/utils";
 import { movePiece } from "@/domain/chess/board/movePiece";
+import { TeamType } from "@/domain/chess/types";
 
 export function chessReducer(
   state: ChessState,
@@ -12,7 +13,12 @@ export function chessReducer(
       const piece = state.pieces.find(p => p.id === action.payload.pieceId);
       if (!piece) return state;
 
-      if (!isOurTurn(piece.team, state.totalTurns)) return state;
+      // 安全のため Reducer 側でもターンチェック
+      const isTurn =
+        (piece.team === TeamType.OUR && state.totalTurns % 2 === 0) ||
+        (piece.team === TeamType.OPPONENT && state.totalTurns % 2 === 1);
+
+      if (!isTurn) return state;
 
       const newPieces = movePiece(
         state.pieces,
@@ -21,11 +27,15 @@ export function chessReducer(
         state.totalTurns
       );
 
+      const hasMoved = newPieces.some(
+        p => p.id === piece.id && !samePosition(p.position, piece.position)
+      );
+
       return {
         ...state,
-        pieces: newPieces,
-        totalTurns: state.totalTurns + 1,
-        winningTeam: checkWinningTeam(newPieces),
+        pieces: hasMoved ? newPieces : state.pieces,
+        totalTurns: hasMoved ? state.totalTurns + 1 : state.totalTurns,
+        winningTeam: hasMoved ? checkWinningTeam(newPieces) : state.winningTeam,
       };
     }
 

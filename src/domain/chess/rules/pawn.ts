@@ -1,5 +1,4 @@
-import { Piece, Position } from "@/domain/chess/types";
-import { PieceType, TeamType } from "@/domain/chess/types";
+import { Piece, Position, PieceType, TeamType } from "@/domain/chess/types";
 import {
   tileIsOccupied,
   tileIsOccupiedByOpponent,
@@ -43,6 +42,9 @@ const getForwardMoves = (pawn: Piece, board: Piece[]): Position[] => {
   return moves;
 };
 
+/* =====================
+   Capture
+===================== */
 const getCaptureMoves = (pawn: Piece, board: Piece[]): Position[] => {
   const dir = getPawnDirection(pawn.team);
 
@@ -53,27 +55,34 @@ const getCaptureMoves = (pawn: Piece, board: Piece[]): Position[] => {
     );
 };
 
+/* =====================
+   En Passant
+===================== */
 const getEnPassantMoves = (pawn: Piece, board: Piece[]): Position[] => {
   const dir = getPawnDirection(pawn.team);
+  const moves: Position[] = [];
 
-  return [-1, 1]
-    .map(dx => {
-      const side = board.find(p =>
-        samePosition(p.position, move(pawn.position, dx, 0))
-      );
+  for (const dx of [-1, 1]) {
+    const sidePos = move(pawn.position, dx, 0);
+    const sidePawn = board.find(
+      p =>
+        p.type === PieceType.PAWN &&
+        p.team !== pawn.team &&
+        p.enPassant === true &&
+        samePosition(p.position, sidePos)
+    );
 
-      if (side?.type === PieceType.PAWN && side.enPassant) {
-        return move(pawn.position, dx, dir);
-      }
-      return null;
-    })
-    .filter((p): p is Position => p !== null);
+    if (sidePawn) {
+      moves.push(move(pawn.position, dx, dir));
+    }
+  }
+
+  return moves;
 };
 
 /* =====================
-   Domain Utilities
+   Utilities
 ===================== */
-
 const getPawnDirection = (team: TeamType): number =>
   team === TeamType.OUR ? 1 : -1;
 
