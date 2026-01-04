@@ -1,7 +1,6 @@
 @use '../foundation/variables' as *;
 @use '../chess/variables' as *;
-@use '../mixins/position' as *;
-@use '../mixins/flex' as *;
+@use '../mixins' as *;
 
 @mixin modal-overlay {
   @include absolute-full;
@@ -18,4 +17,9 @@
   background: #f7f8f6;
   border-radius: $border-radius-md;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  @include responsive(md) {
+    width: 90vw;
+    height: auto;
+    padding: $spacing-lg;
+  }
 }

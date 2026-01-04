@@ -4,6 +4,5 @@
 .main {
   @include flex-column;
   @include flex-center;
-  padding: $spacing-xxl;
   min-height: 100vh;
 }

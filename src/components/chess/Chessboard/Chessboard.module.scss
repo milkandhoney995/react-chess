@@ -1,8 +1,7 @@
 @use '../../../styles/foundation' as *;
 @use '../../../styles/chess/variables' as *;
 @use '../../../styles/mixins' as *;
-@use '../../../styles/components/modal' as *;
-@use '../../../styles/components/button' as *;
+@use '../../../styles/components' as *;
 
 .chessboard {
   @include chess-grid;
@@ -29,9 +28,15 @@
     > .checkmate__body {
       @include flex-column;
       gap: $spacing-xl;
+      @include responsive(md) {
+        gap: $spacing-lg;
+      }
 
       > span {
         font-size: $font-size-xl;
+        @include responsive(md) {
+          gap: $spacing-lg;
+        }
       }
 
       > button {

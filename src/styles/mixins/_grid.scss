@@ -1,10 +1,17 @@
 @use '../chess/variables' as *;
+@use './responsive' as *;
 
 @mixin chess-grid {
   display: grid;
-  grid-template-columns: repeat($chess-grid-columns, $tile-size);
-  grid-template-rows: repeat($chess-grid-rows, $tile-size);
+  grid-template-columns: repeat($chess-grid-columns, 1fr);
+  grid-template-rows: repeat($chess-grid-rows, 1fr);
   width: $board-size;
   height: $board-size;
   position: relative;
+  @include responsive(md) {
+    width: 90vw;
+    height: 90vw;
+    max-width: 36rem;
+    max-height: 36rem;
+  }
 }

@@ -1,7 +1,6 @@
 @use './variables' as *;
 @use '../foundation/variables' as *;
-@use '../mixins/position' as *;
-@use '../mixins/flex' as *;
+@use '../mixins' as *;
 
 @mixin tile-base {
   @include flex-center;
@@ -10,6 +9,11 @@
   position: relative;
   border-radius: 0.4rem;
   transition: background-color 0.2s ease;
+  @include responsive(md) {
+    width: 100%;
+    height: 100%;
+    border-radius: $border-radius-sm;
+  }
 }
 
 @mixin tile-highlight {

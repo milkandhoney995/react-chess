@@ -6,3 +6,8 @@
 @use '../components/Chessboard/Chessboard.module';
 @use '../components/Tile/Tile.module';
 @use '../app/page.module';
+
+@use "./foundation";
+@use "./mixins";
+@use "./components";
+@use "./chess";

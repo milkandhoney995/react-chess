@@ -1,6 +1,6 @@
 @use './variables' as *;
 @use '../foundation/variables' as *;
-@use '../mixins/interaction' as *;
+@use '../mixins' as *;
 
 @mixin chess-piece {
   width: $tile-size;
@@ -12,4 +12,10 @@
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
 
   @include grab-cursor;
+
+  @include responsive(md) {
+    width: 100%;
+    height: 100%;
+    background-size: 80%;
+  }
 }

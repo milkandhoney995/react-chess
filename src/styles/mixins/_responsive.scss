@@ -1,5 +1,14 @@
-@mixin responsive($breakpoint) {
-  @media (min-width: $breakpoint) {
-    @content;
+@use 'sass:map';
+@use "../foundation/breakpoints" as *;
+
+@mixin responsive($size) {
+  $breakpoint: map.get($breakpoints, $size);
+
+  @if $breakpoint {
+    @media (max-width: $breakpoint) {
+      @content;
+    }
+  } @else {
+    @error "Unknown breakpoint: #{$size}";
   }
 }
