@@ -7,8 +7,25 @@ interface Props {
   onDragEnd?: () => void;
 }
 
-const clamp = (v: number, min: number, max: number) =>
-  Math.min(Math.max(v, min), max);
+const clamp = (value: number, min: number, max: number) =>
+  Math.min(Math.max(value, min), max);
+
+/**
+ * クライアント座標 → チェス盤座標に変換
+ * @param clientX
+ * @param clientY
+ * @param boardRect
+*/
+const getBoardPosition = (
+  clientX: number,
+  clientY: number,
+  boardRect: DOMRect
+): Position => {
+  const x = clamp(Math.floor((clientX - boardRect.left) / GRID_SIZE), 0, 7);
+  const y = clamp(7 - Math.floor((clientY - boardRect.top) / GRID_SIZE), 0, 7);
+
+  return { x, y };
+};
 
 const useDragAndDrop = ({ onDrop, onDragEnd }: Props) => {
   const chessboardRef = useRef<HTMLDivElement>(null);
@@ -31,9 +48,16 @@ const useDragAndDrop = ({ onDrop, onDragEnd }: Props) => {
   const onPointerMove = (e: React.PointerEvent) => {
     if (!dragState) return;
 
-    setDragState(prev =>
-      prev ? { ...prev, clientX: e.clientX, clientY: e.clientY } : null
-    );
+    setDragState({
+      ...dragState,
+      clientX: e.clientX,
+      clientY: e.clientY,
+    });
+  };
+
+  const resetDrag = () => {
+    setDragState(null);
+    onDragEnd?.();
   };
 
   const onPointerUp = (e: React.PointerEvent) => {
@@ -42,24 +66,15 @@ const useDragAndDrop = ({ onDrop, onDragEnd }: Props) => {
       return;
     }
 
-    const rect = chessboardRef.current.getBoundingClientRect();
-
-    const x = clamp(
-      Math.floor((e.clientX - rect.left) / GRID_SIZE),
-      0,
-      7
+    const boardRect = chessboardRef.current.getBoundingClientRect();
+    const position = getBoardPosition(
+      e.clientX,
+      e.clientY,
+      boardRect
     );
 
-    const y = clamp(
-      7 - Math.floor((e.clientY - rect.top) / GRID_SIZE),
-      0,
-      7
-    );
-
-    onDrop(dragState.piece.id, { x, y });
-
-    setDragState(null);
-    onDragEnd?.();
+    onDrop(dragState.piece.id, position);
+    resetDrag();
   };
 
   return {

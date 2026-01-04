@@ -98,6 +98,8 @@ const possibleMovesMap: Record<
 
 /**
  * 駒の合法手を返す
+ * @param piece
+ * @param board
  */
 export function getPossibleMoves(piece: Piece, board: Piece[]): Position[] {
   const fn = possibleMovesMap[piece.type];
@@ -110,6 +112,8 @@ export function getPossibleMoves(piece: Piece, board: Piece[]): Position[] {
 ===================== */
 /**
  * 現在のターンが指定した駒のチームのターンかどうか判定
+ * @param pieceTeam
+ * @param totalTurns
  */
 export function isOurTurn(pieceTeam: TeamType, totalTurns: number): boolean {
   return (

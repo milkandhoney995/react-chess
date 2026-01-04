@@ -59,6 +59,7 @@ const Chessboard = ({
           return (
             <Square
               key={`${x}-${yIndex}`}
+              id={`${x}-${yIndex}`}
               piece={piece}
               number={x + yIndex + 2}
               highlight={highlight}

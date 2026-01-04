@@ -5,12 +5,13 @@ import { getPieceImage } from "@/domain/chess/utils";
 interface Props {
   piece?: Piece;
   number: number;
+  id: string;
   highlight: boolean;
   pieceStyle?: React.CSSProperties;
   onPointerDown: (e: React.PointerEvent, piece: Piece) => void;
 }
 
-const Square = ({ piece, number, highlight, pieceStyle, onPointerDown }: Props) => {
+const Square = ({ piece, number, id, highlight, pieceStyle, onPointerDown }: Props) => {
   const className = [
     classes.tile,
     number % 2 === 0 ? classes.tile__blackTile : classes.tile__whiteTile,
@@ -21,6 +22,7 @@ const Square = ({ piece, number, highlight, pieceStyle, onPointerDown }: Props) 
     <div className={className}>
       {piece && (
         <img
+          id={id}
           className={classes.tile__image}
           src={getPieceImage(piece)}
           style={pieceStyle}
