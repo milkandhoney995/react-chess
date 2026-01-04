@@ -1,6 +1,11 @@
-import { useRef, useState } from "react";
-import { DragState, Piece, Position } from "@/domain/chess/types";
+import { useReducer, useRef } from "react";
+import { Piece, Position } from "@/domain/chess/types";
 import { GRID_SIZE } from "@/domain/chess/constants";
+import {
+  chessUIReducer,
+  initialChessUIState,
+} from "@/features/chess/ui/reducer";
+import { ChessUIAction } from "@/features/chess/ui/actions";
 
 interface Props {
   onDrop: (pieceId: string, position: Position) => void;
@@ -29,52 +34,55 @@ const getBoardPosition = (
 
 const useDragAndDrop = ({ onDrop, onDragEnd }: Props) => {
   const chessboardRef = useRef<HTMLDivElement>(null);
-  const [dragState, setDragState] = useState<DragState | null>(null);
+  const [uiState, dispatch] = useReducer(chessUIReducer, initialChessUIState);
+
+  const dragState = uiState.drag;
 
   const onPointerDown = (e: React.PointerEvent, piece: Piece) => {
     e.preventDefault();
 
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
 
-    setDragState({
-      piece,
-      offsetX: e.clientX - rect.left,
-      offsetY: e.clientY - rect.top,
-      clientX: e.clientX,
-      clientY: e.clientY,
+    dispatch({
+      type: "DRAG_START",
+      payload: {
+        piece,
+        offsetX: e.clientX - rect.left,
+        offsetY: e.clientY - rect.top,
+        clientX: e.clientX,
+        clientY: e.clientY,
+      },
     });
   };
 
   const onPointerMove = (e: React.PointerEvent) => {
     if (!dragState) return;
 
-    setDragState({
-      ...dragState,
-      clientX: e.clientX,
-      clientY: e.clientY,
+    dispatch({
+      type: "DRAG_MOVE",
+      payload: {
+        clientX: e.clientX,
+        clientY: e.clientY,
+      },
     });
   };
 
-  const resetDrag = () => {
-    setDragState(null);
+  const finishDrag = () => {
+    dispatch({ type: "DRAG_END" });
     onDragEnd?.();
   };
 
   const onPointerUp = (e: React.PointerEvent) => {
     if (!dragState || !chessboardRef.current) {
-      setDragState(null);
+      finishDrag();
       return;
     }
 
-    const boardRect = chessboardRef.current.getBoundingClientRect();
-    const position = getBoardPosition(
-      e.clientX,
-      e.clientY,
-      boardRect
-    );
+    const rect = chessboardRef.current.getBoundingClientRect();
+    const position = getBoardPosition(e.clientX, e.clientY, rect);
 
     onDrop(dragState.piece.id, position);
-    resetDrag();
+    finishDrag();
   };
 
   return {
