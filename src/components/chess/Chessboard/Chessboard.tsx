@@ -21,6 +21,7 @@ interface Props {
   possibleMoves: Position[];
   draggingPieceId: string | null;
   promotion?: PromotionState;
+  checkedSquares?: Position[];
   dispatch: React.Dispatch<ChessAction>;
   onDragStart: (piece: Piece) => void;
   onDragEnd: () => void;
@@ -34,6 +35,7 @@ const Chessboard: React.FC<Props> = ({
   dispatch,
   onDragStart,
   onDragEnd,
+  checkedSquares = [],
 }) => {
   const {
     chessboardRef,
@@ -52,6 +54,9 @@ const Chessboard: React.FC<Props> = ({
     onDragEnd,
   });
 
+  const isChecked = (position: Position) =>
+    checkedSquares?.some(pos => samePosition(pos, position));
+
   return (
     <div className={classes.chessboard__wrapper}>
       {/* ===== チェス盤 ===== */}
@@ -67,6 +72,7 @@ const Chessboard: React.FC<Props> = ({
             const piece = getPieceAt(pieces, position);
             const style = getPieceStyle(piece, draggingPieceId);
             const highlight = possibleMoves.some(m => samePosition(m, position));
+            const checked = isChecked(position);
 
             return (
               <Square
@@ -75,6 +81,7 @@ const Chessboard: React.FC<Props> = ({
                 piece={piece}
                 number={x + yIndex + 2}
                 highlight={highlight}
+                isChecked={checked}
                 pieceStyle={style}
                 onPointerDown={(e, p) => {
                   if (promotion) return;

@@ -1,6 +1,7 @@
 import { CSSProperties } from "react";
 import { Piece, PieceType, Position, TeamType, DragState } from "@/domain/chess/types";
 import { getPossibleBishopMoves, getPossibleKingMoves, getPossibleKnightMoves, getPossiblePawnMoves, getPossibleQueenMoves, getPossibleRookMoves } from "@/domain/chess/rules";
+import { applyMove } from "./board/applyMove";
 
 /* =====================
    位置比較
@@ -61,19 +62,60 @@ export function getDraggingStyle(
   return style
 }
 /* =====================
-   勝利判定
+  勝利判定
 ===================== */
 export function checkWinningTeam(pieces: Piece[]): TeamType | undefined {
-  const hasOurKing = pieces.some(p => p.type === PieceType.KING && p.team === TeamType.OUR);
-  const hasOpponentKing = pieces.some(p => p.type === PieceType.KING && p.team === TeamType.OPPONENT);
+  if (isCheckmate(TeamType.OUR, pieces)) return TeamType.OPPONENT;
+  if (isCheckmate(TeamType.OPPONENT, pieces)) return TeamType.OUR;
 
-  if (!hasOpponentKing && hasOurKing) return TeamType.OUR;
-  if (!hasOurKing && hasOpponentKing) return TeamType.OPPONENT;
   return undefined;
 }
 
+/**
+ * 王がチェックされているか判定する
+ * @param team
+ * @param pieces 対象の駒
+ * @returns 王がチェックされているか
+ */
+export function isKingInCheck(
+  team: TeamType,
+  pieces: Piece[]
+): boolean {
+  const king = pieces.find(
+    p => p.type === PieceType.KING && p.team === team
+  );
+  if (!king) return false;
+
+  const enemies = pieces.filter(p => p.team !== team);
+
+  return enemies.some(enemy =>
+    enemy.possibleMoves.some(move =>
+      samePosition(move, king.position)
+    )
+  );
+}
+
+/**
+ * チェックメイト判定
+ * @param team
+ * @param pieces 対象の駒
+ * @returns チェックメイトか
+ */
+export function isCheckmate(
+  team: TeamType,
+  pieces: Piece[]
+): boolean {
+  if (!isKingInCheck(team, pieces)) return false;
+  const ownPieces = pieces.filter(p => p.team === team);
+
+  // 全駒が1手も合法手を持たない
+  return ownPieces.every(piece =>
+    getLegalMoves(piece, pieces).length === 0
+  );
+}
+
 /* =====================
-   getPossibleMoves ディスパッチャ
+  getPossibleMoves ディスパッチャ
 ===================== */
 
 /**
@@ -102,9 +144,27 @@ export function getPossibleMoves(piece: Piece, board: Piece[]): Position[] {
   return fn ? fn(piece, board) : [];
 }
 
+/**
+ * 駒の合法手を返す
+ * @param piece
+ * @param board
+ */
+
+export function getLegalMoves(
+  piece: Piece,
+  board: Piece[]
+): Position[] {
+  const pseudoMoves = getPossibleMoves(piece, board);
+
+  return pseudoMoves.filter(to => {
+    const simulated = applyMove(board, piece.position, to);
+    return !isKingInCheck(piece.team, simulated);
+  });
+}
+
 
 /* =====================
-   その他
+  その他
 ===================== */
 /**
  * 現在のターンが指定した駒のチームのターンかどうか判定

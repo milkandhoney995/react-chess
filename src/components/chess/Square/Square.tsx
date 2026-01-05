@@ -9,15 +9,25 @@ interface Props {
   number: number;
   id: string;
   highlight: boolean;
+  isChecked?: boolean;
   pieceStyle?: React.CSSProperties;
   onPointerDown: (e: React.PointerEvent, piece: Piece) => void;
 }
 
-const Square = ({ piece, number, id, highlight, pieceStyle, onPointerDown }: Props) => {
+const Square = ({
+  piece,
+  number,
+  id,
+  highlight,
+  isChecked = false,
+  pieceStyle,
+  onPointerDown,
+}: Props) => {
   const className = [
     classes.tile,
     number % 2 === 0 ? classes.tile__blackTile : classes.tile__whiteTile,
     highlight && classes.tile__highlight,
+    isChecked && classes.tile__checked,
   ].filter(Boolean).join(" ");
 
   // SVG を取得
@@ -30,7 +40,7 @@ const Square = ({ piece, number, id, highlight, pieceStyle, onPointerDown }: Pro
           id={id}
           className={classes.tile__image}
           style={pieceStyle}
-          onPointerDown={(e) => onPointerDown(e, piece)}
+          onPointerDown={e => onPointerDown(e, piece)}
         >
           <SvgPiece team={piece.team} />
         </div>

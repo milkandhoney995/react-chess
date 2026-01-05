@@ -30,4 +30,7 @@
   &__highlight:not(.tile__pieceImage) {
     @include tile-highlight;
   }
+  &__check {
+    outline: 2px solid rgb(242, 90, 90);
+  }
 }

@@ -54,6 +54,14 @@ src
 │   │   ├── Chessboard # 盤面コンポーネント
 │   │   │   ├── Chessboard.module.scss
 │   │   │   └── Chessboard.tsx
+│   │   ├── PiecesSvg # 駒SVGコンポーネント
+│   │   │   ├── Bishop.tsx
+│   │   │   ├── Rook.tsx
+│   │   │   ├── King.tsx
+│   │   │   ├── Knight.tsx
+│   │   │   ├── Queen.tsx
+│   │   │   ├── Pawn.tsx
+│   │   │   └── index.tsx
 │   │   ├── PromotionModal # モーダルコンポーネント
 │   │   │   ├── PromotionModal.module.scss
 │   │   │   └── PromotionModal.tsx
@@ -66,7 +74,8 @@ src
 │       ├── board
 │       │   ├── cloneBoard.ts
 │       │   ├── createBoard.ts
-│       │   └── movePiece.ts
+│       │   ├── applyMove.ts # 盤面シミュレーター(駒を動かす・取る、en passant / castling)
+│       │   └── movePiece.ts # 合法手判定
 │       ├── constants.ts　# 盤面設定や初期配置
 │       ├── rules
 │       │   ├── bishop.ts
