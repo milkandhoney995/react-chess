@@ -2,7 +2,7 @@
 
 import classes from "./Chessboard.module.scss";
 import { VERTICAL_AXIS, HORIZONTAL_AXIS } from "@/domain/chess/constants";
-import { Piece, Position, PieceType, TeamType } from "@/domain/chess/types";
+import { Piece, Position, TeamType } from "@/domain/chess/types";
 import { getPieceAt, samePosition, getPieceStyle } from "@/domain/chess/utils";
 import Square from "@/components/chess/Square/Square";
 import useDragAndDrop from "@/hooks/useDragAndDrop";
@@ -23,13 +23,6 @@ interface Props {
   onDragStart: (piece: Piece) => void;
   onDragEnd: () => void;
 }
-
-const PROMOTION_PIECES: PieceType[] = [
-  PieceType.QUEEN,
-  PieceType.ROOK,
-  PieceType.BISHOP,
-  PieceType.KNIGHT,
-];
 
 const Chessboard = ({
   pieces,

@@ -24,6 +24,7 @@ const ChessPiece = () => {
       pieces={state.pieces}
       possibleMoves={possibleMoves}
       draggingPieceId={draggingPieceId}
+      promotion={state.promotion}
       dispatch={dispatch}
       onDragStart={(piece) => setDraggingPieceId(piece.id)}
       onDragEnd={() => setDraggingPieceId(null)}

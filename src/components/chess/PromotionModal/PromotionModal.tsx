@@ -2,22 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { PieceType, Position, TeamType } from "@/domain/chess/types";
-import { ChessAction } from "@/features/chess/actions";
 import classes from "./PromotionModal.module.scss";
+import { Position, TeamType } from "@/domain/chess/types";
+import { ChessAction } from "@/features/chess/actions";
+import { PROMOTION_PIECES } from "@/domain/chess/constants";
 
 interface Props {
   position: Position;
   team: TeamType;
   dispatch: React.Dispatch<ChessAction>;
 }
-
-const PROMOTION_PIECES: PieceType[] = [
-  PieceType.QUEEN,
-  PieceType.ROOK,
-  PieceType.BISHOP,
-  PieceType.KNIGHT,
-];
 
 const PromotionModal = ({ position, team, dispatch }: Props) => {
   const [mounted, setMounted] = useState(false);
