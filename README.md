@@ -54,6 +54,9 @@ src
 │   │   ├── Chessboard # 盤面コンポーネント
 │   │   │   ├── Chessboard.module.scss
 │   │   │   └── Chessboard.tsx
+│   │   ├── PromotionModal # モーダルコンポーネント
+│   │   │   ├── PromotionModal.module.scss
+│   │   │   └── PromotionModal.tsx
 │   │   ├── ChessPiece # 駒コンポーネント
 │   │   │   └── ChessPiece.tsx
 │   │   └── Square # マスコンポーネント
