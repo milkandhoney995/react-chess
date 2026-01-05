@@ -57,8 +57,6 @@ src
 │   │   ├── PromotionModal # モーダルコンポーネント
 │   │   │   ├── PromotionModal.module.scss
 │   │   │   └── PromotionModal.tsx
-│   │   ├── ChessPiece # 駒コンポーネント
-│   │   │   └── ChessPiece.tsx
 │   │   └── Square # マスコンポーネント
 │   │       ├── Square.module.scss
 │   │       └── Square.tsx
