@@ -57,14 +57,6 @@ export function getPieceStyle(
 }
 
 /* =====================
-   画像取得
-===================== */
-export function getPieceImage(piece: Piece): string {
-  const teamChar = piece.team === TeamType.OUR ? TeamType.OUR : TeamType.OPPONENT;
-  return `/assets/images/${piece.type.toLowerCase()}_${teamChar}.png`;
-}
-
-/* =====================
    勝利判定
 ===================== */
 export function checkWinningTeam(pieces: Piece[]): TeamType | undefined {
