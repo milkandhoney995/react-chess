@@ -4,7 +4,7 @@ import React from "react";
 import classes from "./Chessboard.module.scss";
 import { VERTICAL_AXIS, HORIZONTAL_AXIS } from "@/domain/chess/constants";
 import { Piece, Position, TeamType } from "@/domain/chess/types";
-import { getPieceAt, samePosition, getPieceStyle } from "@/domain/chess/utils";
+import { getPieceAt, samePosition, getPieceStyle, getDraggingStyle } from "@/domain/chess/utils";
 import Square from "@/components/chess/Square/Square";
 import useDragAndDrop from "@/hooks/useDragAndDrop";
 import { ChessAction } from "@/features/chess/actions";
@@ -65,7 +65,7 @@ const Chessboard: React.FC<Props> = ({
           HORIZONTAL_AXIS.map((_, x) => {
             const position: Position = { x, y: 7 - yIndex };
             const piece = getPieceAt(pieces, position);
-            const style = getPieceStyle(piece, dragState, draggingPieceId);
+            const style = getPieceStyle(piece, draggingPieceId);
             const highlight = possibleMoves.some(m => samePosition(m, position));
 
             return (
@@ -89,12 +89,13 @@ const Chessboard: React.FC<Props> = ({
         {/* ===== ドラッグ中の駒追従描画 ===== */}
         {dragState?.piece && (() => {
           const DraggingSvg = PieceSvgMap[dragState.piece.type];
-          const style = getPieceStyle(dragState.piece, dragState, null);
-          return DraggingSvg ? (
-            <div className={classes.chessboard__draggingPiece} style={style}>
+          if (!DraggingSvg) return null;
+
+          return (
+            <div className={classes.chessboard__draggingPiece} style={getDraggingStyle(dragState)}>
               <DraggingSvg team={dragState.piece.team} />
             </div>
-          ) : null;
+          );
         })()}
       </div>
 

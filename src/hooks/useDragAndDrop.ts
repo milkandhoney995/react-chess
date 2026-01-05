@@ -5,7 +5,6 @@ import {
   chessUIReducer,
   initialChessUIState,
 } from "@/features/chess/ui/reducer";
-import { ChessUIAction } from "@/features/chess/ui/actions";
 
 interface Props {
   onDrop: (pieceId: string, position: Position) => void;

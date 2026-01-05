@@ -25,37 +25,41 @@ export function getPieceAt(pieces: Piece[], position: Position): Piece | undefin
 /**
  * 駒のスタイルを計算
  * @param piece 対象の駒
- * @param dragState 現在のドラッグ状態
  * @param draggingPieceId 現在ドラッグ中の駒ID
  * @returns CSSProperties または undefined
  */
 export function getPieceStyle(
   piece: Piece | undefined,
-  dragState: DragState | null | undefined,
   draggingPieceId: string | null
 ): CSSProperties | undefined {
   if (!piece) return undefined;
 
-  // ドラッグ中かどうか
-  const isDragging = dragState?.piece.id === piece.id;
+  // 盤面上の駒は「半透明にするだけ」
+  if (piece.id === draggingPieceId) {
+    return { opacity: 0 };
+  }
 
-  // ドラッグ中の座標固定
-  const baseStyle: CSSProperties = isDragging && dragState
-    ? {
-        position: "fixed",
-        left: dragState.clientX - dragState.offsetX,
-        top: dragState.clientY - dragState.offsetY,
-        zIndex: 1000,
-        pointerEvents: "none",
-      }
-    : {};
-
-  // draggingPieceId による半透明
-  const dragOpacity: CSSProperties = piece.id === draggingPieceId ? { opacity: 0.5 } : {};
-
-  return { ...baseStyle, ...dragOpacity };
+  return undefined;
 }
 
+/**
+ * ドラッグ中の駒スタイルを計算
+ * @param dragState 現在のドラッグ状態
+ * @returns CSSProperties
+ */
+export function getDraggingStyle(
+  dragState: DragState
+): CSSProperties {
+  const style: React.CSSProperties = {
+    position: "fixed",
+    left: dragState.clientX - dragState.offsetX,
+    top: dragState.clientY - dragState.offsetY,
+    zIndex: 1000,
+    pointerEvents: "none",
+  };
+
+  return style
+}
 /* =====================
    勝利判定
 ===================== */
