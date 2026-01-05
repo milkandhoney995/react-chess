@@ -19,8 +19,4 @@
   &__highlight:not(.tile__pieceImage) {
     @include tile-highlight;
   }
-
-  &__highlight.tile__pieceImage {
-    @include tile-highlight-piece;
-  }
 }
