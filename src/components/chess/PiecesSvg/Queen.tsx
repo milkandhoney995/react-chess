@@ -9,7 +9,7 @@ const Queen = ({ team }: Props) => {
   const fill = team === TeamType.OUR ? "#ffffff" : "#000000";
 
   return (
-    <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" fill={fill}>
+    <svg width='100%' height='100%' viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" fill={fill}>
       <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
       <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
       <g id="SVGRepo_iconCarrier">

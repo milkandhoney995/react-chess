@@ -1,7 +1,6 @@
 @use '../../../styles/foundation' as *;
 @use '../../../styles/chess/variables' as *;
 @use '../../../styles/mixins' as *;
-@use '../../../styles/components' as *;
 
 /* =====================
    ブロック: Chessboard
@@ -17,8 +16,8 @@
   /* ドラッグ中の駒 */
   &__draggingPiece {
     position: fixed;
-    width: 48px;
-    height: 48px;
+    width: $piece-size;
+    height: $piece-size;
     pointer-events: none;
     z-index: 1000;
   }

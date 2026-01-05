@@ -3,7 +3,7 @@
 import React from "react";
 import classes from "./Chessboard.module.scss";
 import { VERTICAL_AXIS, HORIZONTAL_AXIS } from "@/domain/chess/constants";
-import { Piece, Position, TeamType, DragState } from "@/domain/chess/types";
+import { Piece, Position, TeamType } from "@/domain/chess/types";
 import { getPieceAt, samePosition, getPieceStyle } from "@/domain/chess/utils";
 import Square from "@/components/chess/Square/Square";
 import useDragAndDrop from "@/hooks/useDragAndDrop";
