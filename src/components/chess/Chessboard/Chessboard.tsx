@@ -1,13 +1,15 @@
 'use client';
 
+import React from "react";
 import classes from "./Chessboard.module.scss";
 import { VERTICAL_AXIS, HORIZONTAL_AXIS } from "@/domain/chess/constants";
-import { Piece, Position, TeamType } from "@/domain/chess/types";
+import { Piece, Position, TeamType, DragState } from "@/domain/chess/types";
 import { getPieceAt, samePosition, getPieceStyle } from "@/domain/chess/utils";
 import Square from "@/components/chess/Square/Square";
 import useDragAndDrop from "@/hooks/useDragAndDrop";
 import { ChessAction } from "@/features/chess/actions";
 import PromotionModal from "../PromotionModal/PromotionModal";
+import { PieceSvgMap } from "../PiecesSvg";
 
 interface PromotionState {
   position: Position;
@@ -24,7 +26,7 @@ interface Props {
   onDragEnd: () => void;
 }
 
-const Chessboard = ({
+const Chessboard: React.FC<Props> = ({
   pieces,
   possibleMoves,
   draggingPieceId,
@@ -32,7 +34,7 @@ const Chessboard = ({
   dispatch,
   onDragStart,
   onDragEnd,
-}: Props) => {
+}) => {
   const {
     chessboardRef,
     dragState,
@@ -42,7 +44,6 @@ const Chessboard = ({
   } = useDragAndDrop({
     onDrop: (pieceId, position) => {
       if (promotion) return; // プロモーション中は操作不可
-
       dispatch({
         type: "MOVE_PIECE",
         payload: { pieceId, to: position },
@@ -52,7 +53,7 @@ const Chessboard = ({
   });
 
   return (
-    <div className={classes.wrapper}>
+    <div className={classes.chessboard__wrapper}>
       {/* ===== チェス盤 ===== */}
       <div
         ref={chessboardRef}
@@ -84,6 +85,17 @@ const Chessboard = ({
             );
           })
         )}
+
+        {/* ===== ドラッグ中の駒追従描画 ===== */}
+        {dragState?.piece && (() => {
+          const DraggingSvg = PieceSvgMap[dragState.piece.type];
+          const style = getPieceStyle(dragState.piece, dragState, null);
+          return DraggingSvg ? (
+            <div className={classes.chessboard__draggingPiece} style={style}>
+              <DraggingSvg team={dragState.piece.team} />
+            </div>
+          ) : null;
+        })()}
       </div>
 
       {/* ===== プロモーション UI ===== */}

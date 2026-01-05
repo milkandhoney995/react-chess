@@ -1,6 +1,8 @@
+'use client';
+
 import classes from "@/components/chess/Square/Square.module.scss";
 import { Piece } from "@/domain/chess/types";
-import { getPieceImage } from "@/domain/chess/utils";
+import { PieceSvgMap } from "../PiecesSvg";
 
 interface Props {
   piece?: Piece;
@@ -18,17 +20,20 @@ const Square = ({ piece, number, id, highlight, pieceStyle, onPointerDown }: Pro
     highlight && classes.tile__highlight,
   ].filter(Boolean).join(" ");
 
+  // SVG を取得
+  const SvgPiece = piece ? PieceSvgMap[piece.type] : null;
+
   return (
     <div className={className}>
-      {piece && (
-        <img
+      {piece && SvgPiece && (
+        <div
           id={id}
           className={classes.tile__image}
-          src={getPieceImage(piece)}
           style={pieceStyle}
           onPointerDown={(e) => onPointerDown(e, piece)}
-          alt={`${piece.type}_${piece.team}`}
-        />
+        >
+          <SvgPiece team={piece.team} />
+        </div>
       )}
     </div>
   );

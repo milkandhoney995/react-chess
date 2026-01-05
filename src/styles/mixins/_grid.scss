@@ -5,8 +5,6 @@
   display: grid;
   grid-template-columns: repeat($chess-grid-columns, 1fr);
   grid-template-rows: repeat($chess-grid-rows, 1fr);
-  width: $board-size;
-  height: $board-size;
   position: relative;
   @include responsive(md) {
     width: 90vw;

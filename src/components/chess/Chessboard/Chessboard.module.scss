@@ -3,49 +3,28 @@
 @use '../../../styles/mixins' as *;
 @use '../../../styles/components' as *;
 
+/* =====================
+   ブロック: Chessboard
+===================== */
 .chessboard {
   @include chess-grid;
-  touch-action: none;
-}
+  touch-action: none; // ドラッグ時スクロール阻止
 
-.modal {
-  @include modal-overlay;
-
-  &__body {
-    @include modal-body;
-    background: $modal-overlay;
-
-    > img {
-      padding: $spacing-md;
-
-      &:hover {
-        background-color: $modal-hover;
-        border-radius: $border-radius-full;
-        @include clickable;
-      }
-    }
-
-    > .checkmate__body {
-      @include flex-column;
-      gap: $spacing-xl;
-      @include responsive(md) {
-        gap: $spacing-lg;
-      }
-
-      > span {
-        font-size: $font-size-xl;
-        @include responsive(md) {
-          gap: $spacing-lg;
-        }
-      }
-
-      > button {
-        @include button-base;
-      }
-    }
+  &__wrapper {
+    position: relative;
   }
-}
 
-.modal.hidden {
-  display: none;
+  /* ドラッグ中の駒 */
+  &__draggingPiece {
+    position: fixed;
+    width: 48px;
+    height: 48px;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* ハイライトされたマス */
+  &__highlight {
+    box-shadow: inset 0 0 0 3px rgba(255, 255, 0, 0.6);
+  }
 }
