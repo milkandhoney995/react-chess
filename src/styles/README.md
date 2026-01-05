@@ -30,7 +30,7 @@ src/styles/
 - Font sizes: `$font-size-sm` through `$font-size-xl`
 
 ### Layout
-- Z-index values, breakpoints, grid settings
+- Breakpoints, grid settings
 
 ## 🔧 Mixins (`_mixins.scss`)
 
@@ -41,12 +41,9 @@ src/styles/
 
 ### Positioning Mixins
 - `@include absolute-center` - Center absolutely positioned elements
-- `@include modal-overlay` - Full-screen modal overlay
 
 ### Component Mixins
 - `@include tile-base` - Base tile styling
-- `@include chess-piece` - Chess piece image styling
-- `@include button-base` - Primary button styling
 
 ### Interaction Mixins
 - `@include clickable` - Hover and active states
@@ -103,5 +100,5 @@ src/styles/
 - **Board Grid**: Automated 8x8 grid generation with `$chess-grid-*` variables
 - **Piece Styling**: Consistent piece sizing and interaction states
 - **Highlight System**: Move highlighting with customizable colors
-- **Modal System**: Reusable modal components with proper z-indexing
+- **Modal System**: Reusable modal components
 - **Responsive Design**: Breakpoint system ready for mobile optimization

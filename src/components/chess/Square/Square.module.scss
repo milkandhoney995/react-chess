@@ -1,5 +1,6 @@
-@use '../../../styles/chess/variables' as *;
 @use '../../../styles/chess' as *;
+@use '../../../styles/foundation' as *;
+@use '../../../styles/mixins' as *;
 
 .tile {
   @include tile-base;
@@ -13,7 +14,17 @@
   }
 
   &__image {
-    @include chess-piece;
+    width: 100%;
+    background-size: $piece-size;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
+
+    @include grab-cursor;
+
+    @include responsive(md) {
+      background-size: 80%;
+    }
   }
 
   &__highlight:not(.tile__pieceImage) {

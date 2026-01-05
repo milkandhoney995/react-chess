@@ -6,7 +6,7 @@
   grid-template-columns: repeat($chess-grid-columns, 1fr);
   grid-template-rows: repeat($chess-grid-rows, 1fr);
   position: relative;
-  @include responsive(md) {
+  @include responsive(sm) {
     width: 90vw;
     height: 90vw;
     max-width: 36rem;

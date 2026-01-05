@@ -4,14 +4,18 @@
 
 @mixin tile-base {
   @include flex-center;
-  width: $tile-size;
-  height: $tile-size;
+  width: $tile-size-lg;
+  height: $tile-size-lg;
   position: relative;
   border-radius: 0.4rem;
   transition: background-color 0.2s ease;
   @include responsive(md) {
-    width: 100%;
-    height: 100%;
+    width: $tile-size-md;
+    height: $tile-size-md;
+  }
+  @include responsive(sm) {
+    width: $tile-size-sm;
+    height: $tile-size-sm;
     border-radius: $border-radius-sm;
   }
 }
@@ -24,6 +28,5 @@
     height: 70%;
     border-radius: $border-radius-full;
     background-color: $chess-highlight;
-    z-index: $z-tile-highlight;
   }
 }

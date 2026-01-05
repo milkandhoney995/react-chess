@@ -1,21 +1,26 @@
+@use '../../../styles/foundation/variables' as *;
+@use '../../../styles/chess/variables' as *;
+@use '../../../styles/mixins' as *;
+
 .promotion {
   /* ===== Overlay ===== */
   &__overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
     display: grid;
     place-items: center;
-    z-index: 100;
+    position: fixed;
+    inset: 0;
+    background: $modal-overlay;
+    backdrop-filter: blur(4px);
   }
 
   /* ===== Modal ===== */
   &__modal {
+    width: 90vw;
     background: #1e1e1e;
-    padding: 16px 20px;
-    border-radius: 10px;
+    padding: $spacing-lg;
+    border-radius: $border-radius-md;
     min-width: 220px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   }
 
   /* ===== Title ===== */
@@ -24,7 +29,7 @@
     text-align: center;
     font-size: 14px;
     font-weight: 600;
-    color: #fff;
+    color: $chess-light-square;
     letter-spacing: 0.04em;
   }
 
