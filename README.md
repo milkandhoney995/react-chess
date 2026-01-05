@@ -54,9 +54,8 @@ src
 │   │   ├── Chessboard # 盤面コンポーネント
 │   │   │   ├── Chessboard.module.scss
 │   │   │   └── Chessboard.tsx
-│   │   ├── Piece # 駒コンポーネント
-│   │   │   ├── Piece.module.scss
-│   │   │   └── Piece.tsx
+│   │   ├── ChessPiece # 駒コンポーネント
+│   │   │   └── ChessPiece.tsx
 │   │   └── Square # マスコンポーネント
 │   │       ├── Square.module.scss
 │   │       └── Square.tsx
@@ -86,7 +85,10 @@ src
 │       ├── reducer.ts
 │       ├── selectors.ts
 │       ├── state.ts
-│       └── types.ts
+│       ├── types.ts
+│       └── ui # UI専用
+│           ├── actions.ts
+│           └── reducer.ts
 ├── hooks
 │   └── useDragAndDrop.ts　# ドラッグ＆ドロップのロジック
 └── styles

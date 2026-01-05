@@ -121,3 +121,18 @@ export function isOurTurn(pieceTeam: TeamType, totalTurns: number): boolean {
     (pieceTeam === TeamType.OPPONENT && totalTurns % 2 === 1)
   );
 }
+
+/**
+ * プロモーション判定
+ * @param piece 対象の駒
+ * @returns プロモーション可能か
+ */
+
+export const isPromotionSquare = (piece: Piece): boolean => {
+  if (piece.type !== PieceType.PAWN) return false;
+
+  return (
+    (piece.team === TeamType.OUR && piece.position.y === 7) ||
+    (piece.team === TeamType.OPPONENT && piece.position.y === 0)
+  );
+};

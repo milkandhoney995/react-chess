@@ -1,4 +1,4 @@
-import { Position } from "@/domain/chess/types";
+import { PieceType, Position } from "@/domain/chess/types";
 
 export type ChessAction =
   | {
@@ -6,6 +6,13 @@ export type ChessAction =
       payload: {
         pieceId: string;
         to: Position;
+      };
+    }
+  | {
+      type: "PROMOTE_PAWN";
+      payload: {
+        position: Position;
+        pieceType: PieceType;
       };
     }
   | { type: "RESET_GAME" };

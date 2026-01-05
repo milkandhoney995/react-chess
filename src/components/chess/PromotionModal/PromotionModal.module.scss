@@ -1,0 +1,78 @@
+.promotion {
+  /* ===== Overlay ===== */
+  &__overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: grid;
+    place-items: center;
+    z-index: 20;
+  }
+
+  /* ===== Modal ===== */
+  &__modal {
+    background: #1e1e1e;
+    padding: 16px 20px;
+    border-radius: 10px;
+    min-width: 220px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  }
+
+  /* ===== Title ===== */
+  &__title {
+    margin-bottom: 12px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.04em;
+  }
+
+  /* ===== Pieces container ===== */
+  &__pieces {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  /* ===== Button ===== */
+  &__button {
+    background: transparent;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background-color 0.15s ease, transform 0.1s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  /* ===== Piece icon ===== */
+  &__piece {
+    width: 40px;
+    height: 40px;
+    display: block;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  /* =========================
+     Modifiers
+  ========================= */
+
+  /* Team */
+  &__piece--w {
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.6));
+  }
+
+  &__piece--b {
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8));
+  }
+}
