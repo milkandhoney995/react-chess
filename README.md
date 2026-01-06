@@ -54,6 +54,9 @@ src
 │   │   ├── Chessboard # 盤面コンポーネント
 │   │   │   ├── Chessboard.module.scss
 │   │   │   └── Chessboard.tsx
+│   │   ├── GameStatus
+│   │   │   ├── GameStatus.module.scss
+│   │   │   └── GameStatus.tsx
 │   │   ├── PiecesSvg # 駒SVGコンポーネント
 │   │   │   ├── Bishop.tsx
 │   │   │   ├── Rook.tsx
@@ -79,6 +82,7 @@ src
 │       ├── constants.ts　# 盤面設定や初期配置
 │       ├── rules
 │       │   ├── bishop.ts
+│       │   ├── check.ts
 │       │   ├── general.ts
 │       │   ├── index.ts
 │       │   ├── slidingMoves.ts
