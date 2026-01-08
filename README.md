@@ -86,81 +86,6 @@ pnpm test:watch
 
 現在、154個のテストケースがあり、主要な機能とエッジケースをカバーしています。
 
-## ディレクトリ構成
-```
-src
-├── app
-│   ├── chess
-│   │   └── page.tsx
-│   ├── globals.scss
-│   ├── layout.tsx
-│   ├── page.module.scss
-│   └── page.tsx
-├── assets
-├── components
-│   ├── chess
-│   │   ├── Chessboard # 盤面コンポーネント
-│   │   │   ├── Chessboard.module.scss
-│   │   │   └── Chessboard.tsx
-│   │   ├── GameStatus
-│   │   │   ├── GameStatus.module.scss
-│   │   │   └── GameStatus.tsx
-│   │   ├── PiecesSvg # 駒SVGコンポーネント
-│   │   │   ├── Bishop.tsx
-│   │   │   ├── Rook.tsx
-│   │   │   ├── King.tsx
-│   │   │   ├── Knight.tsx
-│   │   │   ├── Queen.tsx
-│   │   │   ├── Pawn.tsx
-│   │   │   └── index.tsx
-│   │   ├── PromotionModal # モーダルコンポーネント
-│   │   │   ├── PromotionModal.module.scss
-│   │   │   └── PromotionModal.tsx
-│   │   └── Square # マスコンポーネント
-│   │       ├── Square.module.scss
-│   │       └── Square.tsx
-│   └── ui
-├── domain
-│   └── chess
-│       ├── board
-│       │   ├── cloneBoard.ts
-│       │   ├── createBoard.ts
-│       │   ├── applyMove.ts # 盤面シミュレーター(駒を動かす・取る、en passant / castling)
-│       │   └── movePiece.ts # 合法手判定
-│       ├── constants.ts　# 盤面設定や初期配置
-│       ├── rules
-│       │   ├── bishop.ts
-│       │   ├── check.ts
-│       │   ├── general.ts
-│       │   ├── index.ts
-│       │   ├── slidingMoves.ts
-│       │   ├── king.ts
-│       │   ├── knight.ts
-│       │   ├── pawn.ts
-│       │   ├── queen.ts
-│       │   └── rook.ts
-│       ├── types.ts　# PieceType / TeamType 等
-│       └── utils.ts
-├── features # 状態管理
-│   └── chess
-│       ├── actions.ts
-│       ├── reducer.ts
-│       ├── selectors.ts
-│       ├── state.ts
-│       ├── types.ts
-│       └── ui # UI専用
-│           ├── actions.ts
-│           └── reducer.ts
-├── hooks
-│   └── useDragAndDrop.ts　# ドラッグ＆ドロップのロジック
-└── styles
-    ├── README.md
-    ├── foundation/           # 設計の土台（変更頻度 低）
-    ├── mixins/                # 再利用ロジック
-    ├── chess/                 # ♟ Chess ドメイン専用
-    └── index.scss            # グローバルエントリ（layout.tsx から import）
-```
-
 ## 使い方
 - 駒をクリックまたはタッチで掴む
 - ドラッグして合法手にドロップ
@@ -171,6 +96,154 @@ src
   - ドラッグ中にブラウザを離れた場合の挙動には注意。現在は onPointerUp で releasePointerCapture を呼んでいるため、通常は問題なし。
 - Safari 対応
   - Pointer Events はサポートされているが、touch-action: none; の設定を CSS に追加するとドラッグがスムーズになります。
+
+## ディレクトリ構成
+```
+.
+├── next-env.d.ts
+├── next.config.js
+├── package.json
+├── README.md
+├── tsconfig.json
+├── vitest.config.mts
+├── vitest.setup.ts
+├── public/
+├── scripts/
+│   └── create-test.js
+└── src/
+    ├── app/
+    │   ├── chess/
+    │   │   ├── __tests__/
+    │   │   │   ├── index.ts
+    │   │   │   └── page.test.tsx
+    │   │   └── page.tsx
+    │   ├── globals.scss
+    │   ├── layout.tsx
+    │   ├── page.module.scss
+    │   └── page.tsx
+    ├── assets/
+    ├── components/
+    │   ├── chess/
+    │   │   ├── Chessboard/ # 盤面コンポーネント
+    │   │   │   ├── Chessboard.module.scss
+    │   │   │   ├── Chessboard.tsx
+    │   │   │   └── __tests__/
+    │   │   │       ├── Chessboard.test.tsx
+    │   │   │       └── index.ts
+    │   │   ├── GameStatus/
+    │   │   │   ├── GameStatus.module.scss
+    │   │   │   ├── GameStatus.tsx
+    │   │   │   └── __tests__/
+    │   │   │       ├── GameStatus.test.tsx
+    │   │   │       └── index.ts
+    │   │   ├── PiecesSvg/ # 駒SVGコンポーネント
+    │   │   │   ├── Bishop.tsx
+    │   │   │   ├── index.ts
+    │   │   │   ├── King.tsx
+    │   │   │   ├── Knight.tsx
+    │   │   │   ├── Pawn.tsx
+    │   │   │   ├── Queen.tsx
+    │   │   │   └── Rook.tsx
+    │   │   ├── PromotionModal/ # モーダルコンポーネント
+    │   │   │   ├── PromotionModal.module.scss
+    │   │   │   ├── PromotionModal.tsx
+    │   │   │   └── __tests__/
+    │   │   │       ├── index.ts
+    │   │   │       └── PromotionModal.test.tsx
+    │   │   └── Square/ # マスコンポーネント
+    │   │       ├── Square.module.scss
+    │   │       ├── Square.tsx
+    │   │       └── __tests__/
+    │   │           ├── index.ts
+    │   │           └── Square.test.tsx
+    │   └── ui/
+    ├── domain/
+    │   └── chess/
+    │       ├── __tests__/
+    │       │   ├── index.ts
+    │       │   └── utils.test.ts
+    │       ├── board/
+    │       │   ├── applyMove.ts # 盤面シミュレーター(駒を動かす・取る、en passant / castling)
+    │       │   ├── cloneBoard.ts
+    │       │   ├── createBoard.ts
+    │       │   ├── movePiece.ts # 合法手判定
+    │       │   └── __tests__/
+    │       │       ├── applyMove.test.ts
+    │       │       ├── cloneBoard.test.ts
+    │       │       ├── createBoard.test.ts
+    │       │       ├── index.ts
+    │       │       └── movePiece.test.ts
+    │       ├── constants.ts # 盤面設定や初期配置
+    │       ├── rules/
+    │       │   ├── bishop.ts
+    │       │   ├── check.ts
+    │       │   ├── general.ts
+    │       │   ├── index.ts
+    │       │   ├── king.ts
+    │       │   ├── knight.ts
+    │       │   ├── pawn.ts
+    │       │   ├── queen.ts
+    │       │   ├── rook.ts
+    │       │   ├── slidingMoves.ts
+    │       │   └── __tests__/
+    │       │       ├── bishop.test.ts
+    │       │       ├── check.test.ts
+    │       │       ├── general.test.ts
+    │       │       ├── index.ts
+    │       │       ├── king.test.ts
+    │       │       ├── knight.test.ts
+    │       │       ├── pawn.test.ts
+    │       │       ├── queen.test.ts
+    │       │       ├── rook.test.ts
+    │       │       └── slidingMoves.test.ts
+    │       ├── types.ts # PieceType / TeamType 等
+    │       └── utils.ts
+    ├── features/ # 状態管理
+    │   └── chess/
+    │       ├── __tests__/
+    │       │   ├── actions.test.ts
+    │       │   ├── index.ts
+    │       │   ├── reducer.test.ts
+    │       │   ├── selectors.test.ts
+    │       │   └── state.test.ts
+    │       ├── actions.ts
+    │       ├── reducer.ts
+    │       ├── selectors.ts
+    │       ├── state.ts
+    │       ├── types.ts
+    │       └── ui/ # UI専用
+    │           ├── __tests__/
+    │           │   ├── actions.test.ts
+    │           │   └── reducer.test.ts
+    │           ├── actions.ts
+    │           └── reducer.ts
+    ├── hooks/
+    │   ├── __tests__/
+    │   │   ├── index.ts
+    │   │   └── useDragAndDrop.test.ts
+    │   └── useDragAndDrop.ts # ドラッグ＆ドロップのロジック
+    └── styles/
+        ├── README.md
+        ├── chess/ # ♟ Chess ドメイン専用
+        │   ├── _board.scss
+        │   ├── _tile.scss
+        │   ├── _variables.scss
+        │   └── index.scss
+        ├── foundation/ # 設計の土台（変更頻度 低）
+        │   ├── _breakpoints.scss
+        │   ├── _reset.scss
+        │   ├── _typography.scss
+        │   ├── _variables.scss
+        │   └── index.scss
+        ├── mixins/ # 再利用ロジック
+        │   ├── _flex.scss
+        │   ├── _grid.scss
+        │   ├── _interaction.scss
+        │   ├── _position.scss
+        │   ├── _responsive.scss
+        │   └── index.scss
+        └── index.scss # グローバルエントリ（layout.tsx から import）
+```
 
 ## ライセンス
 
