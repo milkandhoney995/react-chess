@@ -12,7 +12,7 @@ describe("ChessUIAction types", () => {
     possibleMoves: [],
   };
 
-  it("should create DRAG_START action", () => {
+  it("should create DRAG_START action: DRAG_STARTアクションを作成する", () => {
     const action: ChessUIAction = {
       type: "DRAG_START",
       payload: {
@@ -32,7 +32,7 @@ describe("ChessUIAction types", () => {
     expect(action.payload.clientY).toBe(200);
   });
 
-  it("should create DRAG_MOVE action", () => {
+  it("should create DRAG_MOVE action: DRAG_MOVEアクションを作成する", () => {
     const action: ChessUIAction = {
       type: "DRAG_MOVE",
       payload: {
@@ -46,7 +46,7 @@ describe("ChessUIAction types", () => {
     expect(action.payload.clientY).toBe(250);
   });
 
-  it("should create DRAG_END action", () => {
+  it("should create DRAG_END action: DRAG_ENDアクションを作成する", () => {
     const action: ChessUIAction = {
       type: "DRAG_END",
     };
@@ -54,7 +54,7 @@ describe("ChessUIAction types", () => {
     expect(action.type).toBe("DRAG_END");
   });
 
-  it("should create DRAG_CANCEL action", () => {
+  it("should create DRAG_CANCEL action: DRAG_CANCELアクションを作成する", () => {
     const action: ChessUIAction = {
       type: "DRAG_CANCEL",
     };
@@ -62,7 +62,7 @@ describe("ChessUIAction types", () => {
     expect(action.type).toBe("DRAG_CANCEL");
   });
 
-  it("should have correct action type union", () => {
+  it("should have correct action type union: 正しいアクションタイプのユニオンを持っているか", () => {
     const actions: ChessUIAction[] = [
       {
         type: "DRAG_START",

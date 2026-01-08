@@ -2,7 +2,7 @@ import { getPossibleBishopMoves } from "../bishop";
 import { Piece, PieceType, TeamType } from "../../types";
 
 describe("getPossibleBishopMoves", () => {
-  it("should return diagonal moves for bishop in center of empty board", () => {
+  it("should return diagonal moves for bishop in center of empty board: ビショップが空の盤面の中央に配置された場合、対角線の移動を返す", () => {
     const bishop: Piece = {
       id: "bishop",
       type: PieceType.BISHOP,
@@ -13,7 +13,6 @@ describe("getPossibleBishopMoves", () => {
     };
 
     const board: Piece[] = [bishop];
-
     const moves = getPossibleBishopMoves(bishop, board);
 
     // Bishop should move diagonally in all 4 directions
@@ -27,7 +26,7 @@ describe("getPossibleBishopMoves", () => {
     );
   });
 
-  it("should be blocked by own pieces", () => {
+  it("should be blocked by own pieces: 自分の駒で遮られる", () => {
     const bishop: Piece = {
       id: "bishop",
       type: PieceType.BISHOP,
@@ -56,7 +55,7 @@ describe("getPossibleBishopMoves", () => {
     expect(moves).toContainEqual({ x: 4, y: 4 });
   });
 
-  it("should capture opponent pieces but not move beyond", () => {
+  it("should capture opponent pieces but not move beyond: 相手の駒を捕獲し、それ以上移動しない", () => {
     const bishop: Piece = {
       id: "bishop",
       type: PieceType.BISHOP,

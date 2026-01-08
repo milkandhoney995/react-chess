@@ -3,7 +3,7 @@ import { getPossibleQueenMoves } from "../queen";
 import { Piece, PieceType, TeamType } from "../../types";
 
 describe("getPossibleQueenMoves", () => {
-  it("should return all 8 directions for queen in center of empty board", () => {
+  it("should return all 8 directions for queen in center of empty board: クイーンが空の盤面の中央に配置された場合、8方向すべてのマスを返す", () => {
     const queen: Piece = {
       id: "queen",
       type: PieceType.QUEEN,
@@ -32,7 +32,7 @@ describe("getPossibleQueenMoves", () => {
     );
   });
 
-  it("should be blocked by own pieces", () => {
+  it("should be blocked by own pieces: 自分の駒が配置された場合、そのマスに移動しない", () => {
     const queen: Piece = {
       id: "queen",
       type: PieceType.QUEEN,
@@ -61,7 +61,7 @@ describe("getPossibleQueenMoves", () => {
     expect(moves).toContainEqual({ x: 4, y: 3 });
   });
 
-  it("should capture opponent pieces but not move beyond", () => {
+  it("should capture opponent pieces but not move beyond: 相手の駒を捕獲するが、その先には移動しない", () => {
     const queen: Piece = {
       id: "queen",
       type: PieceType.QUEEN,

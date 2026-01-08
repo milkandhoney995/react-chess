@@ -16,7 +16,7 @@ describe("Component: PromotionModal", () => {
     vi.clearAllMocks();
   });
 
-  it("renders promotion modal with correct title", async () => {
+  it("renders promotion modal with correct title: プロモーションモーダルを正しくレンダーする", async () => {
     render(
       <PromotionModal
         position={{ x: 0, y: 7 }}
@@ -30,7 +30,7 @@ describe("Component: PromotionModal", () => {
     });
   });
 
-  it("renders all promotion piece options", async () => {
+  it("renders all promotion piece options: プロモーション可能な駒をレンダーする", async () => {
     render(
       <PromotionModal
         position={{ x: 0, y: 7 }}
@@ -46,7 +46,7 @@ describe("Component: PromotionModal", () => {
     });
   });
 
-  it("dispatches PROMOTE_PAWN action when piece is selected", async () => {
+  it("dispatches PROMOTE_PAWN action when piece is selected: プロモーションアクションをディスパッチする", async () => {
     render(
       <PromotionModal
         position={{ x: 0, y: 7 }}
@@ -69,7 +69,7 @@ describe("Component: PromotionModal", () => {
     });
   });
 
-  it("renders pieces for correct team", async () => {
+  it("renders pieces for correct team: 正しいチームの駒をレンダーする", async () => {
     render(
       <PromotionModal
         position={{ x: 0, y: 7 }}
@@ -84,7 +84,7 @@ describe("Component: PromotionModal", () => {
     });
   });
 
-  it("handles different promotion positions", async () => {
+  it("handles different promotion positions: 異なるプロモーション位置を処理する", async () => {
     const testPositions = [
       { x: 0, y: 7 },
       { x: 7, y: 7 },
@@ -109,7 +109,7 @@ describe("Component: PromotionModal", () => {
     }
   });
 
-  it("applies correct CSS classes", async () => {
+  it("applies correct CSS classes: CSSクラスを正しく適用する", async () => {
     render(
       <PromotionModal
         position={{ x: 0, y: 7 }}
@@ -127,7 +127,7 @@ describe("Component: PromotionModal", () => {
     });
   });
 
-  it("renders all promotion pieces in correct order", async () => {
+  it("renders all promotion pieces in correct order: プロモーション可能な駒を正しく表示する", async () => {
     render(
       <PromotionModal
         position={{ x: 0, y: 7 }}
@@ -147,7 +147,7 @@ describe("Component: PromotionModal", () => {
     });
   });
 
-  it("handles SSR correctly", () => {
+  it("handles SSR correctly: SSRを正しく処理する", () => {
     // In test environment, useEffect runs synchronously, so it renders
     // In real SSR, useEffect doesn't run, so it would return null
     const { container } = render(

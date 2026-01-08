@@ -13,19 +13,19 @@ import { TeamType, PieceType } from "@/domain/chess/types";
 
 describe("Chess Selectors", () => {
   describe("selectPossibleMovesByPieceId", () => {
-    it("should return empty array for null pieceId", () => {
+    it("should return empty array for null pieceId: nullのpieceIdの場合空配列を返す", () => {
       const selector = selectPossibleMovesByPieceId(null);
       const result = selector(initialChessState);
       expect(result).toEqual([]);
     });
 
-    it("should return empty array for non-existent piece", () => {
+    it("should return empty array for non-existent piece: 存在しない駒の場合空配列を返す", () => {
       const selector = selectPossibleMovesByPieceId("non-existent");
       const result = selector(initialChessState);
       expect(result).toEqual([]);
     });
 
-    it("should return possible moves for valid piece", () => {
+    it("should return possible moves for valid piece: 有効な駒の場合、可能な移動先を返す", () => {
       // Find a pawn
       const pawn = initialChessState.pieces.find(
         p => p.type === PieceType.PAWN && p.team === TeamType.OUR
@@ -41,13 +41,13 @@ describe("Chess Selectors", () => {
   });
 
   describe("selectCurrentTeam", () => {
-    it("should return OUR team on even turns", () => {
+    it("should return OUR team on even turns: 偶数ターンの場合はOURチームを返す", () => {
       const state = { ...initialChessState, totalTurns: 0 };
       const result = selectCurrentTeam(state);
       expect(result).toBe(TeamType.OUR);
     });
 
-    it("should return OPPONENT team on odd turns", () => {
+    it("should return OPPONENT team on odd turns: 奇数ターンの場合はOPPONENTチームを返す", () => {
       const state = { ...initialChessState, totalTurns: 1 };
       const result = selectCurrentTeam(state);
       expect(result).toBe(TeamType.OPPONENT);
@@ -55,12 +55,12 @@ describe("Chess Selectors", () => {
   });
 
   describe("selectCheckedKing", () => {
-    it("should return null when no king is in check", () => {
+    it("should return null when no king is in check: チェック状態のキングがいない場合nullを返す", () => {
       const result = selectCheckedKing(initialChessState);
       expect(result).toBeNull();
     });
 
-    it("should return checked king info when king is in check", () => {
+    it("should return checked king info when king is in check: キングがチェック状態の場合、その情報を返す", () => {
       // Create a scenario where a king is in check
       // This would require setting up a specific board position
       // For now, we'll test that the function returns the expected structure
@@ -76,12 +76,12 @@ describe("Chess Selectors", () => {
   });
 
   describe("selectIsCheck", () => {
-    it("should return false when no check", () => {
+    it("should return false when no check: チェック状態でない場合falseを返す", () => {
       const result = selectIsCheck(initialChessState);
       expect(result).toBe(false);
     });
 
-    it("should return true when king is in check", () => {
+    it("should return true when king is in check: キングがチェック状態の場合trueを返す", () => {
       // This would need a specific board setup for check
       // For now, test the basic functionality
       const result = selectIsCheck(initialChessState);
@@ -90,12 +90,12 @@ describe("Chess Selectors", () => {
   });
 
   describe("selectCheckedSquares", () => {
-    it("should return empty array when no check", () => {
+    it("should return empty array when no check: チェック状態でない場合空配列を返す", () => {
       const result = selectCheckedSquares(initialChessState);
       expect(result).toEqual([]);
     });
 
-    it("should return king position when king is in check", () => {
+    it("should return king position when king is in check: キングがチェック状態の場合、キングの位置を返す", () => {
       // This would need a specific board setup
       const result = selectCheckedSquares(initialChessState);
       expect(Array.isArray(result)).toBe(true);
@@ -107,12 +107,12 @@ describe("Chess Selectors", () => {
   });
 
   describe("selectWinningTeam", () => {
-    it("should return undefined when no winner", () => {
+    it("should return undefined when no winner: 勝者がいない場合undefinedを返す", () => {
       const result = selectWinningTeam(initialChessState);
       expect(result).toBeUndefined();
     });
 
-    it("should return winning team when game is won", () => {
+    it("should return winning team when game is won: 勝者がいる場合、勝者のチームを返す", () => {
       // This would need a specific board setup for checkmate
       const result = selectWinningTeam(initialChessState);
       expect(result === undefined || result === TeamType.OUR || result === TeamType.OPPONENT).toBe(true);
@@ -120,13 +120,13 @@ describe("Chess Selectors", () => {
   });
 
   describe("selectIsCheckedSquare", () => {
-    it("should return false for unchecked squares", () => {
+    it("should return false for unchecked squares: チェックされていないマスの場合falseを返す", () => {
       const selector = selectIsCheckedSquare({ x: 0, y: 0 });
       const result = selector(initialChessState);
       expect(result).toBe(false);
     });
 
-    it("should return true for checked king square", () => {
+    it("should return true for checked king square: チェック状態のキングマスの場合trueを返す", () => {
       // This would need a specific board setup
       const selector = selectIsCheckedSquare({ x: 4, y: 0 }); // OUR king position
       const result = selector(initialChessState);

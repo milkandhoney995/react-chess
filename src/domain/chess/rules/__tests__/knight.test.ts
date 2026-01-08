@@ -3,7 +3,7 @@ import { getPossibleKnightMoves } from "../knight";
 import { Piece, PieceType, TeamType } from "../../types";
 
 describe("getPossibleKnightMoves", () => {
-  it("should return L-shaped moves for knight in center of empty board", () => {
+  it("should return L-shaped moves for knight in center of empty board: ナイトが空の盤面の中央に配置された場合、L字型のマスを返す", () => {
     const knight: Piece = {
       id: "knight",
       type: PieceType.KNIGHT,
@@ -26,7 +26,7 @@ describe("getPossibleKnightMoves", () => {
     );
   });
 
-  it("should not include moves outside the board", () => {
+  it("should not include moves outside the board: ボードの外には移動しない", () => {
     const knight: Piece = {
       id: "knight",
       type: PieceType.KNIGHT,
@@ -51,7 +51,7 @@ describe("getPossibleKnightMoves", () => {
     expect(moves).not.toContainEqual({ x: 2, y: -1 });
   });
 
-  it("should capture opponent pieces", () => {
+  it("should capture opponent pieces: 相手の駒を捕獲する", () => {
     const knight: Piece = {
       id: "knight",
       type: PieceType.KNIGHT,
@@ -78,7 +78,7 @@ describe("getPossibleKnightMoves", () => {
     expect(moves).toContainEqual({ x: 5, y: 4 });
   });
 
-  it("should not move to squares occupied by own pieces", () => {
+  it("should not move to squares occupied by own pieces: 自分の駒が配置された場合、そのマスに移動しない", () => {
     const knight: Piece = {
       id: "knight",
       type: PieceType.KNIGHT,

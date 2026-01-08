@@ -2,7 +2,7 @@ import { checkWinningTeam } from "../utils";
 import { Piece, PieceType, TeamType } from "../types";
 
 describe("checkWinningTeam", () => {
-  it("should return undefined when no king is in check", () => {
+  it("should return undefined when no king is in check: チェック中の王がいない場合、undefinedを返す", () => {
     const pieces: Piece[] = [
       {
         id: "w-king",
@@ -25,7 +25,7 @@ describe("checkWinningTeam", () => {
     expect(checkWinningTeam(pieces)).toBeUndefined();
   });
 
-  it("should return undefined when king is in check but has legal moves", () => {
+  it("should return undefined when king is in check but has legal moves: チェック中の王がいるが合法手がある場合、undefinedを返す", () => {
     const pieces: Piece[] = [
       {
         id: "w-king",
@@ -57,7 +57,7 @@ describe("checkWinningTeam", () => {
     expect(checkWinningTeam(pieces)).toBeUndefined();
   });
 
-  it("should return opponent as winner when king is in checkmate", () => {
+  it("should return opponent as winner when our king is in checkmate: 自チームの王がチェックメイトの場合、相手チームを勝者として返す", () => {
     const pieces: Piece[] = [
       {
         id: "w-king",
@@ -97,7 +97,7 @@ describe("checkWinningTeam", () => {
     expect(checkWinningTeam(pieces)).toBe(TeamType.OPPONENT);
   });
 
-  it("should return our team as winner when opponent king is in checkmate", () => {
+  it("should return our team as winner when opponent king is in checkmate: 相手の王がチェックメイトの場合、自チームを勝者として返す", () => {
     const pieces: Piece[] = [
       {
         id: "w-king",

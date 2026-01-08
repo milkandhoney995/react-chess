@@ -3,7 +3,7 @@ import { movePiece } from "../movePiece";
 import { Piece, PieceType, TeamType } from "../../types";
 
 describe("movePiece", () => {
-  it("should move a piece to a new position", () => {
+  it("should move a piece to a new position: 駒を新しい位置に移動する", () => {
     const pawn: Piece = {
       id: "pawn",
       type: PieceType.PAWN,
@@ -22,7 +22,7 @@ describe("movePiece", () => {
     expect(newBoard[0].hasMoved).toBe(true);
   });
 
-  it("should capture opponent pieces", () => {
+  it("should capture opponent pieces: 相手の駒を捕獲する", () => {
     const whitePawn: Piece = {
       id: "white-pawn",
       type: PieceType.PAWN,
@@ -50,7 +50,7 @@ describe("movePiece", () => {
     expect(newBoard[0].position).toEqual({ x: 1, y: 2 });
   });
 
-  it("should return original board if moving piece not found", () => {
+  it("should return original board if moving piece not found: 移動する駒が見つからない場合、元のボードを返す", () => {
     const pawn: Piece = {
       id: "pawn",
       type: PieceType.PAWN,
@@ -67,7 +67,7 @@ describe("movePiece", () => {
     expect(newBoard).toBe(board); // Should return same reference if no move
   });
 
-  it("should update possibleMoves for all pieces", () => {
+  it("should update possibleMoves for all pieces: すべての駒のpossibleMovesを更新する", () => {
     const pawn: Piece = {
       id: "pawn",
       type: PieceType.PAWN,

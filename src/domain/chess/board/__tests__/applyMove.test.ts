@@ -3,7 +3,7 @@ import { applyMove } from "../applyMove";
 import { Piece, PieceType, TeamType } from "../../types";
 
 describe("applyMove", () => {
-  it("should move a piece to an empty square", () => {
+  it("should move a piece to an empty square: 空のマスに駒を移動する", () => {
     const pawn: Piece = {
       id: "pawn",
       type: PieceType.PAWN,
@@ -21,7 +21,7 @@ describe("applyMove", () => {
     expect(newBoard[0].position).toEqual({ x: 0, y: 2 });
   });
 
-  it("should capture opponent pieces", () => {
+  it("should capture opponent pieces: 相手の駒を捕獲する", () => {
     const whitePawn: Piece = {
       id: "white-pawn",
       type: PieceType.PAWN,
@@ -49,7 +49,7 @@ describe("applyMove", () => {
     expect(newBoard[0].position).toEqual({ x: 1, y: 2 });
   });
 
-  it("should handle en passant capture", () => {
+  it("should handle en passant capture: アンパスントキャプチャを処理する", () => {
     // White pawn at (0,4), black pawn at (1,4) that just moved two squares
     const whitePawn: Piece = {
       id: "white-pawn",
@@ -79,7 +79,7 @@ describe("applyMove", () => {
     expect(newBoard[0].position).toEqual({ x: 1, y: 5 });
   });
 
-  it("should return original board if moving piece not found", () => {
+  it("should return original board if moving piece not found: 移動する駒が見つからない場合、元のボードを返す", () => {
     const pawn: Piece = {
       id: "pawn",
       type: PieceType.PAWN,

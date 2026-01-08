@@ -3,7 +3,7 @@ import { getSlidingMoves } from "../slidingMoves";
 import { Piece, PieceType, TeamType } from "../../types";
 
 describe("getSlidingMoves", () => {
-  it("should return moves in given directions until blocked", () => {
+  it("should return moves in given directions until blocked: ブロックされるまで、指定された方向に移動できる", () => {
     const piece: Piece = {
       id: "piece",
       type: PieceType.QUEEN,
@@ -25,7 +25,7 @@ describe("getSlidingMoves", () => {
     );
   });
 
-  it("should stop at own pieces", () => {
+  it("should stop at own pieces: 自分の駒が配置された場合、そのマスに移動しない", () => {
     const piece: Piece = {
       id: "piece",
       type: PieceType.QUEEN,
@@ -54,7 +54,7 @@ describe("getSlidingMoves", () => {
     expect(moves).not.toContainEqual({ x: 6, y: 3 });
   });
 
-  it("should include opponent pieces but stop after", () => {
+  it("should include opponent pieces but stop after: 相手の駒を捕獲するが、その先には移動しない", () => {
     const piece: Piece = {
       id: "piece",
       type: PieceType.QUEEN,
@@ -82,7 +82,7 @@ describe("getSlidingMoves", () => {
     expect(moves).not.toContainEqual({ x: 6, y: 3 });
   });
 
-  it("should handle multiple directions", () => {
+  it("should handle multiple directions: 複数の方向を処理できる", () => {
     const piece: Piece = {
       id: "piece",
       type: PieceType.QUEEN,

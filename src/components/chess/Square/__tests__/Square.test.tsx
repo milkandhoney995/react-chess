@@ -19,7 +19,7 @@ describe("Component: Square", () => {
     vi.clearAllMocks();
   });
 
-  it("renders an empty square", () => {
+  it("renders an empty square: 空のマスをレンダーする", () => {
     const { container } = render(
       <Square
         number={1}
@@ -35,7 +35,7 @@ describe("Component: Square", () => {
     // Just check that the element exists
   });
 
-  it("renders a square with a piece", () => {
+  it("renders a square with a piece: 駒のあるマスをレンダーする", () => {
     render(
       <Square
         piece={mockPiece}
@@ -50,7 +50,7 @@ describe("Component: Square", () => {
     expect(pieceElement).toBeInTheDocument();
   });
 
-  it("applies correct tile color classes", () => {
+  it("applies correct tile color classes: タイルの色クラスを正しく適用する", () => {
     const { container: container1 } = render(
       <Square
         number={1}
@@ -77,7 +77,7 @@ describe("Component: Square", () => {
     expect(square).toBeInTheDocument();
   });
 
-  it("applies highlight class when highlighted", () => {
+  it("applies highlight class when highlighted: ハイライトクラスを正しく適用する", () => {
     const { container } = render(
       <Square
         number={1}
@@ -92,7 +92,7 @@ describe("Component: Square", () => {
     // CSS modules don't apply predictable class names in test environment
   });
 
-  it("applies checked class when square is checked", () => {
+  it("applies checked class when square is checked: チェック状態のマスを正しく適用する", () => {
     const { container } = render(
       <Square
         number={1}
@@ -108,7 +108,7 @@ describe("Component: Square", () => {
     // CSS modules don't apply predictable class names in test environment
   });
 
-  it("applies piece style when provided", () => {
+  it("applies piece style when provided: 駒のスタイルを正しく適用する", () => {
     const pieceStyle = { opacity: 0.5, transform: "translate(10px, 10px)" };
 
     render(
@@ -126,7 +126,7 @@ describe("Component: Square", () => {
     expect(pieceElement).toBeInTheDocument();
   });
 
-  it("handles pointer down events on pieces", () => {
+  it("handles pointer down events on pieces: ポインタダウンイベントを正しく処理する", () => {
     render(
       <Square
         piece={mockPiece}
@@ -151,7 +151,7 @@ describe("Component: Square", () => {
     );
   });
 
-  it("does not render piece image when no piece", () => {
+  it("does not render piece image when no piece: 駒がないマスをレンダーする", () => {
     render(
       <Square
         number={1}
@@ -165,7 +165,7 @@ describe("Component: Square", () => {
     expect(pieceImage).toBeNull();
   });
 
-  it("renders different piece types correctly", () => {
+  it("renders different piece types correctly: プロモーション可能な駒を正しく表示する", () => {
     const pieceTypes = [PieceType.PAWN, PieceType.ROOK, PieceType.KNIGHT, PieceType.BISHOP, PieceType.QUEEN, PieceType.KING];
 
     pieceTypes.forEach((type) => {
@@ -189,7 +189,7 @@ describe("Component: Square", () => {
     });
   });
 
-  it("handles both teams correctly", () => {
+  it("handles both teams correctly: 両チームを正しく処理する", () => {
     const ourPiece = { ...mockPiece, team: TeamType.OUR };
     const opponentPiece = { ...mockPiece, team: TeamType.OPPONENT };
 
@@ -222,7 +222,7 @@ describe("Component: Square", () => {
     expect(pieceElement).toBeInTheDocument();
   });
 
-  it("combines multiple CSS classes correctly", () => {
+  it("combines multiple CSS classes correctly: 複数のCSSクラスを正しく結合する", () => {
     const { container } = render(
       <Square
         piece={mockPiece}

@@ -3,7 +3,7 @@ import { getPossibleRookMoves } from "../rook";
 import { Piece, PieceType, TeamType } from "../../types";
 
 describe("getPossibleRookMoves", () => {
-  it("should return horizontal and vertical moves for rook in center of empty board", () => {
+  it("should return horizontal and vertical moves for rook in center of empty board: ルックが空の盤面の中央に配置された場合、水平と垂直方向のマスを返す", () => {
     const rook: Piece = {
       id: "rook",
       type: PieceType.ROOK,
@@ -32,7 +32,7 @@ describe("getPossibleRookMoves", () => {
     );
   });
 
-  it("should be blocked by own pieces", () => {
+  it("should be blocked by own pieces: 自分の駒が配置された場合、そのマスに移動しない", () => {
     const rook: Piece = {
       id: "rook",
       type: PieceType.ROOK,
@@ -61,7 +61,7 @@ describe("getPossibleRookMoves", () => {
     expect(moves).toContainEqual({ x: 4, y: 3 });
   });
 
-  it("should capture opponent pieces but not move beyond", () => {
+  it("should capture opponent pieces but not move beyond: 相手の駒を捕獲するが、その先には移動しない", () => {
     const rook: Piece = {
       id: "rook",
       type: PieceType.ROOK,

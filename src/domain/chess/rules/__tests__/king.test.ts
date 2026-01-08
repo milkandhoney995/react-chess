@@ -3,7 +3,7 @@ import { getPossibleKingMoves } from "../king";
 import { Piece, PieceType, TeamType } from "../../types";
 
 describe("getPossibleKingMoves", () => {
-  it("should return adjacent squares for king in center of empty board", () => {
+  it("should return adjacent squares for king in center of empty board: キングが空の盤面の中央に配置された場合、隣接するマスを返す", () => {
     const king: Piece = {
       id: "king",
       type: PieceType.KING,
@@ -27,7 +27,7 @@ describe("getPossibleKingMoves", () => {
     );
   });
 
-  it("should not move to squares occupied by own pieces", () => {
+  it("should not move to squares occupied by own pieces: 自分の駒が配置された場合、そのマスに移動しない", () => {
     const king: Piece = {
       id: "king",
       type: PieceType.KING,
@@ -54,7 +54,7 @@ describe("getPossibleKingMoves", () => {
     expect(moves).not.toContainEqual({ x: 4, y: 4 });
   });
 
-  it("should capture opponent pieces", () => {
+  it("should capture opponent pieces: 相手の駒を捕獲する", () => {
     const king: Piece = {
       id: "king",
       type: PieceType.KING,
@@ -81,7 +81,7 @@ describe("getPossibleKingMoves", () => {
     expect(moves).toContainEqual({ x: 4, y: 4 });
   });
 
-  it("should not move outside the board", () => {
+  it("should not move outside the board: ボードの外には移動しない", () => {
     const king: Piece = {
       id: "king",
       type: PieceType.KING,

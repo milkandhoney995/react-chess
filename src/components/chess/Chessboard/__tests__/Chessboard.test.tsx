@@ -34,7 +34,7 @@ describe("Component: Chessboard", () => {
     vi.clearAllMocks();
   });
 
-  it("renders the chessboard grid", () => {
+  it("renders the chessboard grid: チェスボードのグリッドをレンダーする", () => {
     render(
       <Chessboard
         pieces={[]}
@@ -51,7 +51,7 @@ describe("Component: Chessboard", () => {
     expect(squares.length).toBeGreaterThan(60); // Allow some flexibility for CSS module class names
   });
 
-  it("renders pieces on the board", () => {
+  it("renders pieces on the board: ボード上に駒をレンダーする", () => {
     const pieces = [mockPiece];
 
     render(
@@ -70,7 +70,7 @@ describe("Component: Chessboard", () => {
     expect(pieceElement).toBeInTheDocument();
   });
 
-  it("highlights possible moves", () => {
+  it("highlights possible moves: 可能な移動先をハイライトする", () => {
     const pieces = [mockPiece];
     const possibleMoves = [{ x: 0, y: 2 }, { x: 0, y: 3 }];
 
@@ -90,7 +90,7 @@ describe("Component: Chessboard", () => {
     expect(highlightedSquares.length).toBeGreaterThan(0);
   });
 
-  it("shows checked squares", () => {
+  it("shows checked squares: チェック状態の駒を表示する", () => {
     const pieces = [mockPiece];
     const checkedSquares = [{ x: 4, y: 0 }]; // OUR king position
 
@@ -111,7 +111,7 @@ describe("Component: Chessboard", () => {
     expect(checkedElements.length).toBeGreaterThan(0);
   });
 
-  it("handles piece drag start", () => {
+  it("handles piece drag start: ドラッグ開始を処理する", () => {
     const pieces = [mockPiece];
 
     render(
@@ -137,7 +137,7 @@ describe("Component: Chessboard", () => {
     expect(mockOnDragStart).toHaveBeenCalledWith(mockPiece);
   });
 
-  it("prevents interactions during promotion", () => {
+  it("prevents interactions during promotion: プロモーション中はインタラクションを防ぐ", () => {
     const pieces = [mockPiece];
     const promotion = { position: { x: 0, y: 7 }, team: TeamType.OUR };
 
@@ -166,7 +166,7 @@ describe("Component: Chessboard", () => {
     expect(mockOnDragStart).not.toHaveBeenCalled();
   });
 
-  it("renders promotion modal when promotion is active", () => {
+  it("renders promotion modal when promotion is active: プロモーションモーダルを表示する", () => {
     const pieces = [mockPiece];
     const promotion = { position: { x: 0, y: 7 }, team: TeamType.OUR };
 
@@ -187,7 +187,7 @@ describe("Component: Chessboard", () => {
     expect(modal).toBeInTheDocument();
   });
 
-  it("renders dragging piece overlay", () => {
+  it("renders dragging piece overlay: ドラッグ中の駒を表示する", () => {
     const pieces = [mockPiece];
 
     // Mock the useDragAndDrop hook to return drag state
@@ -224,7 +224,7 @@ describe("Component: Chessboard", () => {
     expect(draggingPiece).toBeInTheDocument();
   });
 
-  it("renders complete chess board with initial setup", () => {
+  it("renders complete chess board with initial setup: 完全なチェスボードを初期状態でレンダーする", () => {
     const pieces = createBoard();
 
     render(

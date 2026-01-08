@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import Page from "../page";
 
 describe("Page: Chess Game Page", () => {
-  it("renders the main game components", () => {
+  it("renders the main game components: メインのゲームコンポーネントをレンダーする", () => {
     render(<Page />);
 
     // Check that the main container is rendered
@@ -15,7 +15,7 @@ describe("Page: Chess Game Page", () => {
     expect(chessboardWrapper).toBeInTheDocument();
   });
 
-  it("initially shows no game status overlay", () => {
+  it("initially shows no game status overlay: 初期状態ではゲーム状況のオーバーレイを表示しない", () => {
     render(<Page />);
 
     // Initially, there should be no win/lose/check overlay
@@ -23,7 +23,7 @@ describe("Page: Chess Game Page", () => {
     expect(overlays).toHaveLength(0);
   });
 
-  it("displays check status when king is in check", () => {
+  it("displays check status when king is in check: チェック中であれば、チェック状態を表示する", () => {
     // This would require mocking the chess state to have a king in check
     // For now, we'll test the component renders without crashing
     render(<Page />);
@@ -32,7 +32,7 @@ describe("Page: Chess Game Page", () => {
     expect(screen.getByRole("main")).toBeInTheDocument();
   });
 
-  it("displays winning team when game is over", () => {
+  it("displays winning team when game is over: 勝利チームのメッセージを表示する", () => {
     // This would require setting up a winning state
     // For now, we'll test the component renders without crashing
     render(<Page />);
@@ -41,7 +41,7 @@ describe("Page: Chess Game Page", () => {
     expect(screen.getByRole("main")).toBeInTheDocument();
   });
 
-  it("handles drag interactions", async () => {
+  it("handles drag interactions: ドラッグ操作を処理する", async () => {
     const user = userEvent.setup();
     render(<Page />);
 
@@ -54,7 +54,7 @@ describe("Page: Chess Game Page", () => {
     // and would be better handled in the Chessboard component tests
   });
 
-  it("integrates all chess components together", () => {
+  it("integrates all chess components together: すべてのチェスコンポーネントを統合する", () => {
     render(<Page />);
 
     // Check that all major components are present

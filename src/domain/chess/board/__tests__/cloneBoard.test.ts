@@ -3,7 +3,7 @@ import { cloneBoard } from "../cloneBoard";
 import { Piece, PieceType, TeamType } from "../../types";
 
 describe("cloneBoard", () => {
-  it("should create a deep copy of the board", () => {
+  it("should create a deep copy of the board: ボードのディープコピーを作成する", () => {
     const originalBoard: Piece[] = [
       {
         id: "pawn1",
@@ -24,7 +24,7 @@ describe("cloneBoard", () => {
     expect(clonedBoard[0].possibleMoves[0]).not.toBe(originalBoard[0].possibleMoves[0]); // Deep copy move objects
   });
 
-  it("should preserve all piece properties", () => {
+  it("should preserve all piece properties: 駒のすべてのプロパティを保持する", () => {
     const originalPiece: Piece = {
       id: "king",
       type: PieceType.KING,
@@ -40,7 +40,7 @@ describe("cloneBoard", () => {
     expect(clonedBoard[0]).toEqual(originalPiece);
   });
 
-  it("should handle empty board", () => {
+  it("should handle empty board: 空のボードを処理する", () => {
     const clonedBoard = cloneBoard([]);
 
     expect(clonedBoard).toEqual([]);

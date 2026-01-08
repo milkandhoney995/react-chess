@@ -20,7 +20,7 @@ describe("useDragAndDrop", () => {
     vi.clearAllMocks();
   });
 
-  it("should initialize with no drag state", () => {
+  it("should initialize with no drag state: ドラッグ状態を初期化する", () => {
     const { result } = renderHook(() =>
       useDragAndDrop({ onDrop: mockOnDrop })
     );
@@ -29,7 +29,7 @@ describe("useDragAndDrop", () => {
     expect(result.current.chessboardRef.current).toBeNull();
   });
 
-  it("should start dragging on pointer down", () => {
+  it("should start dragging on pointer down: ポインタダウンでドラッグを開始する", () => {
     const { result } = renderHook(() =>
       useDragAndDrop({ onDrop: mockOnDrop })
     );
@@ -62,7 +62,7 @@ describe("useDragAndDrop", () => {
     expect(result.current.dragState?.clientY).toBe(150);
   });
 
-  it("should update drag position on pointer move", () => {
+  it("should update drag position on pointer move: ポインタ移動時にドラッグ位置を更新する", () => {
     const { result } = renderHook(() =>
       useDragAndDrop({ onDrop: mockOnDrop })
     );
@@ -102,7 +102,7 @@ describe("useDragAndDrop", () => {
     expect(result.current.dragState?.clientY).toBe(200);
   });
 
-  it("should not update position when not dragging", () => {
+  it("should not update position when not dragging: ドラッグしていない場合、位置を更新しない", () => {
     const { result } = renderHook(() =>
       useDragAndDrop({ onDrop: mockOnDrop })
     );
@@ -119,7 +119,7 @@ describe("useDragAndDrop", () => {
     expect(result.current.dragState).toBeNull();
   });
 
-  it("should drop piece on pointer up", () => {
+  it("should drop piece on pointer up: ポインタアップで駒をドロップする", () => {
     const { result } = renderHook(() =>
       useDragAndDrop({ onDrop: mockOnDrop, onDragEnd: mockOnDragEnd })
     );
@@ -172,7 +172,7 @@ describe("useDragAndDrop", () => {
     expect(result.current.dragState).toBeNull();
   });
 
-  it("should handle drag end when no chessboard ref", () => {
+  it("should handle drag end when no chessboard ref: チェスボードの参照がない場合にドラッグ終了を処理する", () => {
     const { result } = renderHook(() =>
       useDragAndDrop({ onDrop: mockOnDrop, onDragEnd: mockOnDragEnd })
     );
@@ -213,7 +213,7 @@ describe("useDragAndDrop", () => {
     expect(result.current.dragState).toBeNull();
   });
 
-  it("should handle drag end when not dragging", () => {
+  it("should handle drag end when not dragging: ドラッグしていない場合にドラッグ終了を処理する", () => {
     const { result } = renderHook(() =>
       useDragAndDrop({ onDrop: mockOnDrop, onDragEnd: mockOnDragEnd })
     );
@@ -231,7 +231,7 @@ describe("useDragAndDrop", () => {
     expect(mockOnDragEnd).toHaveBeenCalled();
   });
 
-  it("should clamp board position within bounds", () => {
+  it("should clamp board position within bounds: ボード位置を境界内にクランプする", () => {
     const { result } = renderHook(() =>
       useDragAndDrop({ onDrop: mockOnDrop })
     );

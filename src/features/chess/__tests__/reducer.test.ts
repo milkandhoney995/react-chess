@@ -5,14 +5,14 @@ import { ChessAction } from "../actions";
 import { Piece, PieceType, TeamType } from "@/domain/chess/types";
 
 describe("chessReducer", () => {
-  it("should return initial state for unknown action", () => {
+  it("should return initial state for unknown action: 未知のアクションに対して初期状態を返す", () => {
     const action = { type: "UNKNOWN" } as any;
     const result = chessReducer(initialChessState, action);
     expect(result).toBe(initialChessState);
   });
 
   describe("MOVE_PIECE", () => {
-    it("should not move piece if promotion is pending", () => {
+    it("should not move piece if promotion is pending: プロモーション中は駒を移動させない", () => {
       const state = {
         ...initialChessState,
         promotion: {
@@ -33,7 +33,7 @@ describe("chessReducer", () => {
       expect(result).toBe(state);
     });
 
-    it("should not move piece if piece not found", () => {
+    it("should not move piece if piece not found: 駒が見つからない場合、移動させない", () => {
       const action: ChessAction = {
         type: "MOVE_PIECE",
         payload: {
@@ -46,7 +46,7 @@ describe("chessReducer", () => {
       expect(result).toBe(initialChessState);
     });
 
-    it("should not move piece if not player's turn", () => {
+    it("should not move piece if not player's turn: プレイヤーのターンではない場合、駒を移動させない", () => {
       // Find a piece that belongs to opponent (odd turns)
       const opponentPiece = initialChessState.pieces.find(
         p => p.team === TeamType.OPPONENT
@@ -69,7 +69,7 @@ describe("chessReducer", () => {
       expect(result).toBe(state);
     });
 
-    it("should move piece successfully", () => {
+    it("should move piece successfully: 駒を正常に移動させる", () => {
       // Find a pawn that can move
       const pawn = initialChessState.pieces.find(
         p => p.type === PieceType.PAWN && p.team === TeamType.OUR
@@ -94,7 +94,7 @@ describe("chessReducer", () => {
       });
     });
 
-    it("should set promotion state when pawn reaches promotion square", () => {
+    it("should set promotion state when pawn reaches promotion square: ポーンがプロモーションマスに到達した場合、プロモーション状態を設定する", () => {
       // Create a state with a pawn near promotion
       const pawnNearPromotion: Piece = {
         id: "pawn-promotion",
@@ -129,7 +129,7 @@ describe("chessReducer", () => {
   });
 
   describe("PROMOTE_PAWN", () => {
-    it("should not promote if no promotion pending", () => {
+    it("should not promote if no promotion pending: プロモーション中でない場合、プロモーションしない", () => {
       const action: ChessAction = {
         type: "PROMOTE_PAWN",
         payload: {
@@ -142,7 +142,7 @@ describe("chessReducer", () => {
       expect(result).toBe(initialChessState);
     });
 
-    it("should promote pawn successfully", () => {
+    it("should promote pawn successfully: ポーンを正常にプロモートする", () => {
       const pawn: Piece = {
         id: "pawn-to-promote",
         type: PieceType.PAWN,
@@ -179,7 +179,7 @@ describe("chessReducer", () => {
   });
 
   describe("RESET_GAME", () => {
-    it("should reset game state", () => {
+    it("should reset game state: ゲーム状態をリセットする", () => {
       const modifiedState = {
         ...initialChessState,
         totalTurns: 5,

@@ -13,14 +13,14 @@ describe("chessUIReducer", () => {
     possibleMoves: [],
   };
 
-  it("should return initial state for unknown action", () => {
+  it("should return initial state for unknown action: 未知のアクションに対して初期状態を返す", () => {
     const action = { type: "UNKNOWN" } as any;
     const result = chessUIReducer(initialChessUIState, action);
     expect(result).toBe(initialChessUIState);
   });
 
   describe("DRAG_START", () => {
-    it("should start dragging with correct state", () => {
+    it("should start dragging with correct state: ドラッグを開始し、正しい状態を設定する", () => {
       const action: ChessUIAction = {
         type: "DRAG_START",
         payload: {
@@ -45,7 +45,7 @@ describe("chessUIReducer", () => {
   });
 
   describe("DRAG_MOVE", () => {
-    it("should update drag position when dragging", () => {
+    it("should update drag position when dragging: ドラッグ中に位置を更新する", () => {
       // First start dragging
       const startAction: ChessUIAction = {
         type: "DRAG_START",
@@ -78,7 +78,7 @@ describe("chessUIReducer", () => {
       expect(result.drag?.offsetY).toBe(20);
     });
 
-    it("should not update position when not dragging", () => {
+    it("should not update position when not dragging: ドラッグしていない場合、位置を更新しない", () => {
       const moveAction: ChessUIAction = {
         type: "DRAG_MOVE",
         payload: {
@@ -93,7 +93,7 @@ describe("chessUIReducer", () => {
   });
 
   describe("DRAG_END", () => {
-    it("should clear drag state", () => {
+    it("should clear drag state: ドラッグ状態をクリアする", () => {
       // First start dragging
       const startAction: ChessUIAction = {
         type: "DRAG_START",
@@ -120,7 +120,7 @@ describe("chessUIReducer", () => {
   });
 
   describe("DRAG_CANCEL", () => {
-    it("should clear drag state", () => {
+    it("should clear drag state: ドラッグ状態をクリアする", () => {
       // First start dragging
       const startAction: ChessUIAction = {
         type: "DRAG_START",

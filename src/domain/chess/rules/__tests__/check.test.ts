@@ -2,7 +2,7 @@ import { getCheckedKing } from "../check";
 import { Piece, PieceType, TeamType } from "../../types";
 
 describe("getCheckedKing", () => {
-  it("should return null when no king is in check", () => {
+  it("should return null when no king is in check: キングがチェックされていない場合nullを返す", () => {
     const pieces: Piece[] = [
       {
         id: "w-king",
@@ -25,7 +25,7 @@ describe("getCheckedKing", () => {
     expect(getCheckedKing(pieces)).toBeNull();
   });
 
-  it("should return the checked king when a king is in check", () => {
+  it("should return the checked king when a king is in check: チェックされているキングを返す", () => {
     const pieces: Piece[] = [
       {
         id: "w-king",

@@ -3,13 +3,13 @@ import { createBoard, createId } from "../createBoard";
 import { PieceType, TeamType } from "../../types";
 
 describe("createBoard", () => {
-  it("should create 32 pieces for a standard chess board", () => {
+  it("should create 32 pieces for a standard chess board: 標準的なチェス盤に32駒を生成する", () => {
     const board = createBoard();
 
     expect(board).toHaveLength(32);
   });
 
-  it("should place white pieces on rows 0-1", () => {
+  it("should place white pieces on rows 0-1: 白の駒を0-1行目に配置する", () => {
     const board = createBoard();
 
     const whitePieces = board.filter(piece => piece.team === TeamType.OUR);
@@ -20,7 +20,7 @@ describe("createBoard", () => {
     });
   });
 
-  it("should place black pieces on rows 6-7", () => {
+  it("should place black pieces on rows 6-7: 黒の駒を6-7行目に配置する", () => {
     const board = createBoard();
 
     const blackPieces = board.filter(piece => piece.team === TeamType.OPPONENT);
@@ -31,7 +31,7 @@ describe("createBoard", () => {
     });
   });
 
-  it("should place kings correctly", () => {
+  it("should place kings correctly: キングを正しく配置する", () => {
     const board = createBoard();
 
     const kings = board.filter(piece => piece.type === PieceType.KING);
@@ -41,7 +41,7 @@ describe("createBoard", () => {
     expect(kings[1].position).toEqual({ x: 4, y: 7 }); // Black king
   });
 
-  it("should place queens correctly", () => {
+  it("should place queens correctly: クイーンを正しく配置する", () => {
     const board = createBoard();
 
     const queens = board.filter(piece => piece.type === PieceType.QUEEN);
@@ -51,7 +51,7 @@ describe("createBoard", () => {
     expect(queens[1].position).toEqual({ x: 3, y: 7 }); // Black queen
   });
 
-  it("should place pawns on rows 1 and 6", () => {
+  it("should place pawns on rows 1 and 6: ポーンを1行目と6行目に配置する", () => {
     const board = createBoard();
 
     const pawns = board.filter(piece => piece.type === PieceType.PAWN);
@@ -73,7 +73,7 @@ describe("createBoard", () => {
 });
 
 describe("createId", () => {
-  it("should generate unique IDs", () => {
+  it("should generate unique IDs: 一意なIDを生成する", () => {
     const id1 = createId();
     const id2 = createId();
 
