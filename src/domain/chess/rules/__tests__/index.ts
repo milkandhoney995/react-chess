@@ -1,0 +1,9 @@
+import "./bishop.test";
+import "./check.test";
+import "./general.test";
+import "./king.test";
+import "./knight.test";
+import "./pawn.test";
+import "./queen.test";
+import "./rook.test";
+import "./slidingMoves.test";

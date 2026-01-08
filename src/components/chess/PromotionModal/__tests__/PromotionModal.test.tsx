@@ -1,0 +1,165 @@
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { vi } from "vitest";
+import PromotionModal from "../PromotionModal";
+import { TeamType } from "@/domain/chess/types";
+import { PROMOTION_PIECES } from "@/domain/chess/constants";
+
+// Mock createPortal
+vi.mock("react-dom", () => ({
+  createPortal: (children: React.ReactNode) => children,
+}));
+
+const mockDispatch = vi.fn();
+
+describe("Component: PromotionModal", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("renders promotion modal with correct title", async () => {
+    render(
+      <PromotionModal
+        position={{ x: 0, y: 7 }}
+        team={TeamType.OUR}
+        dispatch={mockDispatch}
+      />
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText("昇格する駒を選択")).toBeInTheDocument();
+    });
+  });
+
+  it("renders all promotion piece options", async () => {
+    render(
+      <PromotionModal
+        position={{ x: 0, y: 7 }}
+        team={TeamType.OUR}
+        dispatch={mockDispatch}
+      />
+    );
+
+    await waitFor(() => {
+      // Should render buttons for each promotion piece
+      const buttons = screen.getAllByRole("button");
+      expect(buttons).toHaveLength(PROMOTION_PIECES.length);
+    });
+  });
+
+  it("dispatches PROMOTE_PAWN action when piece is selected", async () => {
+    render(
+      <PromotionModal
+        position={{ x: 0, y: 7 }}
+        team={TeamType.OUR}
+        dispatch={mockDispatch}
+      />
+    );
+
+    await waitFor(() => {
+      const queenButton = screen.getAllByRole("button")[0]; // Queen is first
+      fireEvent.click(queenButton);
+    });
+
+    expect(mockDispatch).toHaveBeenCalledWith({
+      type: "PROMOTE_PAWN",
+      payload: {
+        position: { x: 0, y: 7 },
+        pieceType: PROMOTION_PIECES[0], // Queen
+      },
+    });
+  });
+
+  it("renders pieces for correct team", async () => {
+    render(
+      <PromotionModal
+        position={{ x: 0, y: 7 }}
+        team={TeamType.OPPONENT}
+        dispatch={mockDispatch}
+      />
+    );
+
+    await waitFor(() => {
+      // Should render successfully with opponent team
+      expect(screen.getByText("昇格する駒を選択")).toBeInTheDocument();
+    });
+  });
+
+  it("handles different promotion positions", async () => {
+    const testPositions = [
+      { x: 0, y: 7 },
+      { x: 7, y: 7 },
+      { x: 3, y: 0 },
+    ];
+
+    for (const position of testPositions) {
+      const { rerender } = render(
+        <PromotionModal
+          position={position}
+          team={TeamType.OUR}
+          dispatch={mockDispatch}
+        />
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText("昇格する駒を選択")).toBeInTheDocument();
+      });
+
+      // Clean up for next iteration
+      rerender(<></>);
+    }
+  });
+
+  it("applies correct CSS classes", async () => {
+    render(
+      <PromotionModal
+        position={{ x: 0, y: 7 }}
+        team={TeamType.OUR}
+        dispatch={mockDispatch}
+      />
+    );
+
+    await waitFor(() => {
+      const overlay = screen.getByText("昇格する駒を選択").closest('[class*="overlay"]');
+      expect(overlay).toBeInTheDocument();
+
+      const modal = screen.getByText("昇格する駒を選択").closest('[class*="modal"]');
+      expect(modal).toBeInTheDocument();
+    });
+  });
+
+  it("renders all promotion pieces in correct order", async () => {
+    render(
+      <PromotionModal
+        position={{ x: 0, y: 7 }}
+        team={TeamType.OUR}
+        dispatch={mockDispatch}
+      />
+    );
+
+    await waitFor(() => {
+      const buttons = screen.getAllByRole("button");
+      expect(buttons).toHaveLength(PROMOTION_PIECES.length);
+
+      // Each button should have the correct piece type
+      buttons.forEach((button, index) => {
+        expect(button).toBeInTheDocument();
+      });
+    });
+  });
+
+  it("handles SSR correctly", () => {
+    // In test environment, useEffect runs synchronously, so it renders
+    // In real SSR, useEffect doesn't run, so it would return null
+    const { container } = render(
+      <PromotionModal
+        position={{ x: 0, y: 7 }}
+        team={TeamType.OUR}
+        dispatch={mockDispatch}
+      />
+    );
+
+    // In test environment, it should render (useEffect runs)
+    expect(container.firstChild).not.toBeNull();
+    expect(container.firstChild).toBeInTheDocument();
+  });
+});

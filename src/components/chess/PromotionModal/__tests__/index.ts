@@ -1,0 +1,1 @@
+import "./PromotionModal.test";

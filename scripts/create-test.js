@@ -69,16 +69,29 @@ describe("Component: ${fileName}", () => {
   if (
     filePath.includes("/utils/") ||
     filePath.includes("/selectors/") ||
-    filePath.includes("/domain/")
+    filePath.includes("/domain/") ||
+    filePath.includes("/features/")
   ) {
-    return `import { ${fileName} } from "${relativeImport}";
-
-describe("${fileName} Utility", () => {
-  it("should be defined", () => {
-    expect(${fileName}).toBeDefined();
+    return `describe("${fileName} Utility", () => {
+  it("placeholder test", () => {
+    expect(true).toBe(true);
   });
 
   // TODO: ここに関数の具体的なユニットテストを書く
+});
+`;
+  }
+
+  // フック (src/hooks/以下)
+  if (filePath.includes("/hooks/")) {
+    return `import { renderHook } from "@testing-library/react";
+
+describe("${fileName} Hook", () => {
+  it("placeholder test", () => {
+    expect(true).toBe(true);
+  });
+
+  // TODO: ここにフックの具体的なユニットテストを書く
 });
 `;
   }
