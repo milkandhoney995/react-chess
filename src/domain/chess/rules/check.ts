@@ -4,6 +4,8 @@ import { samePosition } from "@/domain/chess/utils";
 /**
  * チェックされている王を返す
  * チェックされていなければ null
+ * @param pieces 盤上の全ての駒
+ * @return チェックされている王のチームと位置、または null
  */
 export function getCheckedKing(
   pieces: Piece[]

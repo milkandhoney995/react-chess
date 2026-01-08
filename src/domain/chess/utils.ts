@@ -7,6 +7,12 @@ import { getCheckedKing } from "@/domain/chess/rules/check";
 /* =====================
   位置比較
 ===================== */
+/**
+ * 2つの位置が同じかどうか判定
+ * @param a 位置A
+ * @param b 位置B
+ * @return 同じ位置であれば true、異なる位置であれば false
+ */
 export function samePosition(a: Position, b: Position): boolean {
   return a.x === b.x && a.y === b.y;
 }
@@ -47,6 +53,11 @@ export function getPieceStyle(
   return undefined;
 }
 
+/**
+ * ドラッグ中の駒のスタイルを計算
+ * @param dragState ドラッグ状態
+ * @returns CSSProperties
+ */
 export function getDraggingStyle(
   dragState: DragState
 ): CSSProperties {
@@ -62,6 +73,11 @@ export function getDraggingStyle(
 /* =====================
   勝利判定（チェックメイト）
 ===================== */
+/**
+ * 勝利チームを判定
+ * @param pieces 盤上の全ての駒
+ * @return 勝利チーム、または undefined（まだ決着していない場合）
+ */
 export function checkWinningTeam(
   pieces: Piece[]
 ): TeamType | undefined {
@@ -86,6 +102,7 @@ export function checkWinningTeam(
 /**
  * 駒タイプごとの関数マップ
  * 新しい駒タイプが増えたら、ここに追加する
+ * @see getPossibleMoves
  */
 const possibleMovesMap: Record<
   PieceType,
@@ -100,9 +117,10 @@ const possibleMovesMap: Record<
 };
 
 /**
- * 駒の合法手を返す
+ * 駒の擬似合法手を返す
  * @param piece
  * @param board
+ * @return 擬似合法手の位置配列
  */
 export function getPossibleMoves(
   piece: Piece,
@@ -119,6 +137,7 @@ export function getPossibleMoves(
  * 駒の合法手を返す
  * @param piece
  * @param board
+ * @return 合法手の位置配列
  */
 export function getLegalMoves(
   piece: Piece,
@@ -139,9 +158,10 @@ export function getLegalMoves(
   その他
 ===================== */
 /**
- * 現在のターンが指定した駒のチームのターンかどうか判定
- * @param pieceTeam
- * @param totalTurns
+ * 現在のターンが指定したチームのターンかどうか判定
+ * @param pieceTeam 駒のチーム
+ * @param totalTurns 現在の総ターン数
+ * @return 指定したチームのターンであれば true、そうでなければ false
  */
 export function isOurTurn(
   pieceTeam: TeamType,
@@ -154,9 +174,9 @@ export function isOurTurn(
 }
 
 /**
- * プロモーション判定
- * @param piece 対象の駒
- * @returns プロモーション可能か
+ * 駒が昇格マスにいるかどうか判定
+ * @param piece 確認する駒
+ * @return 昇格マスにいる場合は true、そうでない場合は false
  */
 export const isPromotionSquare = (piece: Piece): boolean => {
   if (piece.type !== PieceType.PAWN) return false;

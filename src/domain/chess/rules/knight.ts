@@ -16,7 +16,12 @@ export const getPossibleKnightMoves = (
 /* =====================
    Knight Logic
 ===================== */
-
+/**
+ * 指定した駒のジャンプ移動を取得
+ * @param piece 移動元の駒
+ * @param board 盤上の全ての駒
+ * @return ジャンプ移動可能な位置の配列
+*/
 const getJumpMoves = (
   piece: Piece,
   board: Piece[]

@@ -194,6 +194,11 @@ const KING_DIRECTIONS: Direction[] = [
 
 type Direction = [dx: number, dy: number];
 
+/**
+ * 指定した位置が盤内かどうか
+ * @param position 確認する位置
+ * @return 盤内であれば true、盤外であれば false
+*/
 const isInsideBoard = ({ x, y }: Position): boolean =>
   x >= 0 && x < 8 && y >= 0 && y < 8;
 

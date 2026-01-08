@@ -11,7 +11,7 @@ export function chessReducer(
 ): ChessState {
   switch (action.type) {
     /* =====================
-       駒移動
+      駒移動
     ===================== */
     case "MOVE_PIECE": {
       // プロモーション待ち中は移動不可
@@ -41,7 +41,7 @@ export function chessReducer(
       if (!hasMoved) return state;
 
       /* =====================
-         プロモーション判定
+        プロモーション判定
       ===================== */
       const promotedPawn = newPieces.find(
         p =>
@@ -70,7 +70,7 @@ export function chessReducer(
     }
 
     /* =====================
-       プロモーション確定
+      プロモーション確定
     ===================== */
     case "PROMOTE_PAWN": {
       if (!state.promotion) return state;
@@ -94,7 +94,7 @@ export function chessReducer(
     }
 
     /* =====================
-       リセット
+      リセット
     ===================== */
     case "RESET_GAME":
       return {

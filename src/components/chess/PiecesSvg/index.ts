@@ -11,6 +11,10 @@ import King from "./King";
 
 type PieceSvgComponent = React.FC<{ team: TeamType }>;
 
+/**
+ * 駒の種類と対応するSVGコンポーネントのマッピング
+ * @return 駒の種類ごとのSVGコンポーネントマップ
+ */
 export const PieceSvgMap: Record<PieceType, PieceSvgComponent> = {
   [PieceType.PAWN]: Pawn,
   [PieceType.ROOK]: Rook,

@@ -58,6 +58,12 @@ const getCaptureMoves = (pawn: Piece, board: Piece[]): Position[] => {
 /* =====================
    En Passant
 ===================== */
+/**
+ * ポーンのエンパッサン移動を取得
+ * @param pawn 移動元のポーン駒
+ * @param board 盤上の全ての駒
+ * @return エンパッサン移動可能な位置の配列
+*/
 const getEnPassantMoves = (pawn: Piece, board: Piece[]): Position[] => {
   const dir = getPawnDirection(pawn.team);
   const moves: Position[] = [];
@@ -83,12 +89,29 @@ const getEnPassantMoves = (pawn: Piece, board: Piece[]): Position[] => {
 /* =====================
    Utilities
 ===================== */
+/**
+ * ポーンの進行方向を取得
+ * @param team ポーンのチーム
+ * @return 進行方向（OUR チームなら +1、OPPONENT チームなら -1）
+*/
 const getPawnDirection = (team: TeamType): number =>
   team === TeamType.OUR ? 1 : -1;
 
+/**
+ * ポーンが初期位置にいるかどうか
+ * @param pawn 確認するポーン駒
+ * @return 初期位置にいる場合は true、そうでない場合は false
+*/
 const isPawnStartRow = (pawn: Piece): boolean =>
   pawn.position.y === (pawn.team === TeamType.OUR ? 1 : 6);
 
+/**
+ * 指定した移動量だけ移動した、駒の新しい位置を取得
+ * @param position 元の位置
+ * @param dx x方向の移動量
+ * @param dy y方向の移動量
+ * @return 移動後の位置
+*/
 const move = (
   position: Position,
   dx: number,
