@@ -4,17 +4,16 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import classes from "./PromotionModal.module.scss";
 import { PieceSvgMap } from "../PiecesSvg";
-import { Position, TeamType } from "@/domain/chess/types";
+import { PieceType, Position, TeamType } from "@/domain/chess/types";
 import { PROMOTION_PIECES } from "@/domain/chess/constants";
-import { ChessAction } from "@/features/chess/game/actions";
 
 interface Props {
   position: Position;
   team: TeamType;
-  dispatch: React.Dispatch<ChessAction>;
+  onPromote?: (position: Position, type: PieceType) => void;
 }
 
-const PromotionModal = ({ position, team, dispatch }: Props) => {
+const PromotionModal = ({ position, team, onPromote }: Props) => {
   const [mounted, setMounted] = useState(false);
 
   // SSR 対策
@@ -38,12 +37,7 @@ const PromotionModal = ({ position, team, dispatch }: Props) => {
               <button
                 key={type}
                 className={classes.promotion__button}
-                onClick={() =>
-                  dispatch({
-                    type: "PROMOTE_PAWN",
-                    payload: { position, pieceType: type },
-                  })
-                }
+                onClick={() => onPromote?.(position, type)}
               >
                 <SvgPiece team={team} />
               </button>
