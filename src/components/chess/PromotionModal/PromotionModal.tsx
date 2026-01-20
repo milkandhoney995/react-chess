@@ -5,8 +5,8 @@ import { createPortal } from "react-dom";
 import classes from "./PromotionModal.module.scss";
 import { PieceSvgMap } from "../PiecesSvg";
 import { Position, TeamType } from "@/domain/chess/types";
-import { ChessAction } from "@/features/chess/actions";
 import { PROMOTION_PIECES } from "@/domain/chess/constants";
+import { ChessAction } from "@/features/chess/game/actions";
 
 interface Props {
   position: Position;

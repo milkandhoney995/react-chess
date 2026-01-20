@@ -1,5 +1,5 @@
-import { ChessState } from "@/features/chess/types";
-import { ChessAction } from "@/features/chess/actions";
+import { ChessState } from "./types";
+import { ChessAction } from "./actions";
 import { checkWinningTeam, samePosition } from "@/domain/chess/utils";
 import { movePiece } from "@/domain/chess/board/movePiece";
 import { PieceType, TeamType } from "@/domain/chess/types";

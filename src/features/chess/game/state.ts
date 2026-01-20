@@ -1,4 +1,4 @@
-import { ChessState } from "@/features/chess/types";
+import { ChessState } from "./types";
 import { createBoard } from "@/domain/chess/board/createBoard";
 
 export const initialChessState: ChessState = {

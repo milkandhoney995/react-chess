@@ -30,7 +30,7 @@ React + TypeScript で作ったチェスアプリです。
   - 型安全性を重視した設計
 
 - **Features層**: アプリケーションのユースケースと状態管理
-  - `features/chess/` にゲームの状態管理を集約
+  - `features/chess/game` にゲームの状態管理を集約
   - Actions、Reducers、Selectorsのパターンで状態を管理
   - ドメイン層のロジックをUIで利用しやすい形に変換
 
@@ -234,18 +234,19 @@ pnpm test:watch
     │       └── utils.ts
     ├── features/ # 状態管理
     │   └── chess/
-    │       ├── __tests__/
-    │       │   ├── actions.test.ts
-    │       │   ├── index.ts
-    │       │   ├── reducer.test.ts
-    │       │   ├── selectors.test.ts
-    │       │   └── state.test.ts
-    │       ├── actions.ts
-    │       ├── reducer.ts
-    │       ├── selectors.ts
-    │       ├── state.ts
-    │       ├── types.ts
-    │       └── ui/ # UI専用
+    │       ├── game # ゲーム状態
+    │       │   ├── __tests__/
+    │       │   │   ├── actions.test.ts
+    │       │   │   ├── index.ts
+    │       │   │   ├── reducer.test.ts
+    │       │   │   ├── selectors.test.ts
+    │       │   │   └── state.test.ts
+    │       │   ├── actions.ts
+    │       │   ├── reducer.ts
+    │       │   ├── selectors.ts
+    │       │   ├── state.ts
+    │       │   ├── types.ts
+    │       └── view/ # UI専用
     │           ├── __tests__/
     │           │   ├── actions.test.ts
     │           │   └── reducer.test.ts

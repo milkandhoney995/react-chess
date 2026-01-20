@@ -4,7 +4,7 @@ import { GRID_SIZE } from "@/domain/chess/constants";
 import {
   chessUIReducer,
   initialChessUIState,
-} from "@/features/chess/ui/reducer";
+} from "@/features/chess/view/reducer";
 
 interface Props {
   onDrop: (pieceId: string, position: Position) => void;
