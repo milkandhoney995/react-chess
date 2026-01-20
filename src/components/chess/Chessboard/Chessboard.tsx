@@ -4,12 +4,13 @@ import React from "react";
 import classes from "./Chessboard.module.scss";
 import { VERTICAL_AXIS, HORIZONTAL_AXIS } from "@/domain/chess/constants";
 import { Piece, Position, TeamType } from "@/domain/chess/types";
-import { getPieceAt, samePosition, getPieceStyle, getDraggingStyle } from "@/domain/chess/utils";
+import { getPieceAt, samePosition } from "@/domain/chess/utils";
 import Square from "@/components/chess/Square/Square";
 import useDragAndDrop from "@/hooks/useDragAndDrop";
 import { ChessAction } from "@/features/chess/game/actions";
 import PromotionModal from "../PromotionModal/PromotionModal";
 import { PieceSvgMap } from "../PiecesSvg";
+import { getDraggingStyle, getPieceStyle } from "@/utils/ui";
 
 interface PromotionState {
   position: Position;
