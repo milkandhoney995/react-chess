@@ -132,6 +132,12 @@ pnpm test:watch
   - Pointer Events はサポートされているが、touch-action: none; の設定を CSS に追加するとドラッグがスムーズになります。
 
 ## ディレクトリ構成
+
+- `app`配下はサーバーサイドコンポーネント
+- `components/chess/ChessGame.tsx`がクライアントエントリーポイント
+- `features/**`および`hooks/**`はクライアントオンリー
+- `domain/**`は純関数
+
 ```
 .
 ├── next-env.d.ts
@@ -145,7 +151,7 @@ pnpm test:watch
 ├── scripts/
 │   └── create-test.js
 └── src/
-    ├── app/
+    ├── app/ # app配下はサーバーサイドコンポーネント
     │   ├── chess/
     │   │   ├── __tests__/
     │   │   │   ├── index.ts
@@ -158,8 +164,7 @@ pnpm test:watch
     ├── assets/
     ├── components/
     │   ├── chess/
-    │   │   ├── ChessGame/
-    │   │   │   ├── ChessGame.tsx
+    │   │   ├── ChessGame.tsx # クライアントエントリーポイント
     │   │   ├── Chessboard/ # 盤面コンポーネント
     │   │   │   ├── Chessboard.module.scss
     │   │   │   ├── Chessboard.tsx
@@ -193,7 +198,7 @@ pnpm test:watch
     │   │           ├── index.ts
     │   │           └── Square.test.tsx
     │   └── ui/
-    ├── domain/
+    ├── domain/ # 純関数
     │   └── chess/
     │       ├── __tests__/
     │       │   ├── index.ts
@@ -234,7 +239,7 @@ pnpm test:watch
     │       │       └── slidingMoves.test.ts
     │       ├── types.ts # PieceType / TeamType 等
     │       └── utils.ts
-    ├── features/ # 状態管理
+    ├── features/ # 状態管理。クライアントオンリー
     │   └── chess/
     │       ├── game # ゲーム状態
     │       │   ├── __tests__/
@@ -254,7 +259,7 @@ pnpm test:watch
     │           │   └── reducer.test.ts
     │           ├── actions.ts
     │           └── reducer.ts
-    ├── hooks/
+    ├── hooks/ # クライアントオンリー
     │   ├── __tests__/
     │   │   ├── index.ts
     │   │   └── useDragAndDrop.test.ts
