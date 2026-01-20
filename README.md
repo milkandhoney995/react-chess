@@ -264,6 +264,9 @@ pnpm test:watch
     │   │   ├── index.ts
     │   │   └── useDragAndDrop.test.ts
     │   └── useDragAndDrop.ts # ドラッグ＆ドロップのロジック
+    ├── utils/
+    │   ├── ui/
+    │   │   └── index.ts
     └── styles/
         ├── README.md
         ├── chess/ # ♟ Chess ドメイン専用

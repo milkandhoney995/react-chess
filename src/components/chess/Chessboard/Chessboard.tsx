@@ -3,11 +3,11 @@
 import React from "react";
 import classes from "./Chessboard.module.scss";
 import { VERTICAL_AXIS, HORIZONTAL_AXIS } from "@/domain/chess/constants";
-import { Piece, Position, TeamType } from "@/domain/chess/types";
+import { Piece, PieceType, Position, TeamType } from "@/domain/chess/types";
 import { getPieceAt, samePosition } from "@/domain/chess/utils";
 import Square from "@/components/chess/Square/Square";
 import useDragAndDrop from "@/hooks/useDragAndDrop";
-import { ChessAction } from "@/features/chess/game/actions";
+import { ChessAction, movePieceAction, promotePawn } from "@/features/chess/game/actions";
 import PromotionModal from "../PromotionModal/PromotionModal";
 import { PieceSvgMap } from "../PiecesSvg";
 import { getDraggingStyle, getPieceStyle } from "@/utils/ui";
@@ -47,16 +47,16 @@ const Chessboard: React.FC<Props> = ({
   } = useDragAndDrop({
     onDrop: (pieceId, position) => {
       if (promotion) return; // プロモーション中は操作不可
-      dispatch({
-        type: "MOVE_PIECE",
-        payload: { pieceId, to: position },
-      });
+      dispatch(movePieceAction(pieceId, position));
     },
     onDragEnd,
   });
 
   const isChecked = (position: Position) =>
     checkedSquares?.some(pos => samePosition(pos, position));
+
+  const promote = (position: Position, type: PieceType) =>
+    dispatch(promotePawn(position, type));
 
   return (
     <div className={classes.chessboard__wrapper}>
@@ -112,7 +112,7 @@ const Chessboard: React.FC<Props> = ({
         <PromotionModal
           position={promotion.position}
           team={promotion.team}
-          dispatch={dispatch}
+          onPromote={promote}
         />
       )}
     </div>
