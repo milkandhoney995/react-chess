@@ -158,6 +158,8 @@ pnpm test:watch
     ├── assets/
     ├── components/
     │   ├── chess/
+    │   │   ├── ChessGame/
+    │   │   │   ├── ChessGame.tsx
     │   │   ├── Chessboard/ # 盤面コンポーネント
     │   │   │   ├── Chessboard.module.scss
     │   │   │   ├── Chessboard.tsx
