@@ -31,7 +31,7 @@ export const selectCurrentTeam = (state: ChessState): TeamType =>
     : TeamType.OPPONENT;
 
 /* =====================
-  チェック関連（ここが要）
+  チェック関連
 ===================== */
 /**
  * チェックされている王を返す

@@ -21,7 +21,7 @@ interface Props {
   possibleMoves: Position[];
   draggingPieceId: string | null;
   promotion?: PromotionState;
-  checkedSquares?: Position[];
+  isCheckedSquare: (position: Position) => boolean;
   onMovePiece: (pieceId: string, position: Position) => void;
   onPromote: (position: Position, type: PieceType) => void;
   onDragStart: (piece: Piece) => void;
@@ -33,7 +33,7 @@ const Chessboard: React.FC<Props> = ({
   possibleMoves,
   draggingPieceId,
   promotion,
-  checkedSquares = [],
+  isCheckedSquare,
   onMovePiece,
   onPromote,
   onDragStart,
@@ -53,8 +53,6 @@ const Chessboard: React.FC<Props> = ({
     onDragEnd,
   });
 
-  const isChecked = (position: Position) =>
-    checkedSquares?.some(pos => samePosition(pos, position));
 
   return (
     <div className={classes.chessboard__wrapper}>
@@ -71,7 +69,7 @@ const Chessboard: React.FC<Props> = ({
             const piece = getPieceAt(pieces, position);
             const style = getPieceStyle(piece, draggingPieceId);
             const highlight = possibleMoves.some(m => samePosition(m, position));
-            const checked = isChecked(position);
+            const checked = isCheckedSquare(position); // マス単位でチェックされたときの位置計算
 
             return (
               <Square

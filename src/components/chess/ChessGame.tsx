@@ -6,7 +6,6 @@ import Chessboard from "@/components/chess/Chessboard/Chessboard";
 import GameStatus from "@/components/chess/GameStatus/GameStatus";
 import { chessReducer } from "@/features/chess/game/reducer";
 import { initialChessState } from "@/features/chess/game/state";
-import { selectCheckedSquares, selectIsCheck, selectWinningTeam } from "@/features/chess/game/selectors";
 import { movePieceAction, promotePawn } from "@/features/chess/game/actions";
 import { PieceType, Position } from "@/domain/chess/types";
 import { useChessGameView } from "@/features/chess/game/viewModel";
@@ -14,7 +13,6 @@ import { useChessGameView } from "@/features/chess/game/viewModel";
 const ChessGame = () => {
   const [state, dispatch] = useReducer(chessReducer, initialChessState);
   const [draggingPieceId, setDraggingPieceId] = useState<string | null>(null);
-
   const view = useChessGameView(state, draggingPieceId);
 
   /* =========================
@@ -31,16 +29,16 @@ const ChessGame = () => {
   return (
     <main className={styles.main}>
       <GameStatus
-        winningTeam={selectWinningTeam(state)}
-        isCheck={selectIsCheck(state)}
+        winningTeam={view.winningTeam}
+        isCheck={view.isCheck}
       />
 
       <Chessboard
-        pieces={state.pieces}
+        pieces={view.pieces}
         possibleMoves={view.possibleMoves}
-        checkedSquares={selectCheckedSquares(state)}
+        isCheckedSquare={view.isCheckedSquare}
         draggingPieceId={draggingPieceId}
-        promotion={state.promotion}
+        promotion={view.promotion}
         onMovePiece={movePiece}
         onPromote={promote}
         onDragStart={p => setDraggingPieceId(p.id)}
