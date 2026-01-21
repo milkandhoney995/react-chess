@@ -7,7 +7,6 @@ import { Piece, PieceType, Position, TeamType } from "@/domain/chess/types";
 import { getPieceAt, samePosition } from "@/domain/chess/utils";
 import Square from "@/components/chess/Square/Square";
 import useDragAndDrop from "@/hooks/useDragAndDrop";
-import { ChessAction, movePieceAction, promotePawn } from "@/features/chess/game/actions";
 import PromotionModal from "../PromotionModal/PromotionModal";
 import { PieceSvgMap } from "../PiecesSvg";
 import { getDraggingStyle, getPieceStyle } from "@/utils/ui";
@@ -23,7 +22,8 @@ interface Props {
   draggingPieceId: string | null;
   promotion?: PromotionState;
   checkedSquares?: Position[];
-  dispatch: React.Dispatch<ChessAction>;
+  onMovePiece: (pieceId: string, position: Position) => void;
+  onPromote: (position: Position, type: PieceType) => void;
   onDragStart: (piece: Piece) => void;
   onDragEnd: () => void;
 }
@@ -33,10 +33,11 @@ const Chessboard: React.FC<Props> = ({
   possibleMoves,
   draggingPieceId,
   promotion,
-  dispatch,
+  checkedSquares = [],
+  onMovePiece,
+  onPromote,
   onDragStart,
   onDragEnd,
-  checkedSquares = [],
 }) => {
   const {
     chessboardRef,
@@ -46,17 +47,14 @@ const Chessboard: React.FC<Props> = ({
     onPointerUp,
   } = useDragAndDrop({
     onDrop: (pieceId, position) => {
-      if (promotion) return; // プロモーション中は操作不可
-      dispatch(movePieceAction(pieceId, position));
+      if (promotion) return;
+      onMovePiece(pieceId, position);
     },
     onDragEnd,
   });
 
   const isChecked = (position: Position) =>
     checkedSquares?.some(pos => samePosition(pos, position));
-
-  const promote = (position: Position, type: PieceType) =>
-    dispatch(promotePawn(position, type));
 
   return (
     <div className={classes.chessboard__wrapper}>
@@ -100,19 +98,22 @@ const Chessboard: React.FC<Props> = ({
           if (!DraggingSvg) return null;
 
           return (
-            <div className={classes.chessboard__draggingPiece} style={getDraggingStyle(dragState)}>
+            <div
+              className={classes.chessboard__draggingPiece}
+              style={getDraggingStyle(dragState)}
+            >
               <DraggingSvg team={dragState.piece.team} />
             </div>
           );
         })()}
       </div>
 
-      {/* ===== プロモーション UI ===== */}
+      {/* ===== プロモーションモーダル ===== */}
       {promotion && (
         <PromotionModal
           position={promotion.position}
           team={promotion.team}
-          onPromote={promote}
+          onPromote={onPromote}
         />
       )}
     </div>

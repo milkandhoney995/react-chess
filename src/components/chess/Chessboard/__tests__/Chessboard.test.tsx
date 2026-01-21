@@ -16,7 +16,8 @@ vi.mock("@/hooks/useDragAndDrop", () => ({
   })),
 }));
 
-const mockDispatch = vi.fn();
+const mockOnMovePiece = vi.fn();
+const mockOnPromote = vi.fn();
 const mockOnDragStart = vi.fn();
 const mockOnDragEnd = vi.fn();
 
@@ -40,7 +41,8 @@ describe("Component: Chessboard", () => {
         pieces={[]}
         possibleMoves={[]}
         draggingPieceId={null}
-        dispatch={mockDispatch}
+        onMovePiece={mockOnMovePiece}
+        onPromote={mockOnPromote}
         onDragStart={mockOnDragStart}
         onDragEnd={mockOnDragEnd}
       />
@@ -59,7 +61,8 @@ describe("Component: Chessboard", () => {
         pieces={pieces}
         possibleMoves={[]}
         draggingPieceId={null}
-        dispatch={mockDispatch}
+        onMovePiece={mockOnMovePiece}
+        onPromote={mockOnPromote}
         onDragStart={mockOnDragStart}
         onDragEnd={mockOnDragEnd}
       />
@@ -79,7 +82,8 @@ describe("Component: Chessboard", () => {
         pieces={pieces}
         possibleMoves={possibleMoves}
         draggingPieceId={null}
-        dispatch={mockDispatch}
+        onMovePiece={mockOnMovePiece}
+        onPromote={mockOnPromote}
         onDragStart={mockOnDragStart}
         onDragEnd={mockOnDragEnd}
       />
@@ -100,7 +104,8 @@ describe("Component: Chessboard", () => {
         possibleMoves={[]}
         draggingPieceId={null}
         checkedSquares={checkedSquares}
-        dispatch={mockDispatch}
+        onMovePiece={mockOnMovePiece}
+        onPromote={mockOnPromote}
         onDragStart={mockOnDragStart}
         onDragEnd={mockOnDragEnd}
       />
@@ -119,7 +124,8 @@ describe("Component: Chessboard", () => {
         pieces={pieces}
         possibleMoves={[]}
         draggingPieceId={null}
-        dispatch={mockDispatch}
+        onMovePiece={mockOnMovePiece}
+        onPromote={mockOnPromote}
         onDragStart={mockOnDragStart}
         onDragEnd={mockOnDragEnd}
       />
@@ -147,7 +153,8 @@ describe("Component: Chessboard", () => {
         possibleMoves={[]}
         draggingPieceId={null}
         promotion={promotion}
-        dispatch={mockDispatch}
+        onMovePiece={mockOnMovePiece}
+        onPromote={mockOnPromote}
         onDragStart={mockOnDragStart}
         onDragEnd={mockOnDragEnd}
       />
@@ -176,7 +183,8 @@ describe("Component: Chessboard", () => {
         possibleMoves={[]}
         draggingPieceId={null}
         promotion={promotion}
-        dispatch={mockDispatch}
+        onMovePiece={mockOnMovePiece}
+        onPromote={mockOnPromote}
         onDragStart={mockOnDragStart}
         onDragEnd={mockOnDragEnd}
       />
@@ -213,7 +221,8 @@ describe("Component: Chessboard", () => {
         pieces={pieces}
         possibleMoves={[]}
         draggingPieceId="test-piece"
-        dispatch={mockDispatch}
+        onMovePiece={mockOnMovePiece}
+        onPromote={mockOnPromote}
         onDragStart={mockOnDragStart}
         onDragEnd={mockOnDragEnd}
       />
@@ -232,7 +241,8 @@ describe("Component: Chessboard", () => {
         pieces={pieces}
         possibleMoves={[]}
         draggingPieceId={null}
-        dispatch={mockDispatch}
+        onMovePiece={mockOnMovePiece}
+        onPromote={mockOnPromote}
         onDragStart={mockOnDragStart}
         onDragEnd={mockOnDragEnd}
       />

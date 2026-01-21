@@ -9,7 +9,7 @@ vi.mock("react-dom", () => ({
   createPortal: (children: React.ReactNode) => children,
 }));
 
-const mockDispatch = vi.fn();
+const mockOnPromote = vi.fn();
 
 describe("Component: PromotionModal", () => {
   beforeEach(() => {
@@ -21,7 +21,7 @@ describe("Component: PromotionModal", () => {
       <PromotionModal
         position={{ x: 0, y: 7 }}
         team={TeamType.OUR}
-        onPromote={mockDispatch}
+        onPromote={mockOnPromote}
       />
     );
 
@@ -35,7 +35,7 @@ describe("Component: PromotionModal", () => {
       <PromotionModal
         position={{ x: 0, y: 7 }}
         team={TeamType.OUR}
-        onPromote={mockDispatch}
+        onPromote={mockOnPromote}
       />
     );
 
@@ -51,7 +51,7 @@ describe("Component: PromotionModal", () => {
       <PromotionModal
         position={{ x: 0, y: 7 }}
         team={TeamType.OUR}
-        onPromote={mockDispatch}
+        onPromote={mockOnPromote}
       />
     );
 
@@ -60,7 +60,7 @@ describe("Component: PromotionModal", () => {
       fireEvent.click(queenButton);
     });
 
-    expect(mockDispatch).toHaveBeenCalledWith({ x: 0, y: 7 }, PROMOTION_PIECES[0]);
+    expect(mockOnPromote).toHaveBeenCalledWith({ x: 0, y: 7 }, PROMOTION_PIECES[0]);
   });
 
   it("renders pieces for correct team: 正しいチームの駒をレンダーする", async () => {
@@ -68,7 +68,7 @@ describe("Component: PromotionModal", () => {
       <PromotionModal
         position={{ x: 0, y: 7 }}
         team={TeamType.OPPONENT}
-        onPromote={mockDispatch}
+        onPromote={mockOnPromote}
       />
     );
 
@@ -90,7 +90,7 @@ describe("Component: PromotionModal", () => {
         <PromotionModal
           position={position}
           team={TeamType.OUR}
-          onPromote={mockDispatch}
+          onPromote={mockOnPromote}
         />
       );
 
@@ -108,7 +108,7 @@ describe("Component: PromotionModal", () => {
       <PromotionModal
         position={{ x: 0, y: 7 }}
         team={TeamType.OUR}
-        onPromote={mockDispatch}
+        onPromote={mockOnPromote}
       />
     );
 
@@ -126,7 +126,7 @@ describe("Component: PromotionModal", () => {
       <PromotionModal
         position={{ x: 0, y: 7 }}
         team={TeamType.OUR}
-        onPromote={mockDispatch}
+        onPromote={mockOnPromote}
       />
     );
 
@@ -148,7 +148,7 @@ describe("Component: PromotionModal", () => {
       <PromotionModal
         position={{ x: 0, y: 7 }}
         team={TeamType.OUR}
-        onPromote={mockDispatch}
+        onPromote={mockOnPromote}
       />
     );
 

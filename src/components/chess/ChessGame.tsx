@@ -7,6 +7,8 @@ import GameStatus from "@/components/chess/GameStatus/GameStatus";
 import { chessReducer } from "@/features/chess/game/reducer";
 import { initialChessState } from "@/features/chess/game/state";
 import { selectCheckedSquares, selectIsCheck, selectWinningTeam } from "@/features/chess/game/selectors";
+import { movePieceAction, promotePawn } from "@/features/chess/game/actions";
+import { PieceType, Position } from "@/domain/chess/types";
 import { useChessGameView } from "@/features/chess/game/viewModel";
 
 const ChessGame = () => {
@@ -14,7 +16,17 @@ const ChessGame = () => {
   const [draggingPieceId, setDraggingPieceId] = useState<string | null>(null);
 
   const view = useChessGameView(state, draggingPieceId);
-  const possibleMoves = view.possibleMoves
+
+  /* =========================
+   * 操作API（Application層）
+   * ========================= */
+  const movePiece = (pieceId: string, position: Position) => {
+    dispatch(movePieceAction(pieceId, position));
+  };
+
+  const promote = (position: Position, type: PieceType) => {
+    dispatch(promotePawn(position, type));
+  };
 
   return (
     <main className={styles.main}>
@@ -25,16 +37,17 @@ const ChessGame = () => {
 
       <Chessboard
         pieces={state.pieces}
-        possibleMoves={possibleMoves}
+        possibleMoves={view.possibleMoves}
         checkedSquares={selectCheckedSquares(state)}
         draggingPieceId={draggingPieceId}
         promotion={state.promotion}
-        dispatch={dispatch}
+        onMovePiece={movePiece}
+        onPromote={promote}
         onDragStart={p => setDraggingPieceId(p.id)}
         onDragEnd={() => setDraggingPieceId(null)}
       />
     </main>
   );
-}
+};
 
 export default ChessGame;

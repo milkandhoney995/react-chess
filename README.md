@@ -164,7 +164,7 @@ pnpm test:watch
     ├── assets/
     ├── components/
     │   ├── chess/
-    │   │   ├── ChessGame.tsx # クライアントエントリーポイント
+    │   │   ├── ChessGame.tsx # クライアントエントリーポイント。state の更新
     │   │   ├── Chessboard/ # 盤面コンポーネント
     │   │   │   ├── Chessboard.module.scss
     │   │   │   ├── Chessboard.tsx
