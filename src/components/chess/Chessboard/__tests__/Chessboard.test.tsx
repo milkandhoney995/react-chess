@@ -1,4 +1,4 @@
-import { render, fireEvent, screen } from "@testing-library/react";
+import { render, fireEvent } from "@testing-library/react";
 import { vi } from "vitest";
 import Chessboard from "../Chessboard";
 import { Piece, PieceType, Position, TeamType } from "@/domain/chess/types";
@@ -11,11 +11,11 @@ import useDragAndDrop from "@/hooks/useDragAndDrop";
 // SVG mock
 vi.mock("@/components/chess/PiecesSvg", () => ({
   PieceSvgMap: {
-    PAWN: () => <svg data-testid="dragging-piece" />,
+    PAWN: ({ team }: any) => <svg />,
   },
 }));
 
-// Chessboard mock
+// Chessboard CSS module mock
 vi.mock("../Chessboard/Chessboard.module.scss", () => ({
   chessboard__draggingPiece: "chessboard__draggingPiece",
   chessboard: "chessboard",
@@ -44,15 +44,17 @@ vi.mock("@/components/chess/PromotionModal/PromotionModal", () => ({
 }));
 
 // Mock the useDragAndDrop hook
-vi.mock("@/hooks/useDragAndDrop", () => ({
-  default: vi.fn(() => ({
-    chessboardRef: { current: null },
-    dragState: null,
-    onPointerDown: vi.fn(),
-    onPointerMove: vi.fn(),
-    onPointerUp: vi.fn(),
-  })),
-}));
+vi.mock("@/hooks/useDragAndDrop", () => {
+  return {
+    default: vi.fn(() => ({
+      chessboardRef: { current: null },
+      dragState: null,
+      onPointerDown: vi.fn(),
+      onPointerMove: vi.fn(),
+      onPointerUp: vi.fn(),
+    })),
+  };
+});
 
 /* =========================
   test data
@@ -73,9 +75,6 @@ const mockPiece: Piece = {
 };
 
 describe("Component: Chessboard", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
 
   it("renders the chessboard grid: チェスボードのグリッドをレンダーする", () => {
     render(
@@ -91,11 +90,10 @@ describe("Component: Chessboard", () => {
       />
     );
 
-    const squares = document.querySelectorAll(".tile");
-    expect(squares.length).toBe(64);
+    expect(document.querySelectorAll(".tile")).toHaveLength(64);
   });
 
-  it("renders pieces on the board: ボード上に駒をレンダーする", () => {
+  it("renders a piece on the board: ボード上に駒をレンダーする", () => {
     render(
       <Chessboard
         pieces={[mockPiece]}
@@ -112,7 +110,7 @@ describe("Component: Chessboard", () => {
     expect(document.querySelector(".tile__image")).toBeInTheDocument();
   });
 
-  it("highlights possible moves: 可能な移動先をハイライトする", () => {
+  it("highlights possible move squares: 可能な移動先をハイライトする", () => {
     render(
       <Chessboard
         pieces={[mockPiece]}
@@ -151,7 +149,7 @@ describe("Component: Chessboard", () => {
     expect(document.querySelector(".tile__checked")).toBeInTheDocument();
   });
 
-  it("handles piece drag start: ドラッグ開始を処理する", () => {
+  it("calls onDragStart when a piece is pointer-down: ドラッグ開始時にonDragStartを呼び出す", () => {
     render(
       <Chessboard
         pieces={[mockPiece]}
@@ -165,13 +163,21 @@ describe("Component: Chessboard", () => {
       />
     );
 
-    const piece = document.querySelector(".tile__image")!;
-    fireEvent.pointerDown(piece);
+    fireEvent.pointerDown(document.querySelector(".tile__image")!);
 
     expect(mockOnDragStart).toHaveBeenCalledWith(mockPiece);
   });
 
-  it("prevents interactions during promotion: プロモーション中はインタラクションを防ぐ", () => {
+  it("prevents drag interaction during promotion: プロモーション中はドラッグ操作できない", () => {
+    const onPointerDown = vi.fn();
+    vi.mocked(useDragAndDrop).mockReturnValue({
+      chessboardRef: { current: null },
+      dragState: null,
+      onPointerDown,
+      onPointerMove: vi.fn(),
+      onPointerUp: vi.fn(),
+    });
+
     render(
       <Chessboard
         pieces={[mockPiece]}
@@ -186,10 +192,8 @@ describe("Component: Chessboard", () => {
       />
     );
 
-    const piece = document.querySelector(".tile__image")!;
-    fireEvent.pointerDown(piece);
-
-    expect(mockOnDragStart).not.toHaveBeenCalled();
+    fireEvent.pointerDown(document.querySelector(".tile__image")!);
+    expect(onPointerDown).not.toHaveBeenCalled();
   });
 
   it("renders promotion modal when promotion is active: プロモーションモーダルを表示する", () => {
@@ -210,8 +214,8 @@ describe("Component: Chessboard", () => {
     expect(document.querySelector(".promotion__overlay")).toBeInTheDocument();
   });
 
-  // it("renders dragging piece overlay: ドラッグ中の駒を表示する", () => {
-  //   vi.mocked(useDragAndDrop).mockImplementation(() => ({
+  // it("renders dragging piece overlay when dragState has a piece: ドラッグ中の駒を表示する", () => {
+  //   vi.mocked(useDragAndDrop).mockReturnValue({
   //     chessboardRef: { current: null },
   //     dragState: {
   //       piece: mockPiece,
@@ -223,9 +227,9 @@ describe("Component: Chessboard", () => {
   //     onPointerDown: vi.fn(),
   //     onPointerMove: vi.fn(),
   //     onPointerUp: vi.fn(),
-  //   }));
+  //   });
 
-  //   render(
+  //   const { container } = render(
   //     <Chessboard
   //       pieces={[mockPiece]}
   //       possibleMoves={[]}
@@ -238,10 +242,13 @@ describe("Component: Chessboard", () => {
   //     />
   //   );
 
-  //   expect(screen.getByTestId("dragging-piece")).toBeInTheDocument();
+  //   expect(
+  //     container.querySelector(".chessboard__draggingPiece")
+  //   ).toBeInTheDocument();
+
   // });
 
-  it("renders complete chess board with initial setup: 完全なチェスボードを初期状態でレンダーする", () => {
+  it("renders a complete initial chess board (32 pieces): 完全な初期状態のチェス盤を表示する", () => {
     render(
       <Chessboard
         pieces={createBoard()}
@@ -255,7 +262,7 @@ describe("Component: Chessboard", () => {
       />
     );
 
-    expect(document.querySelectorAll(".tile").length).toBe(64);
-    expect(document.querySelectorAll(".tile__image").length).toBe(32);
+    expect(document.querySelectorAll(".tile")).toHaveLength(64);
+    expect(document.querySelectorAll(".tile__image")).toHaveLength(32);
   });
 });

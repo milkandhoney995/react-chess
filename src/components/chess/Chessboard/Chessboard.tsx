@@ -8,7 +8,7 @@ import { getPieceAt, samePosition } from "@/domain/chess/utils";
 import Square from "@/components/chess/Square/Square";
 import useDragAndDrop from "@/hooks/useDragAndDrop";
 import PromotionModal from "../PromotionModal/PromotionModal";
-import { PieceSvgMap } from "../PiecesSvg";
+import { PieceSvgMap } from "@/components/chess/PiecesSvg";
 import { getDraggingStyle, getPieceStyle } from "@/utils/ui";
 
 interface PromotionState {
