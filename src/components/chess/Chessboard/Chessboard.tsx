@@ -69,19 +69,14 @@ const Chessboard: React.FC<Props> = ({
         ))}
 
         {/* ドラッグ中の駒描画 */}
-        {dragState?.piece && (() => {
-          const DraggingSvg = PieceSvgMap[dragState.piece.type];
-          if (!DraggingSvg) return null;
-
-          return (
-            <div
-              className={classes.chessboard__draggingPiece}
-              style={getDraggingStyle(dragState)}
-            >
-              <DraggingSvg team={dragState.piece.team} />
-            </div>
-          );
-        })()}
+        {dragState?.piece && PieceSvgMap[dragState.piece.type] && (
+          <div
+            className={classes.chessboard__draggingPiece}
+            style={getDraggingStyle(dragState)}
+          >
+            {React.createElement(PieceSvgMap[dragState.piece.type], { team: dragState.piece.team })}
+          </div>
+        )}
       </div>
 
       {/* プロモーションモーダル */}
