@@ -1,9 +1,10 @@
 import { render, fireEvent } from "@testing-library/react";
 import { vi } from "vitest";
 import Chessboard from "../Chessboard";
-import { Piece, PieceType, Position, TeamType } from "@/domain/chess/types";
+import { PieceType, TeamType } from "@/domain/chess/types";
 import { createBoard } from "@/domain/chess/board/createBoard";
 import useDragAndDrop from "@/hooks/useDragAndDrop";
+import { SquareView } from "@/features/chess/viewModels/types";
 
 /* =========================
   mocks
@@ -11,7 +12,12 @@ import useDragAndDrop from "@/hooks/useDragAndDrop";
 // SVG mock
 vi.mock("@/components/chess/PiecesSvg", () => ({
   PieceSvgMap: {
-    PAWN: ({ team }: any) => <svg />,
+    pawn: ({ team }: any) => <svg />,
+    rook: ({ team }: any) => <svg />,
+    knight: ({ team }: any) => <svg />,
+    bishop: ({ team }: any) => <svg />,
+    queen: ({ team }: any) => <svg />,
+    king: ({ team }: any) => <svg />,
   },
 }));
 
@@ -43,46 +49,60 @@ vi.mock("@/components/chess/PromotionModal/PromotionModal", () => ({
   default: () => <div className="promotion__overlay" />,
 }));
 
-// Mock the useDragAndDrop hook
-vi.mock("@/hooks/useDragAndDrop", () => {
-  return {
-    default: vi.fn(() => ({
-      chessboardRef: { current: null },
-      dragState: null,
-      onPointerDown: vi.fn(),
-      onPointerMove: vi.fn(),
-      onPointerUp: vi.fn(),
-    })),
-  };
-});
+// useDragAndDrop mock
+vi.mock("@/hooks/useDragAndDrop", () => ({
+  default: vi.fn(() => ({
+    chessboardRef: { current: null },
+    dragState: null,
+    onPointerDown: vi.fn(),
+    onPointerMove: vi.fn(),
+    onPointerUp: vi.fn(),
+  })),
+}));
 
 /* =========================
   test data
 ========================= */
-const mockIsCheckedSquare = vi.fn<(position: Position) => boolean>(() => false);
 const mockOnMovePiece = vi.fn();
 const mockOnPromote = vi.fn();
 const mockOnDragStart = vi.fn();
 const mockOnDragEnd = vi.fn();
 
-const mockPiece: Piece = {
-  id: "test-piece",
-  type: PieceType.PAWN,
-  team: TeamType.OUR,
+const mockPiece: SquareView = {
+  id: "0-1",
   position: { x: 0, y: 1 },
-  hasMoved: false,
-  possibleMoves: [],
+  piece: {
+    id: "p1",
+    position: { x: 0, y: 1 },
+    type: PieceType.PAWN,
+    team: TeamType.OUR,
+    hasMoved: false,
+    possibleMoves: [],
+  },
+  highlight: true,
+  isChecked: false,
 };
 
+/* =========================
+  tests
+========================= */
 describe("Component: Chessboard", () => {
 
   it("renders the chessboard grid: チェスボードのグリッドをレンダーする", () => {
+    const emptySquares = Array.from({ length: 8 }, (_, y) =>
+      Array.from({ length: 8 }, (_, x) => ({
+        id: `${x}-${y}`,
+        position: { x, y },
+        piece: undefined,
+        highlight: false,
+        isChecked: false
+      }))
+    ).flat();
+
     render(
       <Chessboard
-        pieces={[]}
-        possibleMoves={[]}
+        squares={emptySquares}
         draggingPieceId={null}
-        isCheckedSquare={mockIsCheckedSquare}
         onMovePiece={mockOnMovePiece}
         onPromote={mockOnPromote}
         onDragStart={mockOnDragStart}
@@ -96,10 +116,8 @@ describe("Component: Chessboard", () => {
   it("renders a piece on the board: ボード上に駒をレンダーする", () => {
     render(
       <Chessboard
-        pieces={[mockPiece]}
-        possibleMoves={[]}
+        squares={[mockPiece]}
         draggingPieceId={null}
-        isCheckedSquare={mockIsCheckedSquare}
         onMovePiece={mockOnMovePiece}
         onPromote={mockOnPromote}
         onDragStart={mockOnDragStart}
@@ -113,13 +131,8 @@ describe("Component: Chessboard", () => {
   it("highlights possible move squares: 可能な移動先をハイライトする", () => {
     render(
       <Chessboard
-        pieces={[mockPiece]}
-        possibleMoves={[
-          { x: 0, y: 2 },
-          { x: 0, y: 3 },
-        ]}
+        squares={[mockPiece]}
         draggingPieceId={null}
-        isCheckedSquare={mockIsCheckedSquare}
         onMovePiece={mockOnMovePiece}
         onPromote={mockOnPromote}
         onDragStart={mockOnDragStart}
@@ -131,14 +144,15 @@ describe("Component: Chessboard", () => {
   });
 
   it("shows checked squares: チェック状態の駒を表示する", () => {
-    mockIsCheckedSquare.mockReturnValueOnce(true);
+    const checkedSquare = {
+      ...mockPiece,
+      isChecked: true, // ←ここでチェック状態にする
+    };
 
     render(
       <Chessboard
-        pieces={[mockPiece]}
-        possibleMoves={[]}
+        squares={[checkedSquare]}
         draggingPieceId={null}
-        isCheckedSquare={mockIsCheckedSquare}
         onMovePiece={mockOnMovePiece}
         onPromote={mockOnPromote}
         onDragStart={mockOnDragStart}
@@ -152,10 +166,8 @@ describe("Component: Chessboard", () => {
   it("calls onDragStart when a piece is pointer-down: ドラッグ開始時にonDragStartを呼び出す", () => {
     render(
       <Chessboard
-        pieces={[mockPiece]}
-        possibleMoves={[]}
+        squares={[mockPiece]}
         draggingPieceId={null}
-        isCheckedSquare={mockIsCheckedSquare}
         onMovePiece={mockOnMovePiece}
         onPromote={mockOnPromote}
         onDragStart={mockOnDragStart}
@@ -165,10 +177,11 @@ describe("Component: Chessboard", () => {
 
     fireEvent.pointerDown(document.querySelector(".tile__image")!);
 
-    expect(mockOnDragStart).toHaveBeenCalledWith(mockPiece);
+    expect(mockOnDragStart).toHaveBeenCalledWith(mockPiece.piece);
   });
 
   it("prevents drag interaction during promotion: プロモーション中はドラッグ操作できない", () => {
+    const useDragAndDropMock = vi.mocked(useDragAndDrop);
     const onPointerDown = vi.fn();
     vi.mocked(useDragAndDrop).mockReturnValue({
       chessboardRef: { current: null },
@@ -180,11 +193,9 @@ describe("Component: Chessboard", () => {
 
     render(
       <Chessboard
-        pieces={[mockPiece]}
-        possibleMoves={[]}
+        squares={[mockPiece]}
         draggingPieceId={null}
         promotion={{ position: { x: 0, y: 7 }, team: TeamType.OUR }}
-        isCheckedSquare={mockIsCheckedSquare}
         onMovePiece={mockOnMovePiece}
         onPromote={mockOnPromote}
         onDragStart={mockOnDragStart}
@@ -199,11 +210,9 @@ describe("Component: Chessboard", () => {
   it("renders promotion modal when promotion is active: プロモーションモーダルを表示する", () => {
     render(
       <Chessboard
-        pieces={[mockPiece]}
-        possibleMoves={[]}
+        squares={[mockPiece]}
         draggingPieceId={null}
         promotion={{ position: { x: 0, y: 7 }, team: TeamType.OUR }}
-        isCheckedSquare={mockIsCheckedSquare}
         onMovePiece={mockOnMovePiece}
         onPromote={mockOnPromote}
         onDragStart={mockOnDragStart}
@@ -215,15 +224,16 @@ describe("Component: Chessboard", () => {
   });
 
   // it("renders dragging piece overlay when dragState has a piece: ドラッグ中の駒を表示する", () => {
+  //   const dragState = {
+  //     piece: mockPiece.piece!,
+  //     offsetX: 0,
+  //     offsetY: 0,
+  //     clientX: 50,
+  //     clientY: 50,
+  //   };
   //   vi.mocked(useDragAndDrop).mockReturnValue({
   //     chessboardRef: { current: null },
-  //     dragState: {
-  //       piece: mockPiece,
-  //       offsetX: 0,
-  //       offsetY: 0,
-  //       clientX: 100,
-  //       clientY: 100,
-  //     },
+  //     dragState,
   //     onPointerDown: vi.fn(),
   //     onPointerMove: vi.fn(),
   //     onPointerUp: vi.fn(),
@@ -231,10 +241,8 @@ describe("Component: Chessboard", () => {
 
   //   const { container } = render(
   //     <Chessboard
-  //       pieces={[mockPiece]}
-  //       possibleMoves={[]}
-  //       draggingPieceId="test-piece"
-  //       isCheckedSquare={mockIsCheckedSquare}
+  //       squares={[mockPiece]}
+  //       draggingPieceId={mockPiece.piece!.id}
   //       onMovePiece={mockOnMovePiece}
   //       onPromote={mockOnPromote}
   //       onDragStart={mockOnDragStart}
@@ -245,16 +253,25 @@ describe("Component: Chessboard", () => {
   //   expect(
   //     container.querySelector(".chessboard__draggingPiece")
   //   ).toBeInTheDocument();
-
   // });
 
   it("renders a complete initial chess board (32 pieces): 完全な初期状態のチェス盤を表示する", () => {
+    const initialBoard = Array.from({ length: 8 }, (_, y) =>
+      Array.from({ length: 8 }, (_, x) => {
+        const piece = createBoard().find(p => p.position.x === x && p.position.y === y);
+        return {
+          id: `${x}-${y}`,
+          position: { x, y },
+          piece: piece || undefined,
+          highlight: false,
+          isChecked: false,
+        };
+      })
+    ).flat();
     render(
       <Chessboard
-        pieces={createBoard()}
-        possibleMoves={[]}
+        squares={initialBoard}
         draggingPieceId={null}
-        isCheckedSquare={mockIsCheckedSquare}
         onMovePiece={mockOnMovePiece}
         onPromote={mockOnPromote}
         onDragStart={mockOnDragStart}
