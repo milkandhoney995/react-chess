@@ -1,7 +1,5 @@
-import ChessGame from "@/components/chess/ChessGame";
+import ChessGameContainer from "@/features/chess/ChessGameContainer";
 
 export default function ChessPage() {
-  return (
-    <ChessGame />
-  );
+  return <ChessGameContainer />;
 }

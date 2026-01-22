@@ -134,7 +134,7 @@ pnpm test:watch
 ## ディレクトリ構成
 
 - `app`配下はサーバーサイドコンポーネント
-- `components/chess/ChessGame.tsx`がクライアントエントリーポイント
+- `features/chess/ChessGameContainer.tsx`がクライアントエントリーポイント
 - `features/**`および`hooks/**`はクライアントオンリー
 - `domain/**`は純関数
 
@@ -164,7 +164,7 @@ pnpm test:watch
     ├── assets/
     ├── components/
     │   ├── chess/
-    │   │   ├── ChessGame.tsx # クライアントエントリーポイント。state の更新
+    │   │   ├── ChessGame.tsx # チェスゲームコンポーネント
     │   │   ├── Chessboard/ # 盤面コンポーネント
     │   │   │   ├── Chessboard.module.scss
     │   │   │   ├── Chessboard.tsx
@@ -253,12 +253,16 @@ pnpm test:watch
     │       │   ├── selectors.ts
     │       │   ├── state.ts
     │       │   ├── types.ts
-    │       └── view/ # UI専用
-    │           ├── __tests__/
-    │           │   ├── actions.test.ts
-    │           │   └── reducer.test.ts
-    │           ├── actions.ts
-    │           └── reducer.ts
+    │       │── view/ # UI専用
+    │       │   ├── __tests__/
+    │       │   │   ├── actions.test.ts
+    │       │   │   └── reducer.test.ts
+    │       │   ├── actions.ts
+    │       │   └── reducer.ts
+    │       │── viewModels/ # 表示用にデータ変換、Presentation Model
+    │       │   ├── types.ts
+    │       │   └── useChessGameViewModel.ts
+    |       └── ChessGameContainer.tsx # Client Entry（Application層）
     ├── hooks/ # クライアントオンリー
     │   ├── __tests__/
     │   │   ├── index.ts

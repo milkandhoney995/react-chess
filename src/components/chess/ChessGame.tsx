@@ -1,48 +1,41 @@
-"use client";
+'use client';
 
+import React from "react";
 import styles from "@/app/page.module.scss";
-import { useReducer, useState } from "react";
 import Chessboard from "@/components/chess/Chessboard/Chessboard";
 import GameStatus from "@/components/chess/GameStatus/GameStatus";
-import { chessReducer } from "@/features/chess/game/reducer";
-import { initialChessState } from "@/features/chess/game/state";
-import { movePieceAction, promotePawn } from "@/features/chess/game/actions";
-import { PieceType, Position } from "@/domain/chess/types";
-import { useChessGameView } from "@/features/chess/game/viewModel";
+import { ChessGameViewModel } from "@/features/chess/viewModels/types";
+import { Piece, PieceType, Position } from "@/domain/chess/types";
 
-const ChessGame = () => {
-  const [state, dispatch] = useReducer(chessReducer, initialChessState);
-  const [draggingPieceId, setDraggingPieceId] = useState<string | null>(null);
-  const view = useChessGameView(state, draggingPieceId);
+interface Props {
+  viewModel: ChessGameViewModel;
+  draggingPieceId: string | null;
+  onMovePiece: (pieceId: string, position: Position) => void;
+  onPromote: (position: Position, type: PieceType) => void;
+  onDragStart: (piece: Piece) => void;
+  onDragEnd: () => void;
+}
 
-  /* =========================
-   * 操作API（Application層）
-   * ========================= */
-  const movePiece = (pieceId: string, position: Position) => {
-    dispatch(movePieceAction(pieceId, position));
-  };
-
-  const promote = (position: Position, type: PieceType) => {
-    dispatch(promotePawn(position, type));
-  };
-
+const ChessGame: React.FC<Props> = ({
+  viewModel,
+  draggingPieceId,
+  onMovePiece,
+  onPromote,
+  onDragStart,
+  onDragEnd,
+}) => {
   return (
     <main className={styles.main}>
-      <GameStatus
-        winningTeam={view.winningTeam}
-        isCheck={view.isCheck}
-      />
-
+      <GameStatus {...viewModel.gameStatus} />
       <Chessboard
-        pieces={view.pieces}
-        possibleMoves={view.possibleMoves}
-        isCheckedSquare={view.isCheckedSquare}
+        squares={viewModel.chessboard.squares}
+        draggingPiece={viewModel.chessboard.draggingPiece}
+        promotion={viewModel.chessboard.promotion}
         draggingPieceId={draggingPieceId}
-        promotion={view.promotion}
-        onMovePiece={movePiece}
-        onPromote={promote}
-        onDragStart={p => setDraggingPieceId(p.id)}
-        onDragEnd={() => setDraggingPieceId(null)}
+        onMovePiece={onMovePiece}
+        onPromote={onPromote}
+        onDragStart={onDragStart}
+        onDragEnd={onDragEnd}
       />
     </main>
   );

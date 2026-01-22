@@ -2,26 +2,19 @@
 
 import React from "react";
 import classes from "./Chessboard.module.scss";
-import { VERTICAL_AXIS, HORIZONTAL_AXIS } from "@/domain/chess/constants";
-import { Piece, PieceType, Position, TeamType } from "@/domain/chess/types";
-import { getPieceAt, samePosition } from "@/domain/chess/utils";
 import Square from "@/components/chess/Square/Square";
-import useDragAndDrop from "@/hooks/useDragAndDrop";
-import PromotionModal from "../PromotionModal/PromotionModal";
+import PromotionModal from "@/components/chess/PromotionModal/PromotionModal";
 import { PieceSvgMap } from "@/components/chess/PiecesSvg";
+import { SquareView, PromotionView } from "@/features/chess/viewModels/types";
+import { Position, Piece, PieceType } from "@/domain/chess/types";
+import useDragAndDrop from "@/hooks/useDragAndDrop";
 import { getDraggingStyle, getPieceStyle } from "@/utils/ui";
 
-interface PromotionState {
-  position: Position;
-  team: TeamType;
-}
-
 interface Props {
-  pieces: Piece[];
-  possibleMoves: Position[];
+  squares: SquareView[];
+  draggingPiece?: { piece: Piece; x: number; y: number };
   draggingPieceId: string | null;
-  promotion?: PromotionState;
-  isCheckedSquare: (position: Position) => boolean;
+  promotion?: PromotionView;
   onMovePiece: (pieceId: string, position: Position) => void;
   onPromote: (position: Position, type: PieceType) => void;
   onDragStart: (piece: Piece) => void;
@@ -29,68 +22,53 @@ interface Props {
 }
 
 const Chessboard: React.FC<Props> = ({
-  pieces,
-  possibleMoves,
+  squares,
+  draggingPiece,
   draggingPieceId,
   promotion,
-  isCheckedSquare,
   onMovePiece,
   onPromote,
   onDragStart,
   onDragEnd,
 }) => {
-  const {
-    chessboardRef,
-    dragState,
-    onPointerDown,
-    onPointerMove,
-    onPointerUp,
-  } = useDragAndDrop({
-    onDrop: (pieceId, position) => {
-      if (promotion) return;
-      onMovePiece(pieceId, position);
-    },
-    onDragEnd,
-  });
-
+  const { chessboardRef, dragState, onPointerDown, onPointerMove, onPointerUp } =
+    useDragAndDrop({
+      onDrop: (pieceId, position) => {
+        if (!promotion) {
+          onMovePiece(pieceId, position);
+        }
+      },
+      onDragEnd,
+    });
 
   return (
     <div className={classes.chessboard__wrapper}>
-      {/* ===== チェス盤 ===== */}
+      {/* チェス盤 */}
       <div
         ref={chessboardRef}
         className={classes.chessboard}
         onPointerMove={promotion ? undefined : onPointerMove}
         onPointerUp={promotion ? undefined : onPointerUp}
       >
-        {VERTICAL_AXIS.map((_, yIndex) =>
-          HORIZONTAL_AXIS.map((_, x) => {
-            const position: Position = { x, y: 7 - yIndex };
-            const piece = getPieceAt(pieces, position);
-            const style = getPieceStyle(piece, draggingPieceId);
-            const highlight = possibleMoves.some(m => samePosition(m, position));
-            const checked = isCheckedSquare(position); // マス単位でチェックされたときの位置計算
+        {squares.map((square) => (
+          <Square
+            key={square.id}
+            id={square.id}
+            piece={square.piece}
+            highlight={square.highlight}
+            isChecked={square.isChecked}
+            pieceStyle={getPieceStyle(square.piece, draggingPieceId)}
+            number={square.position.x + square.position.y + 2}
+            onPointerDown={(e, piece) => {
+              if (!promotion) {
+                onPointerDown(e, piece);
+                onDragStart(piece);
+              }
+            }}
+          />
+        ))}
 
-            return (
-              <Square
-                key={`${x}-${yIndex}`}
-                id={`${x}-${yIndex}`}
-                piece={piece}
-                number={x + yIndex + 2}
-                highlight={highlight}
-                isChecked={checked}
-                pieceStyle={style}
-                onPointerDown={(e, p) => {
-                  if (promotion) return;
-                  onPointerDown(e, p);
-                  onDragStart(p);
-                }}
-              />
-            );
-          })
-        )}
-
-        {/* ===== ドラッグ中の駒追従描画 ===== */}
+        {/* ドラッグ中の駒描画 */}
         {dragState?.piece && (() => {
           const DraggingSvg = PieceSvgMap[dragState.piece.type];
           if (!DraggingSvg) return null;
@@ -106,7 +84,7 @@ const Chessboard: React.FC<Props> = ({
         })()}
       </div>
 
-      {/* ===== プロモーションモーダル ===== */}
+      {/* プロモーションモーダル */}
       {promotion && (
         <PromotionModal
           position={promotion.position}
