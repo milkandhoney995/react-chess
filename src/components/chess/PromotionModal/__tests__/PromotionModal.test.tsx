@@ -4,7 +4,7 @@ import PromotionModal from "../PromotionModal";
 import { TeamType } from "@/domain/chess/types";
 import { PROMOTION_PIECES } from "@/domain/chess/constants";
 
-// Mock createPortal
+// Mock createPortal to render modal inline
 vi.mock("react-dom", () => ({
   createPortal: (children: React.ReactNode) => children,
 }));
@@ -24,10 +24,7 @@ describe("Component: PromotionModal", () => {
         onPromote={mockOnPromote}
       />
     );
-
-    await waitFor(() => {
-      expect(screen.getByText("昇格する駒を選択")).toBeInTheDocument();
-    });
+    await waitFor(() => expect(screen.getByText("昇格する駒を選択")).toBeInTheDocument());
   });
 
   it("renders all promotion piece options: プロモーション可能な駒をレンダーする", async () => {
@@ -38,9 +35,7 @@ describe("Component: PromotionModal", () => {
         onPromote={mockOnPromote}
       />
     );
-
     await waitFor(() => {
-      // Should render buttons for each promotion piece
       const buttons = screen.getAllByRole("button");
       expect(buttons).toHaveLength(PROMOTION_PIECES.length);
     });
@@ -54,12 +49,10 @@ describe("Component: PromotionModal", () => {
         onPromote={mockOnPromote}
       />
     );
-
     await waitFor(() => {
-      const queenButton = screen.getAllByRole("button")[0]; // Queen is first
+      const queenButton = screen.getAllByRole("button")[0]; // Queen first
       fireEvent.click(queenButton);
     });
-
     expect(mockOnPromote).toHaveBeenCalledWith({ x: 0, y: 7 }, PROMOTION_PIECES[0]);
   });
 
@@ -71,11 +64,7 @@ describe("Component: PromotionModal", () => {
         onPromote={mockOnPromote}
       />
     );
-
-    await waitFor(() => {
-      // Should render successfully with opponent team
-      expect(screen.getByText("昇格する駒を選択")).toBeInTheDocument();
-    });
+    await waitFor(() => expect(screen.getByText("昇格する駒を選択")).toBeInTheDocument());
   });
 
   it("handles different promotion positions: 異なるプロモーション位置を処理する", async () => {
@@ -84,7 +73,6 @@ describe("Component: PromotionModal", () => {
       { x: 7, y: 7 },
       { x: 3, y: 0 },
     ];
-
     for (const position of testPositions) {
       const { rerender } = render(
         <PromotionModal
@@ -93,12 +81,7 @@ describe("Component: PromotionModal", () => {
           onPromote={mockOnPromote}
         />
       );
-
-      await waitFor(() => {
-        expect(screen.getByText("昇格する駒を選択")).toBeInTheDocument();
-      });
-
-      // Clean up for next iteration
+      await waitFor(() => expect(screen.getByText("昇格する駒を選択")).toBeInTheDocument());
       rerender(<></>);
     }
   });
@@ -111,7 +94,6 @@ describe("Component: PromotionModal", () => {
         onPromote={mockOnPromote}
       />
     );
-
     await waitFor(() => {
       const overlay = screen.getByText("昇格する駒を選択").closest('[class*="overlay"]');
       expect(overlay).toBeInTheDocument();
@@ -129,21 +111,14 @@ describe("Component: PromotionModal", () => {
         onPromote={mockOnPromote}
       />
     );
-
     await waitFor(() => {
       const buttons = screen.getAllByRole("button");
       expect(buttons).toHaveLength(PROMOTION_PIECES.length);
-
-      // Each button should have the correct piece type
-      buttons.forEach((button, index) => {
-        expect(button).toBeInTheDocument();
-      });
+      buttons.forEach((button) => expect(button).toBeInTheDocument());
     });
   });
 
   it("handles SSR correctly: SSRを正しく処理する", () => {
-    // In test environment, useEffect runs synchronously, so it renders
-    // In real SSR, useEffect doesn't run, so it would return null
     const { container } = render(
       <PromotionModal
         position={{ x: 0, y: 7 }}
@@ -151,8 +126,6 @@ describe("Component: PromotionModal", () => {
         onPromote={mockOnPromote}
       />
     );
-
-    // In test environment, it should render (useEffect runs)
     expect(container.firstChild).not.toBeNull();
     expect(container.firstChild).toBeInTheDocument();
   });

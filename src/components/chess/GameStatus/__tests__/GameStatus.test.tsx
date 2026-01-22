@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import GameStatus from "../GameStatus";
+import GameStatus from "@/components/chess/GameStatus/GameStatus";
 import { TeamType } from "@/domain/chess/types";
 
 describe("Component: GameStatus", () => {
@@ -10,24 +10,19 @@ describe("Component: GameStatus", () => {
 
   it("displays check status when king is in check: チェック中であれば、チェック状態を表示する", () => {
     render(<GameStatus isCheck={true} />);
-    const checkElement = screen.getByText("Check!");
-    expect(checkElement).toBeInTheDocument();
+    expect(screen.getByText("Check!")).toBeInTheDocument();
   });
 
   it("displays winning team message when game is over: 勝利チームのメッセージを表示する", () => {
-    // Test OUR team win
     const { rerender } = render(<GameStatus winningTeam={TeamType.OUR} isCheck={false} />);
     expect(screen.getByText("You Win!")).toBeInTheDocument();
 
-    // Test OPPONENT team win
     rerender(<GameStatus winningTeam={TeamType.OPPONENT} isCheck={false} />);
     expect(screen.getByText("You Lose!")).toBeInTheDocument();
   });
 
   it("prioritizes winning team over check status: 勝利チームが優先される", () => {
     render(<GameStatus winningTeam={TeamType.OUR} isCheck={true} />);
-
-    // Should show win message, not check
     expect(screen.getByText("You Win!")).toBeInTheDocument();
     expect(screen.queryByText("Check!")).not.toBeInTheDocument();
   });
@@ -36,11 +31,9 @@ describe("Component: GameStatus", () => {
     const { rerender } = render(<GameStatus winningTeam={undefined} isCheck={false} />);
     expect(screen.queryByText("Check!")).not.toBeInTheDocument();
 
-    // Enter check state
     rerender(<GameStatus winningTeam={undefined} isCheck={true} />);
     expect(screen.getByText("Check!")).toBeInTheDocument();
 
-    // Exit check state
     rerender(<GameStatus winningTeam={undefined} isCheck={false} />);
     expect(screen.queryByText("Check!")).not.toBeInTheDocument();
   });
@@ -49,20 +42,15 @@ describe("Component: GameStatus", () => {
     render(<GameStatus winningTeam={TeamType.OUR} isCheck={false} />);
     const overlay = screen.getByText("You Win!").parentElement;
     expect(overlay).toBeInTheDocument();
-    // Note: CSS modules don't apply class names in test environment
-    // Just check that the element exists
   });
 
   it("handles all winning team scenarios: 勝利チームのメッセージを表示する", () => {
-    // Test OUR team win
     const { rerender } = render(<GameStatus winningTeam={TeamType.OUR} isCheck={false} />);
     expect(screen.getByText("You Win!")).toBeInTheDocument();
 
-    // Test OPPONENT team win
     rerender(<GameStatus winningTeam={TeamType.OPPONENT} isCheck={false} />);
     expect(screen.getByText("You Lose!")).toBeInTheDocument();
 
-    // Test no winner
     rerender(<GameStatus winningTeam={undefined} isCheck={false} />);
     expect(screen.queryByText(/You Win!|You Lose!/)).not.toBeInTheDocument();
   });
