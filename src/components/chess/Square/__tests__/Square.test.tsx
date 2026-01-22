@@ -31,8 +31,6 @@ describe("Component: Square", () => {
 
     const squareElement = container.firstChild as HTMLElement;
     expect(squareElement).toBeInTheDocument();
-    // CSS modules don't apply class names in test environment
-    // Just check that the element exists
   });
 
   it("renders a square with a piece: 駒のあるマスをレンダーする", () => {
@@ -50,33 +48,6 @@ describe("Component: Square", () => {
     expect(pieceElement).toBeInTheDocument();
   });
 
-  it("applies correct tile color classes: タイルの色クラスを正しく適用する", () => {
-    const { container: container1 } = render(
-      <Square
-        number={1}
-        id="square-1"
-        highlight={false}
-        onPointerDown={mockOnPointerDown}
-      />
-    );
-
-    let square = container1.firstChild as HTMLElement;
-    expect(square).toBeInTheDocument();
-    // CSS modules don't apply predictable class names in test environment
-
-    const { container: container2 } = render(
-      <Square
-        number={2}
-        id="square-2"
-        highlight={false}
-        onPointerDown={mockOnPointerDown}
-      />
-    );
-
-    square = container2.firstChild as HTMLElement;
-    expect(square).toBeInTheDocument();
-  });
-
   it("applies highlight class when highlighted: ハイライトクラスを正しく適用する", () => {
     const { container } = render(
       <Square
@@ -89,7 +60,6 @@ describe("Component: Square", () => {
 
     const square = container.firstChild as HTMLElement;
     expect(square).toBeInTheDocument();
-    // CSS modules don't apply predictable class names in test environment
   });
 
   it("applies checked class when square is checked: チェック状態のマスを正しく適用する", () => {
@@ -105,7 +75,6 @@ describe("Component: Square", () => {
 
     const square = container.firstChild as HTMLElement;
     expect(square).toBeInTheDocument();
-    // CSS modules don't apply predictable class names in test environment
   });
 
   it("applies piece style when provided: 駒のスタイルを正しく適用する", () => {
@@ -145,10 +114,7 @@ describe("Component: Square", () => {
       clientY: 100,
     });
 
-    expect(mockOnPointerDown).toHaveBeenCalledWith(
-      expect.any(Object), // PointerEvent
-      mockPiece
-    );
+    expect(mockOnPointerDown).toHaveBeenCalledWith(expect.any(Object), mockPiece);
   });
 
   it("does not render piece image when no piece: 駒がないマスをレンダーする", () => {
@@ -166,7 +132,14 @@ describe("Component: Square", () => {
   });
 
   it("renders different piece types correctly: プロモーション可能な駒を正しく表示する", () => {
-    const pieceTypes = [PieceType.PAWN, PieceType.ROOK, PieceType.KNIGHT, PieceType.BISHOP, PieceType.QUEEN, PieceType.KING];
+    const pieceTypes = [
+      PieceType.PAWN,
+      PieceType.ROOK,
+      PieceType.KNIGHT,
+      PieceType.BISHOP,
+      PieceType.QUEEN,
+      PieceType.KING,
+    ];
 
     pieceTypes.forEach((type) => {
       const testPiece = { ...mockPiece, type };
@@ -184,8 +157,7 @@ describe("Component: Square", () => {
       const pieceElement = document.querySelector('[class*="tile__image"]');
       expect(pieceElement).toBeInTheDocument();
 
-      // Clean up for next iteration
-      rerender(<></>);
+      rerender(<></>); // クリーンアップ
     });
   });
 
@@ -193,7 +165,6 @@ describe("Component: Square", () => {
     const ourPiece = { ...mockPiece, team: TeamType.OUR };
     const opponentPiece = { ...mockPiece, team: TeamType.OPPONENT };
 
-    // Test OUR team
     const { rerender } = render(
       <Square
         piece={ourPiece}
@@ -207,7 +178,6 @@ describe("Component: Square", () => {
     let pieceElement = document.querySelector('[class*="tile__image"]');
     expect(pieceElement).toBeInTheDocument();
 
-    // Test OPPONENT team
     rerender(
       <Square
         piece={opponentPiece}
@@ -236,7 +206,5 @@ describe("Component: Square", () => {
 
     const square = container.firstChild as HTMLElement;
     expect(square).toBeInTheDocument();
-    // CSS modules don't apply predictable class names in test environment
-    // Just check that the square renders with all the props applied
   });
 });
