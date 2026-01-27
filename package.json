@@ -14,9 +14,9 @@
   },
   "dependencies": {
     "@types/react-dom": "^19.2.3",
-    "next": "^16.1.4",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
+    "next": "^16.1.5",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "typescript": "^5.9.3"
   },
   "devDependencies": {
@@ -28,7 +28,7 @@
     "@types/react": "^19.2.9",
     "@vitejs/plugin-react": "^5.1.2",
     "eslint": "^9.39.2",
-    "eslint-config-next": "^16.1.4",
+    "eslint-config-next": "^16.1.5",
     "jsdom": "^27.4.0",
     "react-redux": "^9.2.0",
     "sass": "^1.97.3",
