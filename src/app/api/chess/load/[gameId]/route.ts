@@ -8,6 +8,25 @@ if (savedGames.size === 0) {
   // Games will be stored in memory for this session
 }
 
+/**
+ * ゲームの状態をロードするAPIエンドポイント
+ * クライアントからゲームIDを受け取り、そのゲームの状態を返す
+ * 期待されるリクエスト:
+ * @requires gameId: string - ロードしたいゲームのID
+ * @example
+ * GET /api/chess/load/abc123
+ * @returns gameId: string - ロードされたゲームのID
+ * @returns state: unknown - ゲームの状態（ChessStateオブジェクトなど）
+ * @returns createdAt: string - ゲームの作成日時
+ * @returns updatedAt: string - ゲームの最終更新日時
+ * @example
+ * {
+ *   "gameId": "abc123",
+ *   "state": { ... }, // ゲームの状態を表すオブジェクト
+ *   "createdAt": "2024-06-01T12:00:00Z",
+ *   "updatedAt": "2024-06-01T12:30:00Z"
+ * }
+ * */
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ gameId: string }> }
