@@ -1,15 +1,16 @@
 "use client";
 
-import { useReducer, useState } from "react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import ChessGame from "@/components/chess/ChessGame";
-import { chessReducer } from "@/features/chess/game/reducer";
-import { initialChessState } from "@/features/chess/game/state";
-import { movePieceAction, promotePawn } from "@/features/chess/game/actions";
+import { movePiece, promotePawn } from "@/store/slices/chessSlice";
 import { useChessGameViewModel } from "@/features/chess/viewModels/useChessGameViewModel";
 import { Piece, PieceType, Position } from "@/domain/chess/types";
+import { RootState } from "@/store";
 
 const ChessGameContainer: React.FC = () => {
-  const [state, dispatch] = useReducer(chessReducer, initialChessState);
+  const dispatch = useDispatch();
+  const state = useSelector((state: RootState) => state.chess);
   const [draggingPieceId, setDraggingPieceId] = useState<string | null>(null); // UI専用
   const viewModel = useChessGameViewModel(state, draggingPieceId);
 
@@ -18,10 +19,10 @@ const ChessGameContainer: React.FC = () => {
       viewModel={viewModel}
       draggingPieceId={draggingPieceId}
       onMovePiece={(id: string, pos: Position) =>
-        dispatch(movePieceAction(id, pos))
+        dispatch(movePiece({ pieceId: id, to: pos }))
       }
       onPromote={(pos: Position, type: PieceType) =>
-        dispatch(promotePawn(pos, type))
+        dispatch(promotePawn({ position: pos, pieceType: type }))
       }
       onDragStart={(p: Piece) => setDraggingPieceId(p.id)}
       onDragEnd={() => setDraggingPieceId(null)}
