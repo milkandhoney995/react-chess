@@ -27,7 +27,7 @@ export const chessApi = createApi({
   }),
   tagTypes: ['Game'],
   endpoints: (builder) => ({
-    // Save current game state
+    // ゲームの状態を保存（新規保存または上書き保存）
     saveGame: builder.mutation<SaveGameResponse, SaveGameRequest>({
       query: (payload) => ({
         url: '/save',
@@ -37,13 +37,13 @@ export const chessApi = createApi({
       invalidatesTags: ['Game'],
     }),
 
-    // Load game state
+    // ゲームIDを指定して保存したゲームを読み込む
     loadGame: builder.query<LoadGameResponse, string>({
       query: (gameId) => `/load/${gameId}`,
       providesTags: ['Game'],
     }),
 
-    // Get list of saved games
+    // 保存したゲームの一覧を取得
     listGames: builder.query<
       Array<{ gameId: string; createdAt: string; updatedAt: string }>,
       void
@@ -52,7 +52,7 @@ export const chessApi = createApi({
       providesTags: ['Game'],
     }),
 
-    // Delete a saved game
+    // 保存したゲームを削除
     deleteGame: builder.mutation<{ success: boolean }, string>({
       query: (gameId) => ({
         url: `/games/${gameId}`,
@@ -61,7 +61,7 @@ export const chessApi = createApi({
       invalidatesTags: ['Game'],
     }),
 
-    // Validate a move
+    // 駒の動きを検証
     validateMove: builder.query<
       { valid: boolean; reason?: string },
       { state: ChessState; pieceId: string; to: Position }

@@ -2,7 +2,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useSaveGameMutation, useLoadGameQuery } from '@/store/api/chessApi';
 import { setChessState } from '@/store/slices/chessSlice';
 import { RootState } from '@/store';
-import { ChessState } from '@/features/chess/game/types';
 
 /**
  * Custom hook for managing game persistence with RTK Query
