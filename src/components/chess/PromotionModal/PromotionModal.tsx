@@ -18,6 +18,7 @@ const PromotionModal = ({ position, team, onPromote }: Props) => {
 
   // SSR 対策
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 

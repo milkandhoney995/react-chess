@@ -1,10 +1,27 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { Provider } from "react-redux";
+import { configureStore } from "@reduxjs/toolkit";
 import Page from "../page";
+import chessReducer from "@/store/slices/chessSlice";
+import { chessApi } from "@/store/api/chessApi";
+
+const createTestStore = () =>
+  configureStore({
+    reducer: {
+      chess: chessReducer,
+      [chessApi.reducerPath]: chessApi.reducer,
+    },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(chessApi.middleware),
+  });
+
+const renderWithStore = (ui: React.ReactElement) =>
+  render(<Provider store={createTestStore()}>{ui}</Provider>);
 
 describe("Page: Chess Game Page", () => {
   it("renders the main game components: メインのゲームコンポーネントをレンダーする", () => {
-    render(<Page />);
+    renderWithStore(<Page />);
 
     // Check that the main container is rendered
     const mainElement = screen.getByRole("main");
@@ -16,7 +33,7 @@ describe("Page: Chess Game Page", () => {
   });
 
   it("initially shows no game status overlay: 初期状態ではゲーム状況のオーバーレイを表示しない", () => {
-    render(<Page />);
+    renderWithStore(<Page />);
 
     // Initially, there should be no win/lose/check overlay
     const overlays = screen.queryAllByText(/You Win!|You Lose!|Check!/);
@@ -26,7 +43,7 @@ describe("Page: Chess Game Page", () => {
   it("displays check status when king is in check: チェック中であれば、チェック状態を表示する", () => {
     // This would require mocking the chess state to have a king in check
     // For now, we'll test the component renders without crashing
-    render(<Page />);
+    renderWithStore(<Page />);
 
     // The component should render successfully
     expect(screen.getByRole("main")).toBeInTheDocument();
@@ -35,7 +52,7 @@ describe("Page: Chess Game Page", () => {
   it("displays winning team when game is over: 勝利チームのメッセージを表示する", () => {
     // This would require setting up a winning state
     // For now, we'll test the component renders without crashing
-    render(<Page />);
+    renderWithStore(<Page />);
 
     // The component should render successfully
     expect(screen.getByRole("main")).toBeInTheDocument();
@@ -43,7 +60,7 @@ describe("Page: Chess Game Page", () => {
 
   it("handles drag interactions: ドラッグ操作を処理する", async () => {
     const user = userEvent.setup();
-    render(<Page />);
+    renderWithStore(<Page />);
 
     // The chessboard should be present
     const chessboard = document.querySelector('[class*="chessboard"]');
@@ -55,7 +72,7 @@ describe("Page: Chess Game Page", () => {
   });
 
   it("integrates all chess components together: すべてのチェスコンポーネントを統合する", () => {
-    render(<Page />);
+    renderWithStore(<Page />);
 
     // Check that all major components are present
     const mainElement = screen.getByRole("main");

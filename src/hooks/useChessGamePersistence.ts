@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useSaveGameMutation, useLoadGameQuery } from '@/store/api/chessApi';
+import { useSaveGameMutation, useLazyLoadGameQuery } from '@/store/api/chessApi';
 import { setChessState } from '@/store/slices/chessSlice';
 import { RootState } from '@/store';
 
@@ -11,7 +11,7 @@ export const useChessGamePersistence = () => {
   const dispatch = useDispatch();
   const chessState = useSelector((state: RootState) => state.chess);
   const [saveGame, { isLoading: isSaving }] = useSaveGameMutation();
-  const { data: loadedGame, isLoading: isLoading, isFetching } = useLoadGameQuery('');
+  const [triggerLoadGame, { isLoading, isFetching }] = useLazyLoadGameQuery();
 
   const handleSaveGame = async (gameId?: string) => {
     try {
@@ -25,11 +25,9 @@ export const useChessGamePersistence = () => {
 
   const handleLoadGame = async (gameId: string) => {
     try {
-      const result = await useLoadGameQuery(gameId);
-      if (result.data) {
-        dispatch(setChessState(result.data.state));
-        return result.data;
-      }
+      const result = await triggerLoadGame(gameId).unwrap();
+      dispatch(setChessState(result.state));
+      return result;
     } catch (error) {
       console.error('Failed to load game:', error);
       throw error;

@@ -78,6 +78,7 @@ export const chessApi = createApi({
 export const {
   useSaveGameMutation,
   useLoadGameQuery,
+  useLazyLoadGameQuery,
   useListGamesQuery,
   useDeleteGameMutation,
   useValidateMoveQuery,
